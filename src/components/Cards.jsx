@@ -12,13 +12,14 @@ export default function Card({ theme, desc, type, item, review }) {
 
 
 
+   
 
     const { themeLayout } = useThemeContext();
 
     const [isLoading, setIsLoading] = useState(true);
 
 
-     //console.log(item?.shopProductsListAcf?.mainCategories?.edges[0]?.node?.slug)
+    // console.log(item?.attributes?.sub_category?.data?.attributes?.slug)
 
 
     useEffect(() => {
@@ -72,31 +73,33 @@ export default function Card({ theme, desc, type, item, review }) {
                 ) : (
                     <>
                     <AOSInit/>
-                    <div data-aos="fade-up" className='grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2'
-                     data-id={item?.id ?? null} 
-                     data-review={item?.attributes?.reviewCount}>
+                    <div data-aos="fade-up" className='grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2' data-id={item?.id ?? null} data-review={item?.attributes?.reviewCount}>
                         <div className='relative overflow-hidden'>
-                            <Link className='block' href={`/${item?.shopProductsListAcf?.mainCategories?.edges[0]?.node?.slug.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
-                                <Images
+                        <Link className='block' href={`/${item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
+                           <Images
                                     width="170"
                                     height="170"
                                     quality={100}
                                     placeholder={true}
-                                    imageurl={item?.image?.sourceUrl && item?.image?.sourceUrl}
+                                    imageurl={item?.images[0]?.src && item?.images[0]?.src}
                                     classes={'w-full object-cover rounded-[10px] aspect-square 2xl:min-w-[170px]'}
-                                    alt={item?.image?.altText ?? 'Product'}
-                                    title={item?.image?.altText  ?? 'Product'}
+                                    alt={item?.images[0]?.alt ?? 'Product'}
+                                    title={item?.images[0]?.alt  ?? 'Product'}
                                 />
                             </Link>
-                            <Cart
+   <Cart
                                 itemid={item?.id ?? null}
                                 type="button"
-                                price={item?.regularPrice !== null ? item?.regularPrice : item?.regularPrice}
+                                price={item?.sale_price !== null ? item?.sale_price: item?.regular_price}
                                 name={item?.name}
                             />
                         </div>
                         <div className='grid gap-[7px] mt-[2px]'>
-                            <Link className='block' href={`/${item?.attributes?.main_categories?.data[0]?.attributes?.Slug.toLowerCase() ?? null}/${item?.attributes?.Slug == null ? item?.name?.toLowerCase().replace(/ /g, '-') ?? null : item?.attributes?.Slug ?? null}`}>
+
+                        
+
+
+                            <Link className='block' href={`/${item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
                                 <h4 className='text-[14px] text-black'>{item?.name ?? null}</h4>
                             </Link>
                             {!desc == true ?
@@ -105,38 +108,40 @@ export default function Card({ theme, desc, type, item, review }) {
                                 null
                             }
                             {type == true ?
-                                <p className='text-[12px] leading-[20px] text-black text-opacity-80'> {truncateWords(item?.attributes?.ShortDescription[0]?.children[0]?.text ?? null ?? null, 20)}</p>
+                                <p className='text-[12px] leading-[20px] text-black text-opacity-80'> {truncateWords(item?.short_description ?? null ?? null, 20)}</p>
                                 :
                                 null
                             }
                         </div>
 
-                        {review ?
+
+
+                        {item?.rating_count > 0 ?
                             <>
                                 <span className='flex gap-[6px] text-[12px] text-black text-opacity-80 items-center'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" className='mb-[3px]' height="12" fill="none" viewBox="0 0 13 13">
                                         <path fill={color} d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z" />
                                     </svg>
-                                    {review} Reviews</span>
+                                    {item?.rating_count} Reviews</span>
                             </>
                             : null
                         }
 
                         <span className='flex gap-[8px]'>
-                            {item?.regularPrice && <del className='text-[14px] font-light'>
-                                {item?.regularPrice ?? null} QR
+                            {item?.sale_price&& <del className='text-[14px] font-light'>
+                                {item?.regular_price ?? null} QR
                             </del>
                             }
                             <span className='text-[14px] font-semibold'>
-                                {item?.regularPrice ?? null}
-                                {!item?.regularPrice && <span>{item?.regularPrice ?? null}</span>} QR {item?.attributes?.Unit && <span className='text-[11px] font-light uppercase '>/ {item?.attributes?.Unit}</span>}
+                                {item?.sale_price?? null}
+                                {!item?.sale_price&& <span>{item?.regular_price ?? null}</span>} QR {item?.attributes?.Unit && <span className='text-[11px] font-light uppercase '>/ {item?.attributes?.Unit}</span>}
                             </span>
                         </span>
                         <div className='xl:hidden mt-[4px]'>
                             <Cart
                                 itemid={item?.id ?? null}
                                 type="button-small"
-                                price={item?.regularPrice !== null ? item?.regularPrice : item?.regularPrice}
+                                price={item?.sale_price!== null ? item?.sale_price: item?.regular_price}
                                 name={item?.name}
                             />
                         </div>
@@ -221,7 +226,7 @@ export default function Card({ theme, desc, type, item, review }) {
                             <Cart
                                 itemid={item?.id ?? null}
                                 type="button"
-                                price={item?.regularPrice !== null ? item?.regularPrice : item?.regularPrice}
+                                price={item?.sale_price!== null ? item?.sale_price: item?.regular_price}
                                 name={item?.name}
                             />
                         </div>
@@ -237,7 +242,7 @@ export default function Card({ theme, desc, type, item, review }) {
                                 null
                             }
                             {type == true ?
-                                <p className='text-[12px] leading-[20px] text-black text-opacity-80'> {truncateWords(item?.attributes?.ShortDescription[0]?.children[0]?.text ?? null ?? null, 20)}</p>
+                                <p className='text-[12px] leading-[20px] text-black text-opacity-80'> {truncateWords(item?.short_description ?? null ?? null, 20)}</p>
                                 :
                                 null
                             }
@@ -254,19 +259,19 @@ export default function Card({ theme, desc, type, item, review }) {
                         }
 
                         <span className='flex gap-[8px]'>
-                            {item?.regularPrice && <del className='text-[14px] font-light'>
-                                {item?.regularPrice ?? null} QR
+                            {item?.sale_price&& <del className='text-[14px] font-light'>
+                                {item?.regular_price ?? null} QR
                             </del>
                             }
                             <span className='text-[14px] font-semibold'>
-                                {item?.regularPrice ?? null}
-                                {!item?.regularPrice && <span>{item?.regularPrice ?? null}</span>} QR {item?.attributes?.Unit && <span className='text-[11px] font-light uppercase '>/ {item?.attributes?.Unit}</span>}
+                                {item?.sale_price?? null}
+                                {!item?.sale_price&& <span>{item?.regular_price ?? null}</span>} QR {item?.attributes?.Unit && <span className='text-[11px] font-light uppercase '>/ {item?.attributes?.Unit}</span>}
                             </span>
                         </span>
                         <div className='xl:hidden mt-[4px]'>
                             <Cart
                                 type="button-small"
-                                price={item?.regularPrice !== null ? item?.regularPrice : item?.regularPrice}
+                                price={item?.sale_price!== null ? item?.sale_price: item?.regular_price}
                                 name={item?.name}
                             />
                         </div>

@@ -1,10 +1,13 @@
+
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { wordpressGraphQlApiUrl } from '@/utils/variables';
+import { wordpressGraphQlApiUrl, wordpressRestApiUrl } from '@/utils/variables';
 import { useModalContext } from '@/context/modalContext';
 
-export default function AddReviewForm({ productId }) {
+
+const ReviewForm = ({ productId }) => {
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [comment, setComment] = useState('');
@@ -21,171 +24,77 @@ export default function AddReviewForm({ productId }) {
 
   const todayDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-  // Function to fetch existing reviews
-  const fetchExistingReviews = async () => {
-    try {
-      const response = await fetch(wordpressGraphQlApiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query: `
-            query($productId: ID!) {
-              shop(id: $productId) {
-                data {
-                  attributes {
-                    reviews {
-                      id
-                      rating
-                      author
-                      comment
-                      postedDate
-                      authorEmail
-                      showPublic
-                    }
-                  }
-                }
-              }
-            }
-          `,
-          variables: { productId }
-        })
-      });
-      const result = await response.json();
-      const reviews = result.data.shop.data.attributes.reviews || [];
-      setExistingReviews(reviews);
-    } catch (error) {
-     // console.error('Error fetching reviews:', error);
-    }
-  };
 
-  // Function to submit review
-  const sendReview = async () => {
-    try {
-      const updatedReviews = [
-        ...existingReviews,
-        {
-          rating: parseInt(rating, 10), // Convert rating to integer
-          author: name,
-          comment: comment,
-          postedDate: todayDate,
-          authorEmail: email,
-          showPublic: false
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+
+    const response = await fetch(`${wordpressRestApiUrl}product-reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlbW8uY2h1Y2hvdGVycWF0YXIuY29tIiwiaWF0IjoxNzI4NDcyNzE1LCJuYmYiOjE3Mjg0NzI3MTUsImV4cCI6MTcyOTA3NzUxNSwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMSJ9fX0.53wfSeR3-Bb5Sw9Id3rRlJXvnH2SjA2eTgvlPh_MWSI`, // Replace with JWT or Basic Auth
+      },
+      body: JSON.stringify({
+        title: name, // Assuming name corresponds to the title
+        content: comment, // Assuming comment corresponds to the content
+        acf: {
+          name: name, // ACF field for name
+          email: email, // ACF field for email
+          rating: rating, // ACF field for rating
+          product_id: String(productId) // ACF field for product ID
         }
-      ];
+      }),
+    });
 
-      const response = await fetch(wordpressGraphQlApiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query: `
-            mutation($productId: ID!, $reviews: [ComponentProductreviewsReviewsInput]) {
-              updateShop(
-                id: $productId,
-                data: {
-                  reviews: $reviews
-                }
-              ) {
-                data {
-                  attributes {
-                    reviews {
-                      id
-                      rating
-                      author
-                      comment
-                      postedDate
-                      authorEmail
-                      showPublic
-                    }
-                  }
-                }
-              }
-            }
-          `,
-          variables: {
-            productId,
-            reviews: updatedReviews
-          }
-        })
-      });
-      const result = await response.json();
-     // console.log('Review submitted:', result);
-      setSendProgress(true);
-
-      const res = await fetch('/api/reviewSendMail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ productId, name, rating, comment, todayDate })
-      });
-
-      if (res.ok) {
-        setStatus('Email sent successfully!');
-      } else {
-        setStatus('Failed to send email');
-      }
-
-      setTimeout(() => {
-        setSuccessLabel(true);
-        setSendProgress(false);
-      }, 3000);
-
-      setTimeout(() => {
-        setSuccessLabel(false);
-        setButtonLabel(true);
-        setName('');
-        setEmail('');
-        setComment('');
-        setShowModal(false);
-      }, 5000);
-    } catch (error) {
-      setStatus('An error occurred');
-     // console.error('Error submitting review:', error);
-    }
-  };
-
-  // Validate form
-  const validateForm = () => {
-    let errors = {};
-
-    if (!name) {
-      errors.name = 'Name is required.';
+    if (response.ok) {
+      // Handle successful submission
+      setSuccessLabel(true);
+      setSendProgress(false);
+      //console.log('Review submitted successfully');
+    } else {
+      // Handle error
+      console.error('Failed to submit review');
     }
 
-    if (!email) {
-      errors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Email is invalid.';
+
+
+    const res = await fetch('/api/reviewSendMail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ productId, name, rating, comment, todayDate })
+    });
+
+    if (res.ok) {
+      setStatus('Email sent successfully!');
+    } else {
+      setStatus('Failed to send email');
     }
 
-    setErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
-  };
+    setTimeout(() => {
+      setSuccessLabel(false);
+      setButtonLabel(true);
+      setName('');
+      setEmail('');
+      setComment('');
+      setShowModal(false);
+    }, 1000);
 
-  // Submit handler
-  const submitReview = () => {
-    validateForm();
-    if (isFormValid) {
-      fetchExistingReviews().then(() => {
-        sendReview();
-        setButtonLabel(false);
-        setSendProgress(true);
-      });
-    }
-  };
 
-  useEffect(() => {
-    fetchExistingReviews();
-  }, []);
+
+
+  }
+
 
   return (
-    <>
+    <form onSubmit={handleSubmit}>
+
+
       <div className="w-full grid gap-[16px]">
         <h2 className='uppercase text-[18px] font-semibold tracking-[1%] mb-[10px]'>Ratings & Review</h2>
+
         <div className="rating rating-lg mb-3 gap-[10px] flex">
           <input
             type="radio"
@@ -237,7 +146,7 @@ export default function AddReviewForm({ productId }) {
           name="name"
           required
         />
-        {errors.name && <p className='text-red-500 mb-3'>{errors.name}</p>}
+
         <input
           type="email"
           placeholder="Email"
@@ -247,7 +156,7 @@ export default function AddReviewForm({ productId }) {
           name="email"
           required
         />
-        {errors.email && <p className='text-red-500 mb-3'>{errors.email}</p>}
+
         <textarea
           className="textarea  placeholder:text-black border-black textarea-bordered w-full text-black rounded-[6px]"
           placeholder="Review this product"
@@ -263,7 +172,6 @@ export default function AddReviewForm({ productId }) {
             aria-label="Submit"
             type="submit"
             className="btn btn-neutral bg-black rounded-[6px] w-full"
-            onClick={submitReview}
           >
             <span className={buttonLabel === false ? "hidden" : ""}>
               Submit
@@ -282,7 +190,7 @@ export default function AddReviewForm({ productId }) {
           {successLabel && (
             <div role="alert" className="alert alert-success mt-7 rounded-md text-white">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="http:www.w3.org/2000/svg"
                 className="h-6 w-6 shrink-0 stroke-current"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -299,6 +207,9 @@ export default function AddReviewForm({ productId }) {
           )}
         </div>
       </div>
-    </>
+    </form>
   );
-}
+};
+
+export default ReviewForm;
+

@@ -2,42 +2,32 @@ import { useThemeContext } from "@/context/themeContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-
-
-
 export default function FilterProducts() {
-
-
-
   const router = useRouter();
+  const { themeLayout } = useThemeContext();
 
-
-
-  const { themeLayout } = useThemeContext()
-
-
-  const [maxPrice, setMaxPrice] = useState(100000);
+  const [minPrice, setMinPrice] = useState(0);
   const [minReviewCount, setMinReviewCount] = useState(1); // Default to 1 review
 
   // Update state when query parameters change
   useEffect(() => {
-    if (router.query.maxPrice) {
-      setMaxPrice(parseFloat(router.query.maxPrice));
+    if (router.query.minPrice) {
+      setMinPrice(parseFloat(router.query.minPrice));
     }
     if (router.query.minReviewCount) {
       setMinReviewCount(parseInt(router.query.minReviewCount, 10));
     }
-  }, [router.query.maxPrice, router.query.minReviewCount]);
+  }, [router.query.minPrice, router.query.minReviewCount]);
 
-  // Handle price change
+  // Handle minimum price change
   const handlePriceChange = (event) => {
-    const newMaxPrice = parseFloat(event.target.value);
-    setMaxPrice(newMaxPrice);
+    const newMinPrice = parseFloat(event.target.value);
+    setMinPrice(newMinPrice);
 
-    // Update URL with new maxPrice
+    // Update URL with new minPrice
     router.push({
       pathname: router.pathname,
-      query: { ...router.query, maxPrice: newMaxPrice },
+      query: { ...router.query, minPrice: newMinPrice },
     }, undefined, { shallow: false });
   };
 
@@ -52,9 +42,6 @@ export default function FilterProducts() {
       query: { ...router.query, minReviewCount: newMinReviewCount },
     }, undefined, { shallow: false });
   };
-
-
-
 
   let color;
   switch (themeLayout.toLowerCase()) {
@@ -78,7 +65,6 @@ export default function FilterProducts() {
       break;
   }
 
-
   return (
     <>
       <div className="px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px]">
@@ -88,9 +74,9 @@ export default function FilterProducts() {
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
+              name="minPrice"
               value="0"
-              checked={maxPrice === 0}
+              checked={minPrice === 0}
               onChange={handlePriceChange}
             />
             All
@@ -99,60 +85,48 @@ export default function FilterProducts() {
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
+              name="minPrice"
               value="100"
-              checked={maxPrice === 100}
+              checked={minPrice === 100}
               onChange={handlePriceChange}
             />
-           100 &#62;
+            100 +
           </li>
           <li className="flex justify-start items-center gap-2">
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
+              name="minPrice"
               value="500"
-              checked={maxPrice === 500}
+              checked={minPrice === 500}
               onChange={handlePriceChange}
             />
-          500 &#62;
+            500 +
           </li>
           <li className="flex justify-start items-center gap-2">
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
+              name="minPrice"
               value="1000"
-              checked={maxPrice === 1000}
+              checked={minPrice === 1000}
               onChange={handlePriceChange}
             />
-          1000 &#62;
+            1000 +
           </li>
           <li className="flex justify-start items-center gap-2">
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
-              value="5000"
-              checked={maxPrice === 5000}
+              name="minPrice"
+              value="1500"
+              checked={minPrice === 1500}
               onChange={handlePriceChange}
             />
-         5000 &#62;
-          </li>
-          <li className="flex justify-start items-center gap-2">
-            <input
-              type="radio"
-              className={`radio w-[18px] h-[18px] checked:bg-${themeLayout.toLowerCase()}-100`}
-              name="maxPrice"
-              value="1000000"
-              checked={maxPrice > 5000}
-              onChange={handlePriceChange}
-            />
-            5000 &#62;
+            1500 +
           </li>
         </ul>
       </div>
-
 
       <div className="px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px]">
         <span className="block uppercase font-semibold text-[13px]">Rating</span>
@@ -212,9 +186,8 @@ export default function FilterProducts() {
               <path fill={color} d="m6.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35L.318 4.99l4.455-.368L6.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L20.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L34.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L48.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L62.5.5Z" />
             </svg>
           </li>
-
         </ul>
       </div>
     </>
-  )
+  );
 }

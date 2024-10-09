@@ -9,6 +9,7 @@ export default function PageHeader({ title, type, data }) {
 
 
 
+   // console.log(data)
 
     const { themeLayout } = useThemeContext();
     const { setModalFor, setShowModal } = useModalContext();
@@ -36,7 +37,7 @@ export default function PageHeader({ title, type, data }) {
     const FilteredCategories = (themeLayout) => {
       
       // Extract and filter subcategories
-    const subCategories = data?.data.shops.data.flatMap(shop =>
+    const subCategories = data?.acf?.sub_categories[0]?.post_name(shop =>
         shop.attributes.sub_categories.data.map(cat => cat.attributes.slug)
     );
 
@@ -73,7 +74,7 @@ export default function PageHeader({ title, type, data }) {
     const FilteredCategoriesMore = (themeLayout) => {
       
         // Extract and filter subcategories
-      const subCategories = data?.data.shops.data.flatMap(shop =>
+      const subCategories = data?.acf?.sub_categories?.post_name.flatMap(shop =>
           shop.attributes.sub_categories.data.map(cat => cat.attributes.slug)
       );
   
