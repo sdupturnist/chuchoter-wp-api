@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-export default function OrderForm({ totalAMount, items }) {
+export default function OrderForm({ totalAmountOrder, items }) {
 
     const router = useRouter()
 
@@ -52,7 +52,7 @@ export default function OrderForm({ totalAMount, items }) {
                 <p><strong>ID:</strong> ${item.id}</p>
                 <p><strong>Name:</strong> ${item.name}</p>
                 <p><strong>Quantity:</strong> ${item.quantity}</p>
-                <p><strong>Price:</strong> ${item.price.toFixed(2)} QR</p>
+                <p><strong>Price:</strong> ${item?.price != null ? Math.round(item?.price * 100) / 100 : undefined } QR</p>
                 <p><strong>Total:</strong> ${(item.price * item.quantity).toFixed(2)} QR</p>
                 <hr> <!-- Horizontal rule for separation -->
               </div>`
@@ -63,73 +63,73 @@ export default function OrderForm({ totalAMount, items }) {
 
 
     async function sendOrder() {
-        try {
-            const response = await fetch(wordpressGraphQlApiUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    query: `
-            mutation {
-              createOrder(
-                data: {
-                  orderEmail: "${email}",
-                  orderCity: "${city}",
-                  orderAdditionalInstructions: "${instructions}",
-                  orderGift: ${giftItem},
-                  ReceiverName: "${receiverName}",
-                  ReceiverPhone: "${receiverPhone}",
-                  ReceiverCity: "${receiverCity}",
-                  OrderFullName: "${receiverName}",
-                  orderItems: "${orderItems}", 
-                  orderPhone: "${phone}",
-                  OrderAddress: "${address}",
-                  ReceiverAddress: "${receiverAddress}",
-                  TotalAmount: "${totalAMount}"
-                }
-              ) {
-                data {
-                  id
-                  attributes {
-                    orderEmail
-                    orderCity
-                    orderAdditionalInstructions
-                    orderGift
-                    ReceiverName
-                    ReceiverPhone
-                    ReceiverCity
-                    OrderFullName
-                    orderItems
-                    orderPhone
-                    OrderAddress
-                    ReceiverAddress
-                    TotalAmount
-                  }
-                }
-              }
-            }
-          `,
-                }),
-            });
+        // try {
+        //     const response = await fetch(wordpressGraphQlApiUrl, {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({
+        //             query: `
+        //     mutation {
+        //       createOrder(
+        //         data: {
+        //           orderEmail: "${email}",
+        //           orderCity: "${city}",
+        //           orderAdditionalInstructions: "${instructions}",
+        //           orderGift: ${giftItem},
+        //           ReceiverName: "${receiverName}",
+        //           ReceiverPhone: "${receiverPhone}",
+        //           ReceiverCity: "${receiverCity}",
+        //           OrderFullName: "${receiverName}",
+        //           orderItems: "${orderItems}", 
+        //           orderPhone: "${phone}",
+        //           OrderAddress: "${address}",
+        //           ReceiverAddress: "${receiverAddress}",
+        //           TotalAmount: "${totalAmountOrder}"
+        //         }
+        //       ) {
+        //         data {
+        //           id
+        //           attributes {
+        //             orderEmail
+        //             orderCity
+        //             orderAdditionalInstructions
+        //             orderGift
+        //             ReceiverName
+        //             ReceiverPhone
+        //             ReceiverCity
+        //             OrderFullName
+        //             orderItems
+        //             orderPhone
+        //             OrderAddress
+        //             ReceiverAddress
+        //             TotalAmount
+        //           }
+        //         }
+        //       }
+        //     }
+        //   `,
+        //         }),
+        //     });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-            }
+        //     if (!response.ok) {
+        //         const errorText = await response.text();
+        //         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        //     }
 
-            const { data } = await response.json();
+        //     const { data } = await response.json();
 
-            // Assuming you want to use `data` for further processing
-            let headerPost = data;
+        //     // Assuming you want to use `data` for further processing
+        //     let headerPost = data;
 
-            setSendProgress(true);
+        //     setSendProgress(true);
 
-          //  console.log(headerPost);
-        } catch (error) {
-            console.error('Error during fetch:', error);
-            // Optionally, update the UI to reflect the error state
-        }
+        //   //  console.log(headerPost);
+        // } catch (error) {
+        //     console.error('Error during fetch:', error);
+        //     // Optionally, update the UI to reflect the error state
+        // }
 
 
 
@@ -139,7 +139,7 @@ export default function OrderForm({ totalAMount, items }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ fullname, email, phone, address, city, instructions,  giftItem, receiverName, receiverPhone, receiverAddress, receiverCity, itemListMail, totalAMount }),
+                body: JSON.stringify({ fullname, email, phone, address, city, instructions,  giftItem, receiverName, receiverPhone, receiverAddress, receiverCity, itemListMail, totalAmountOrder}),
             });
 
             if (res.ok) {

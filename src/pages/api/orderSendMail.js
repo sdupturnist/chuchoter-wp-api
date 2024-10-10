@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { fullname, email, phone, address, city, instructions, giftItem, receiverName, receiverPhone, receiverAddress, receiverCity, itemListMail, totalAMount } = req.body;
+    const { fullname, email, phone, address, city, instructions, giftItem, receiverName, receiverPhone, receiverAddress, receiverCity, itemListMail, totalAmountOrder } = req.body;
 
     // Create a transporter
     const transporter = nodemailer.createTransport({
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
 
           <div style="margin-bottom: 20px;">
             <h3 style="margin-bottom: 10px; font-size: 18px;">Total Amount:</h3>
-            <p style="margin: 0;background:yellow;">[`+ totalAMount + `QR]</p>
+            <p style="margin: 0;background:yellow;">[`+ totalAmountOrder + `QR]</p>
         </div>
 
         <div style="margin-bottom: 20px;">

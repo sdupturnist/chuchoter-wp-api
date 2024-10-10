@@ -1,4 +1,4 @@
-import { adminUrl, wordpressGraphQlApiUrl } from "@/utils/variables";
+import { adminUrl, wordpressGraphQlApiUrl, frontendUrl } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from '@/components/Seo';
 import Link from "next/link";
@@ -14,23 +14,51 @@ import Slider from "react-slick";
 import Card from "@/components/Cards";
 import useWindowWidth from "@/components/WindowWidth";
 import { AOSInit } from "@/components/Aos";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 
-export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featuredProducts_ }) {
+export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featuredProducts_, reviews }) {
 
 
+
+  const router = useRouter();
+  const { query } = router;
 
 
   const homePageData = pageData_?.data?.pages?.nodes[0] ?? [];
-  const productsFeatured = featuredProducts_?.data?.products?.nodes ?? [];
   const homePageTwoData = homeTwoData_?.data?.allStoreSectionsAcf?.nodes ?? [];
 
-  //console.log(pageData_?.data?.pages?.nodes[0])
+
+
 
   const { setThemeLayout } = useThemeContext()
+
+
+
+  const toCapitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+
+  const filteredProducts = featuredProducts_
+    .filter(product => product?.acf?.featured === true) // Filter for featured products
+    .map(product => ({
+      ...product,
+      reviews: reviews || [], // Add the reviews array
+    }));
+
+
+
+
+  //console.log(filteredProducts)
+
+
+
 
 
   const chocolate = useRef();
@@ -681,30 +709,31 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
               </div>
             </div>
           </section>
-          {productsFeatured.length !== 0 && windowWidth > 999 ? <section>
+          {featuredProducts_.length !== 0 && windowWidth > 999 ? <section>
 
             <div className="container" data-aos="fade-in">
               <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
                 <h2 className="text-[16px] uppercase font-semibold mb-[30px]">Featured products</h2>
                 <div className="slider-container slider-featured-items mt-[30px]">
+
                   <Slider {...featuredProductsSlider}>
-                    {featuredProducts_ && productsFeatured.map((item, key) => {
 
-                      const publicReviews = item?.attributes?.reviews?.filter(review => review.showPublic);
+                    {filteredProducts.map((item, key) => {
+
+                      const filteredReviews = item.reviews.filter(review => parseInt(review.acf.product_id, 10) === item?.id);
+
                       return (
-                        <>
-                          sdsd
-                        </>
-                        // <Card
-                        //   key={key}
-                        //   theme="chocolates"
-                        //   item={item}
-                        //   review={publicReviews ? publicReviews.length : null}
-                        // />
 
-                      )
+                        <Card
+                          item={item}
+                          review={filteredReviews}  // Pass the matching reviews
+                          theme="chocolates"
+                        />
+
+                      );
                     })}
-                  </Slider>
+
+  </Slider>
                 </div>
               </div>
             </div>
@@ -713,7 +742,7 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
           }
           <section data-aos="fade-in">
             <div className="container">
-              <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${productsFeatured.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
+              <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${featuredProducts_.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
                 <div className="md:pl-[15%]">
                   <h3 className="md:text-[30px] sm:text-[26px] text-[22px] uppercase font-medium">
                     {pageData_ && homePageData?.title}
@@ -867,102 +896,18 @@ export async function getStaticProps() {
     const homeTwoData_ = await homeTwoDataResponse.json();
 
     // Fetch featured products
-    const featuredProductsResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `query ShopProducts {
-  products(first: 5, where: {featured: true, orderby: {order: DESC, field: DATE}}) {
-    found
-    nodes {
-      id
-      featured
-      name
-      description
-      reviewCount
-      onSale
-      type
-      image {
-        altText
-        sourceUrl
-      }
-      ... on ProductWithPricing {
-        regularPrice
-      }
-      ... on VariableProduct {
-        regularPrice
-      }
-      ... on SimpleProduct {
-        regularPrice
-      }
-      ... on ExternalProduct {
-        regularPrice
-      }
-      ... on GroupProduct {
-        regularPrice
-      }
-      ... on WithAcfShopProductsListAcf {
-        shopProductsListAcf {
-          featured
-          includes
-          mainCategories {
-            edges {
-              node {
-                id
-                slug
-              }
-            }
-          }
-          subCategories {
-            edges {
-              node {
-                id
-                slug
-              }
-            }
-          }
-        }
-      }
-      ... on NodeWithTitle {
-        seo {
-          canonical
-          focuskw
-          opengraphSiteName
-          metaDesc
-          metaKeywords
-          title
-          opengraphDescription
-          opengraphUrl
-          opengraphImage {
-            altText
-            link
-            sourceUrl
-          }
-          opengraphType
-          opengraphTitle
-          opengraphModifiedTime
-          twitterDescription
-          twitterTitle
-          twitterImage {
-            sourceUrl
-          }
-        }
-      }
-    }
-  }
-}`,
-      }),
-    });
-    const featuredProducts_ = await featuredProductsResponse.json();
+
+    const featuredProducts = await axios.get(`${frontendUrl}/api/products`);
+
+    const reviewsData = await axios.get(`${frontendUrl}/api/reviews`);
 
     return {
       props: {
         pageData_,
         homeTwoData_,
         pageDataAbout_,
-        featuredProducts_,
+        featuredProducts_: featuredProducts.data,
+        reviews: reviewsData.data,
       },
       revalidate: 60, // Revalidate every 60 seconds
     };
@@ -974,6 +919,7 @@ export async function getStaticProps() {
         homeTwoData_: null,
         pageDataAbout_: null,
         featuredProducts_: null,
+        reviews: null
       },
       revalidate: 60, // Optional: still allow revalidation even on error
     };

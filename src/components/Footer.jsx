@@ -4,6 +4,7 @@ import BottomNav from "./BottomNav";
 import { CategoryData } from "@/hooks/categoryData";
 import { ContactData } from "@/hooks/contactData";
 import { useThemeContext } from "@/context/themeContext";
+import { SubCategoryData } from "@/hooks/subCategoryData";
 
 
 
@@ -13,6 +14,7 @@ export default function Footer({ page, initialData }) {
 
 
   const { dataCategory } = CategoryData(initialData);
+  const { dataSubCategory } = SubCategoryData(initialData);
 
   const { dataContact } = ContactData(initialData);
 
@@ -23,183 +25,116 @@ export default function Footer({ page, initialData }) {
 
 
 
+
   const FilteredCategories = () => {
-    // Define custom order
-    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events']; // Adjust according to your custom order
+    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
-    // Ensure dataCategory and its nested properties are defined before processing
-    const categoriesMap = dataCategory?.data?.shops?.data.reduce((acc, item) => {
-      // Extract main category title
-      const mainCategories = item?.attributes?.main_categories?.data || [];
-
-      // Extract subcategories
-      const subcategories = item?.attributes?.sub_categories?.data || [];
-
-      // Process each main category
-      mainCategories.forEach(mainCategoryItem => {
-        const mainCategory = mainCategoryItem?.attributes?.Title;
-
-        if (mainCategory) {
-          // Initialize the set if it does not exist
-          if (!acc[mainCategory]) {
-            acc[mainCategory] = new Set();
-          }
-
-          // Add each subcategory to the set if it's not empty
-          subcategories.forEach(subcatItem => {
-            const subcategory = subcatItem?.attributes?.slug;
-            if (subcategory) {
-              acc[mainCategory].add(subcategory);
-            }
-          });
-        }
-      });
-
-      return acc;
-    }, {});
-
-    // Check if categoriesMap is defined and filter out categories with no subcategories
-    const filteredCategories = categoriesMap
-      ? Object.entries(categoriesMap).filter(([mainCategory, subcategories]) => subcategories.size > 0)
+    const sortedCategories = dataCategory
+      ? dataCategory
+        .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
+        .sort((a, b) => {
+          const indexA = customOrder.indexOf(a?.title?.rendered);
+          const indexB = customOrder.indexOf(b?.title?.rendered);
+          return indexA - indexB;
+        })
       : [];
 
-    // Sort categories based on custom order
-    const sortedCategories = filteredCategories.sort(([a], [b]) => {
-      const indexA = customOrder.indexOf(a);
-      const indexB = customOrder.indexOf(b);
-
-      // Handle categories not in customOrder by placing them at the end
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-
-      return indexA - indexB;
-    });
-
-    // Return null if there are no categories to display
-    if (sortedCategories.length === 0) return null;
-
     return (
-      <>
-        {sortedCategories && sortedCategories.map(([mainCategory, subcategories]) => (
-          dataCategory?.data?.shops?.data?.length !== 0 ? <div className="" key={mainCategory}>
-            <h4 className="text-[15px] font-semibold uppercase mb-[24px]">{mainCategory}</h4>
+      sortedCategories.map((item, index) => (
+        <>
+          <div className="">
+            <h4 className="text-[15px] font-semibold uppercase mb-[24px]">{item?.title?.rendered}</h4>
             <ul className="[&>*]:text-[14px] grid gap-[12px] [&>*]:transition-all capitalize">
-              {[...subcategories].map((subcategory, index) => (
-                <li key={index}>
-                  <Link
-                    onClick={() => {
-                      setThemeLayout(mainCategory);
-                    }}
-                    aria-label={subcategory?.replace(/-/g, ' ')}
-                    title={subcategory?.replace(/-/g, ' ')}
-                    href={`/${subcategory?.replace(/-/g, '-').toLowerCase()}`}
-                    className="hover:opacity-50"
-                  >
-                    {subcategory?.replace(/-/g, ' ')}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div> : null
+              {dataSubCategory && dataSubCategory
+                .filter(item => item?.acf?.show_in_menu === true) // Filter for items with show_in_menu true
+                .map((item, index) => (
+                  <li key={index}>
+                    <Link
+                      onClick={() => {
+                        setThemeLayout(mainCategory);
+                      }}
+                      aria-label={item?.title?.rendered}
+                      title={item?.title?.rendered}
+                      href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
+                      className="hover:opacity-50"
+                    >
+                      {item?.title?.rendered?.replace(/-/g, ' ')}
+                    </Link>
+                  </li>
+                ))}
 
-        ))}
-      </>
+            </ul>
+          </div>
+        </>
+      ))
     );
   };
-
 
 
 
 
   const FilteredCategoriesAccordin = () => {
-    // Define custom order
-    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events']; // Adjust according to your custom order
+    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
-    // Create a map to store unique main categories and their subcategories
-    const categoriesMap = dataCategory?.data?.shops?.data.reduce((acc, item) => {
-      // Extract main categories and subcategories
-      const mainCategories = item?.attributes?.main_categories?.data || [];
-      const subcategories = item?.attributes?.sub_categories?.data || [];
-
-      // Process each main category
-      mainCategories.forEach(mainCategoryItem => {
-        const mainCategory = mainCategoryItem?.attributes?.Title;
-
-        if (mainCategory) {
-          if (!acc[mainCategory]) {
-            acc[mainCategory] = new Set();
-          }
-
-          // Add each subcategory to the set if it's not empty
-          subcategories.forEach(subcatItem => {
-            const subcategory = subcatItem?.attributes?.slug;
-            if (subcategory) {
-              acc[mainCategory].add(subcategory);
-            }
-          });
-        }
-      });
-
-      return acc;
-    }, {});
-
-    // Ensure categoriesMap is an object and filter out categories with no subcategories
-    const filteredCategories = categoriesMap
-      ? Object.entries(categoriesMap).filter(([mainCategory, subcategories]) => subcategories.size > 0)
+    const sortedCategories = dataCategory
+      ? dataCategory
+        .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
+        .sort((a, b) => {
+          const indexA = customOrder.indexOf(a?.title?.rendered);
+          const indexB = customOrder.indexOf(b?.title?.rendered);
+          return indexA - indexB;
+        })
       : [];
 
-    // Sort categories based on custom order
-    const sortedCategories = filteredCategories.sort(([a], [b]) => {
-      const indexA = customOrder.indexOf(a);
-      const indexB = customOrder.indexOf(b);
-
-      // Handle categories not in customOrder by placing them at the end
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-
-      return indexA - indexB;
-    });
-
-    // Return null if there are no categories to display
-    if (sortedCategories.length === 0) return null;
-
     return (
-      <>
-        {sortedCategories && sortedCategories.map(([mainCategory, subcategories]) => (
-          dataCategory?.data?.shops?.data?.length !== 0 ? <div key={mainCategory} className="collapse collapse-plus rounded-none">
+      sortedCategories.map((item, index) => (
+        <>
+
+
+
+
+          <div key={index} className="collapse collapse-plus rounded-none">
             <input
               type="radio"
               className="min-h-[10px] after:top-0"
               name="my-accordion-3"
-              id={mainCategory}
+              id={index}
             />
             <div className="collapse-title p-0 min-h-0">
-              {mainCategory}
+              {item?.title?.rendered}
             </div>
             <div className="collapse-content !pb-0 px-0 mb-0">
               <ul className="mt-[24px] grid gap-[24px] m-0 p-0">
-                {[...subcategories].map(subcategory => (
-                  <li key={subcategory}>
-                    <Link
-                      onClick={() => {
-                        setThemeLayout(mainCategory);
-                      }}
-                      aria-label={subcategory?.replace(/-/g, ' ')}
-                      title={subcategory?.replace(/-/g, ' ')}
-                      href={`/${subcategory?.replace(/-/g, '-').toLowerCase()}`}
-                      className="hover:opacity-50"
-                    >
-                      {subcategory?.replace(/-/g, ' ')}
-                    </Link>
-                  </li>
-                ))}
+
+
+                {dataSubCategory && dataSubCategory
+                  .filter(item => item?.acf?.show_in_menu === true) // Filter for items with show_in_menu true
+                  .map((item, index) => (
+                    <li key={index}>
+
+                      <Link
+                        onClick={() => {
+                          setThemeLayout(mainCategory);
+                        }}
+                        aria-label={item?.title?.rendered}
+                        title={item?.title?.rendered}
+                        href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
+                        className="hover:opacity-50"
+                      >
+                        {item?.title?.rendered?.replace(/-/g, ' ')}
+                      </Link>
+
+                    </li>
+                  ))}
               </ul>
             </div>
-          </div> : null
-        ))}
-      </>
+          </div>
+        </>
+      ))
     );
   };
+
+
 
 
 

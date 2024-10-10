@@ -12,19 +12,44 @@ import axios from 'axios';
 
 
 
-export default function AllProducts({ products, currentPage, totalCount, test, reviews }) {
+export default function AllProducts({ products, currentPage, totalCount }) {
+
+  const router = useRouter();
+  const { query } = router;
+
 
   const allProducts = products ?? [];
   const totalProducts = totalCount; // Replace this with actual total products count from your API if available
   const productsPerPage = 30; // This should match the per_page value used in the API call
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
+console.log(products)
 
-  // console.log(reviews)
+
+
+  //query.category
+
+
+  const toCapitalize = (str) => {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
+
+
+  const filteredProducts = products
+  .filter(product =>
+    product.acf.main_categories.some(category => category.post_title === toCapitalize(query.category))
+  );
+
+
+  
+  //console.log(filteredProducts)
+
+
+
+
 
   const { themeLayout } = useThemeContext();
-  const router = useRouter();
-  const { query } = router;
   const [currentUrl, setCurrentUrl] = useState('');
 
   //console.log(allProducts)
@@ -39,7 +64,7 @@ export default function AllProducts({ products, currentPage, totalCount, test, r
 
 
   const handlePageChange = (page) => {
-    router.push(`/products?page=${page}`);
+    router.push(`/${query.category}?page=${page}`);
   };
 
 
@@ -65,23 +90,26 @@ export default function AllProducts({ products, currentPage, totalCount, test, r
           data={allProducts}
           />
 
-          {allProducts.length > 0 ? (
+          {filteredProducts.length > 0 ? (
             <>
               <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
-                {allProducts.map((item, key) => {
-                  const publicReviews = item?.attributes?.reviews?.filter(review => review.showPublic);
+              {filteredProducts.map((item, key) => {
+   
 
-                  return (
-                    <div className="w-full" key={key}>
-                      <Card
-                        type="cat"
-                        item={item}
-                        review={publicReviews ? publicReviews.length : null}
-                        theme={themeLayout}
-                      />
-                    </div>
-                  );
-                })}
+
+    return (
+        <div className="w-full" key={key}>
+            <Card
+                type="cat"
+                item={item}
+                theme={themeLayout}
+            />
+        </div>
+    );
+})}
+
+
+
               </div>
               <div className="text-center pb-[100px] lg:pb-[0]">
                 <Pagination
@@ -119,7 +147,7 @@ export async function getServerSideProps(context) {
         page, 
         per_page: 29,
         min_price:minPrice,
-        rating_count:0
+        rating_count:0,
        }, 
     });
 
@@ -127,22 +155,19 @@ export async function getServerSideProps(context) {
     const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
     
 
-    const reviewsData = await axios.get(`${frontendUrl}/api/reviews`);
-    
+
 
     return {
       props: {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.totalCount, 
-        test:minPrice || 0,
-        reviews: reviewsData.data, 
       }
     };
 
   } catch (error) {
     console.error('Error fetching products:', error.message);
-    return { props: { products: [], currentPage: 1, totalCount: 0, reviews: [] } }; // Set default total count to 0 on error
+    return { props: { products: [], currentPage: 1, totalCount: 0 } }; // Set default total count to 0 on error
   }
 }
 

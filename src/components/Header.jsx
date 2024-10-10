@@ -23,6 +23,7 @@ export default function Nav({ theme, page, initialData }) {
 
 
 
+
   // TOGGLE MENU
   const [hidden, setHidden] = useState(false);
   const [screenWidth, setScreenWidth] = useState(0);
@@ -164,87 +165,38 @@ export default function Nav({ theme, page, initialData }) {
       break;
   }
 
-
+  //console.log(dataCategory)
 
 
   const FilteredCategories = (headerColor) => {
+    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
-
-
-    // Define custom order
-    const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events']; // Adjust according to your custom order
-
-    // Create a map to store unique main categories and their subcategories
-    const categoriesMap = dataCategory?.data?.shops?.data.reduce((acc, item) => {
-      // Extract main categories and subcategories
-      const mainCategories = item?.attributes?.main_categories?.data || [];
-      const subcategories = item?.attributes?.sub_categories?.data || [];
-
-      
-      // Process each main category
-      mainCategories.forEach(mainCategoryItem => {
-        const mainCategory = mainCategoryItem?.attributes?.Title;
-
-        if (mainCategory) {
-          if (!acc[mainCategory]) {
-            acc[mainCategory] = new Set();
-          }
-
-          // Add each subcategory to the set if it's not empty
-          subcategories.forEach(subcatItem => {
-            const subcategory = subcatItem?.attributes?.slug;
-            if (subcategory) {
-              acc[mainCategory].add(subcategory);
-            }
-          });
-        }
-      });
-
-      
-      return acc;
-      
-    }, {});
-
-
-
-    // Return empty array if categoriesMap is undefined or null
-    if (!categoriesMap) return null;
-
-    // Convert categoriesMap to an array
-    const categoriesArray = Object.entries(categoriesMap);
-
-    // Sort categories based on custom order
-    const sortedCategories = categoriesArray.sort(([a], [b]) => {
-      const indexA = customOrder.indexOf(a);
-      const indexB = customOrder.indexOf(b);
-
-      // Handle categories not in customOrder by placing them at the end
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-
-      return indexA - indexB;
-    });
+    const sortedCategories = dataCategory
+        ? dataCategory
+            .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
+            .sort((a, b) => {
+                const indexA = customOrder.indexOf(a?.title?.rendered);
+                const indexB = customOrder.indexOf(b?.title?.rendered);
+                return indexA - indexB;
+            })
+        : [];
 
     return (
-      <>
-  {sortedCategories && sortedCategories.map(([mainCategory, subcategories, ]) => (
-          <li key={mainCategory}>
-            <Link
-              aria-label={mainCategory}
-              title={mainCategory}
-              href={`/${mainCategory.replace(/_/g, '-').toLowerCase()}`}
-              style={{ color: headerColor }}
-              onClick={() => setThemeLayout(mainCategory)}
-            >
-              {mainCategory}
-            </Link>
-          </li>
-        ))}
-      </>
+       sortedCategories.map((item, index) => (
+                <li key={index}>
+                    <Link
+                        aria-label={item?.title?.rendered}
+                        title={item?.title?.rendered}
+                        href={`/${item?.title?.rendered.toLowerCase()}`}
+                        onClick={() => setThemeLayout('gray')}
+                        style={{ color: headerColor }}
+                    >
+                        {item?.title?.rendered}
+                    </Link>
+                </li>
+            ))
     );
-  };
-
-
+};
 
 
 
@@ -454,6 +406,9 @@ export default function Nav({ theme, page, initialData }) {
     </motion.div>
   );
 }
+
+
+
 
 
 

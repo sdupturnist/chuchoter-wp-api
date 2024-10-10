@@ -1,7 +1,8 @@
 // hooks/useData.js
 
-import { wordpressGraphQlApiUrl } from '@/utils/variables';
+import { frontendUrl } from '@/utils/variables';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export const CategoryData = (initialData) => {
     const [dataCategory, setDataCategory] = useState(initialData);
@@ -10,66 +11,39 @@ export const CategoryData = (initialData) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(wordpressGraphQlApiUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        query: `query {
-  shops(pagination: { limit: 1000 }) {
-    data {
-      attributes {
-        main_categories {
-          data {
-            attributes {
-              Slug
-              Title
-            }
-          }
-        }
-        sub_categories {
-          data {
-            attributes {
-              slug
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`,
-                    }),
-                });
-
-                if (!res.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-
-                const data = await res.json();
-
+                // Fetch category data from the mainCategories API
+                const resCategory = await axios.get(`${frontendUrl}/api/mainCategories`);
+                
                 // Save data to localStorage
-                localStorage.setItem('categoryData', JSON.stringify(data));
+                localStorage.setItem('categoryData', JSON.stringify(resCategory.data));
 
-                setDataCategory(data);
+                setDataCategory(resCategory.data);
+
             } catch (error) {
-                setErrorDataCategory(error.message);
+                if (error.response) {
+                    setErrorDataCategory(error.response.data.message);
+                } else {
+                    setErrorDataCategory(error.message);
+                }
             }
         };
 
-        if (!initialData) {
-            // Try to get data from localStorage
-            const storedData = localStorage.getItem('categoryData');
+        // if (!initialData) {
+        //     // Try to get data from localStorage
+        //     const storedData = localStorage.getItem('categoryData');
             
-            if (storedData) {
-                setDataCategory(JSON.parse(storedData));
-            } else {
-                fetchData();
-            }
-        } else {
-            setDataCategory(initialData);
-        }
+        //     if (storedData) {
+        //         setDataCategory(JSON.parse(storedData));
+        //     } else {
+        //         fetchData();
+        //     }
+        // } else {
+        //     setDataCategory(initialData);
+        // }
+        fetchData();
+        setDataCategory(initialData);
+
+
     }, [initialData]);
 
     return { dataCategory, errorDataCategory };

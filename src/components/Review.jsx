@@ -1,11 +1,11 @@
 export default function Review({ data }) {
 
 
-  const filledStars = Math.floor(data?.rating ?? null); // Whole stars
-  const halfStar = data?.rating % 1 >= 0.5;    // Check if there's a half star
-  const emptyStars = 5 - Math.ceil(data?.rating); // Remaining empty stars
+  const filledStars = Math.floor(data?.acf?.rating ?? null); // Whole stars
+  const halfStar = data?.acf.rating % 1 >= 0.5;    // Check if there's a half star
+  const emptyStars = 5 - Math.ceil(data?.acf?.rating); // Remaining empty stars
 
-
+  //console.log(data?.acf)
 
 
   const renderStars = (count, filled) => {
@@ -28,7 +28,7 @@ export default function Review({ data }) {
 
   return (
     <li>
-      <span>{data?.author ?? null}</span>
+      <span>{data?.acf?.name ?? null}</span>
       <div className="flex mt-[12px] mb-[16px]">
         {renderStars(filledStars, true)}
         {halfStar && (
@@ -43,8 +43,8 @@ export default function Review({ data }) {
         )}
         {renderStars(emptyStars, false)}
       </div>
-      <p className="text-gray-500">{data?.comment ?? null}</p>
-      <span className="block text-gray-500 mt-[16px]">{data?.postedDate ?? null}</span>
+      <div className="text-gray-500" dangerouslySetInnerHTML={{ __html: data.content.rendered }} />
+      <span className="block text-gray-500 mt-[16px]">{data.date ?? null}</span>
     </li>
   );
 }

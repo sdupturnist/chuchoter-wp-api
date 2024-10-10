@@ -19,11 +19,24 @@ export default function ProductSingle({ product, test, reviews }) {
   const router = useRouter();
   const { query } = router;
 
-console.log(reviews)
+  //console.log(reviews)
 
   const { setModalFor, setShowModal } = useModalContext();
-  const { setProductId, setProductReviewCount } = useProductContext();
+  const { setProductId, setProductName } = useProductContext();
   const { cartItems, setCartItems } = useCartContext();
+
+
+  const [filteredReviews, setFilteredReviews] = useState([]);
+
+
+
+
+  useEffect(() => {
+    // Filter reviews by product_id "234"
+    const filtered = reviews.filter(review => review.acf.product_id === `${String(product?.id)}`);
+    setFilteredReviews(filtered);
+  }, [reviews]);
+
 
 
 
@@ -35,9 +48,10 @@ console.log(reviews)
   //   }
   // }, [product, router]);
 
-   // Update product context
+  // Update product context
   useEffect(() => {
     setProductId(product?.id ?? null);
+    setProductName(product?.name ?? null);
     // setProductReviewCount(reviewData_?.data?.review?.data?.length ?? 0);
   }, []);
 
@@ -80,19 +94,19 @@ console.log(reviews)
       alert('Please enter a valid item ID.');
       return;
     }
-  
+
     const newItem = {
       id: String(id),
       quantity: 1,
       price: offerprice ?? regular_price,
       name: name,
     };
-  
+
     // Initialize cartItems from localStorage
     let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-  
+
     const existingItemIndex = cartItems.findIndex(item => item.id === newItem.id);
-  
+
     let updatedItems;
     if (existingItemIndex !== -1) {
       updatedItems = [...cartItems];
@@ -100,12 +114,12 @@ console.log(reviews)
     } else {
       updatedItems = [...cartItems, newItem];
     }
-  
+
     setCartItems(updatedItems);
     localStorage.setItem('cartItems', JSON.stringify(updatedItems));
     router.push('/cart');
   };
-  
+
 
   // const publicReviews = product?.reviews?.filter(review => review.showPublic);
 
@@ -183,13 +197,13 @@ console.log(reviews)
                   <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.main_categories[0]?.post_name ?? null}</span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">{product?.name ?? null}</h1>
                   {reviews.length > 0 ? <span className='flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" className='mb-[1px]' height="16" fill="none" viewBox="0 0 13 13">
-                  <path fill="#E7B66B" d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z" />
-                  </svg>
-                  {reviewCount} Reviews
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" className='mb-[1px]' height="16" fill="none" viewBox="0 0 13 13">
+                      <path fill="#E7B66B" d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z" />
+                    </svg>
+                    {filteredReviews.length} Reviews
                   </span>
-                  :
-                  null
+                    :
+                    null
                   }
                   <span className='flex gap-[14px] mt-[32px]'>
                     {product?.sale_price && <del className='text-[24px] font-normal opacity-60'>
@@ -228,15 +242,15 @@ console.log(reviews)
                     </span>
                   </span>}
 
-                  {/* {
-                    !reviewCount &&
+                  {
+                    !reviews.length &&
                     <button
                       className="btn border border-black text-black border-solid bg-white sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                       onClick={openAddReviewModal}
                     >
                       Write a review
                     </button>
-                  } */}
+                  }
 
                 </div>
               </div>
@@ -298,17 +312,17 @@ console.log(reviews)
                   )
                 }
 
-                {/* 
-                {reviewCount > 0 &&
+
+                {reviews.length > 0 &&
                   <>
                     <input type="radio"
                       defaultChecked={!product.Includes || !product.Description}
                       name="my_tabs_2" role="tab"
                       className="tab rounded-lg !border-black uppercase sm:text-[16px] text-[14px] font-semibold tracking-[1%] min-h-[50px] border-b border-solid sm:min-w-[150px] min-w-[120px]"
-                      aria-label={`${reviewCount} Reviews`} />
+                      aria-label={`${filteredReviews.length} Reviews`} />
                     <div role="tabpanel" className="tab-content bg-base-100 border-black rounded-lg sm:p-[32px] p-[24px]">
                       <ul className="grid review-list">
-                        {publicReviews && publicReviews.map((item, key) => {
+                        {reviews && filteredReviews.map((item, key) => {
                           return (
                             <Review
                               key={key}
@@ -319,13 +333,13 @@ console.log(reviews)
                       </ul>
                     </div>
                   </>
-                } */}
+                }
               </div>
 
               {product.content ||
                 product?.acf?.includes
-                // ||
-                // reviewCount > 0
+                ||
+                reviews.length > 0
                 ? <button
                   className="btn border border-black border-solid bg-black sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                   onClick={openAddReviewModal}
@@ -364,14 +378,14 @@ export async function getServerSideProps(context) {
       props: {
         product: res.data[0], // Set the fetched products
         test: slug,
-        reviews: reviewsData.data, 
+        reviews: reviewsData.data,
       },
     };
   } catch (error) {
     console.error('Error fetching products:', error.message);
     return {
       props: {
-        product: [], 
+        product: [],
         reviews: []
       },
     };

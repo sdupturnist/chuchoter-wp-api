@@ -6,7 +6,7 @@ import { wordpressGraphQlApiUrl, wordpressRestApiUrl } from '@/utils/variables';
 import { useModalContext } from '@/context/modalContext';
 
 
-const ReviewForm = ({ productId }) => {
+const ReviewForm = ({ productId, productName }) => {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,7 +36,7 @@ const ReviewForm = ({ productId }) => {
         'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlbW8uY2h1Y2hvdGVycWF0YXIuY29tIiwiaWF0IjoxNzI4NDcyNzE1LCJuYmYiOjE3Mjg0NzI3MTUsImV4cCI6MTcyOTA3NzUxNSwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMSJ9fX0.53wfSeR3-Bb5Sw9Id3rRlJXvnH2SjA2eTgvlPh_MWSI`, // Replace with JWT or Basic Auth
       },
       body: JSON.stringify({
-        title: name, // Assuming name corresponds to the title
+        title: String(productName), // Assuming name corresponds to the title
         content: comment, // Assuming comment corresponds to the content
         acf: {
           name: name, // ACF field for name
