@@ -7,7 +7,7 @@ const WooCommerce = axios.create({
 
 // Handler function
 export default async function handler(req, res) {
-  const { page = 1, per_page = 100, min_price = 0, rating_count = 0 } = req.query; // Default to page 1 and 100 items per page
+  const { page = 1, per_page = 100, min_price = 0, user_reviews = 0 } = req.query; // Default to page 1 and 100 items per page
 
   try {
     // Fetch products
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       params: {
         consumer_key: woocommerceConsumerKey,
         consumer_secret: woocommerceConsumerSecret,
-        rating_count,
+        user_reviews,
         min_price,
         per_page,
         page,

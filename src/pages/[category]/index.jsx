@@ -23,7 +23,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   const productsPerPage = 30; // This should match the per_page value used in the API call
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
-console.log(products)
+
 
 
 
@@ -147,7 +147,7 @@ export async function getServerSideProps(context) {
         page, 
         per_page: 29,
         min_price:minPrice,
-        rating_count:0,
+        user_reviews: null, // Use user_reviews here
        }, 
     });
 

@@ -73,7 +73,6 @@ const review = item?.acf?.user_reviews
                 ) : (
                     <>
                         <AOSInit />
-                        {console.log(review?.length || null)}
                        <div data-aos="fade-up" className='grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2' data-id={item?.id ?? null} data-review={review?.length}>
                           <div className='relative overflow-hidden'>
                            
@@ -247,7 +246,7 @@ const review = item?.acf?.user_reviews
                                     null
                                 }
                             </div>
-                            {review[0]?.acf?.product_id == item?.id  ?
+                            {review?.length > 0  ?
                                 <>
                                     <span className='flex gap-[6px] text-[12px] text-black text-opacity-80 items-center'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" className='mb-[3px]' height="12" fill="none" viewBox="0 0 13 13">

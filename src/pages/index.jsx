@@ -15,18 +15,14 @@ import Card from "@/components/Cards";
 import useWindowWidth from "@/components/WindowWidth";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
-import { useRouter } from "next/router";
 
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 
-export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featuredProducts_, reviews }) {
+export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featuredProducts_ }) {
 
 
-
-  const router = useRouter();
-  const { query } = router;
 
 
   const homePageData = pageData_?.data?.pages?.nodes[0] ?? [];
@@ -34,31 +30,7 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
 
 
-
   const { setThemeLayout } = useThemeContext()
-
-
-
-  const toCapitalize = (str) => {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  };
-
-
-  const filteredProducts = featuredProducts_
-    .filter(product => product?.acf?.featured === true) // Filter for featured products
-    .map(product => ({
-      ...product,
-      reviews: reviews || [], // Add the reviews array
-    }));
-
-
-
-
-  //console.log(filteredProducts)
-
-
-
 
 
   const chocolate = useRef();
@@ -716,24 +688,23 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                 <h2 className="text-[16px] uppercase font-semibold mb-[30px]">Featured products</h2>
                 <div className="slider-container slider-featured-items mt-[30px]">
 
+
+
                   <Slider {...featuredProductsSlider}>
 
-                    {filteredProducts.map((item, key) => {
+  {featuredProducts_ && featuredProducts_
+                .filter(item => item?.acf?.featured === true) // Filter for items with show_in_menu true
+                .map((item, index) => (
+                 <>
+<Card
+                 key={index}
+                 theme="chocolates"
+                 item={item}
+            />
 
-                      const filteredReviews = item.reviews.filter(review => parseInt(review.acf.product_id, 10) === item?.id);
-
-                      return (
-
-                        <Card
-                          item={item}
-                          review={filteredReviews}  // Pass the matching reviews
-                          theme="chocolates"
-                        />
-
-                      );
-                    })}
-
-  </Slider>
+              </>
+                ))}
+                  </Slider>
                 </div>
               </div>
             </div>
@@ -896,10 +867,9 @@ export async function getStaticProps() {
     const homeTwoData_ = await homeTwoDataResponse.json();
 
     // Fetch featured products
-
-    const featuredProducts = await axios.get(`${frontendUrl}/api/products`);
-
-    const reviewsData = await axios.get(`${frontendUrl}/api/reviews`);
+ 
+      const featuredProducts = await axios.get(`${frontendUrl}/api/products`);
+   
 
     return {
       props: {
@@ -907,7 +877,6 @@ export async function getStaticProps() {
         homeTwoData_,
         pageDataAbout_,
         featuredProducts_: featuredProducts.data,
-        reviews: reviewsData.data,
       },
       revalidate: 60, // Revalidate every 60 seconds
     };
@@ -919,7 +888,6 @@ export async function getStaticProps() {
         homeTwoData_: null,
         pageDataAbout_: null,
         featuredProducts_: null,
-        reviews: null
       },
       revalidate: 60, // Optional: still allow revalidation even on error
     };
