@@ -23,7 +23,7 @@ export default function Footer({ page, initialData }) {
   const { themeLayout, setThemeLayout } = useThemeContext()
 
 
-
+  const currentTheme =   themeLayout.toString().toLowerCase()
 
 
   const FilteredCategories = () => {
@@ -42,8 +42,8 @@ export default function Footer({ page, initialData }) {
     return (
       sortedCategories.map((item, index) => (
         <>
-          <div className="">
-            <h4 className="text-[15px] font-semibold uppercase mb-[24px]">{item?.title?.rendered}</h4>
+          <div className={`[&>*]:text-${currentTheme}-100`}>
+            <h4  className={`text-${currentTheme}-100 text-[15px] font-semibold uppercase mb-[24px]`}>{item?.title?.rendered}</h4>
             <ul className="[&>*]:text-[14px] grid gap-[12px] [&>*]:transition-all capitalize">
               {dataSubCategory && dataSubCategory
                 .filter(item => item?.acf?.show_in_menu === true) // Filter for items with show_in_menu true
@@ -52,13 +52,13 @@ export default function Footer({ page, initialData }) {
 
                     {/* {console.log(item?.acf?.main_cat[0]?.post_name)} */}
    <Link
-                      // onClick={() => {
-                      //   setThemeLayout(mainCategory);
-                      // }}
+                      onClick={() => {
+                        setThemeLayout(item?.acf?.main_cat[0]?.post_name?.replace(/-/g, '-').toLowerCase());
+                      }}
                       aria-label={item?.title?.rendered}
                       title={item?.title?.rendered}
                       href={`/${item?.acf?.main_cat[0]?.post_name?.replace(/-/g, '-').toLowerCase()}?sub_categories=${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
-                      className="hover:opacity-50"
+                      className={`text-${currentTheme}-100 hover:opacity-50`}
                     >
                       {item?.title?.rendered?.replace(/-/g, ' ')}
                     </Link>
@@ -154,7 +154,7 @@ export default function Footer({ page, initialData }) {
             aria-label="facebook"
             title="facebook"
             href={contactData.facebook == null ? '#' : contactData.facebook}
-            className="hover:opacity-50"
+            className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
             target="_blank"
           >
             facebook
@@ -166,7 +166,7 @@ export default function Footer({ page, initialData }) {
             aria-label="instagram"
             title="instagram"
             href={contactData.instagram == null ? '#' : contactData.instagram}
-            className="hover:opacity-50"
+            className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
             target="_blank"
           >
             instagram
@@ -177,7 +177,7 @@ export default function Footer({ page, initialData }) {
             aria-label="snapchat"
             title="snapchat"
             href={contactData.snapchat == null ? '#' : contactData.snapchat}
-            className="hover:opacity-50"
+            className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
             target="_blank"
           >
             snapchat
@@ -420,7 +420,7 @@ export default function Footer({ page, initialData }) {
 
   function normalFooter() {
     return (<>
-      <footer className={`container border-t border-black border-solid md:py-[70px] py-[50px] lg:block hidden`}>
+      <footer className={`container border-t border-${currentTheme}-100 border-solid md:py-[70px] py-[50px] lg:block hidden`}>
         <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid gap-[50px]">
           <div className="md:flex md:justify-between md:gap-0 grid grid-cols-2 gap-[30px]">
             <div className=" ">
@@ -536,18 +536,18 @@ export default function Footer({ page, initialData }) {
 
   function catFooter() {
     return (<>
-      <footer className={`container border-t border-black border-solid md:py-[70px] py-[50px] lg:block hidden`}>
+      <footer className={`container border-t border-${currentTheme}-100 border-solid md:py-[70px] py-[50px] lg:block hidden`}>
         <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid gap-[50px]">
           <div className="md:flex md:justify-between md:gap-0 grid grid-cols-2 gap-[30px]">
             <div className=" ">
-              <h4 className="text-[15px] font-semibold uppercase mb-[24px]">SITEMAP</h4>
+              <h4 className={`text-[15px] font-semibold uppercase mb-[24px] text-${currentTheme}-100`}>SITEMAP</h4>
               <ul className="[&>*]:text-[14px] grid gap-[12px] [&>*]:transition-all capitalize">
                 <li>
                   <Link
                     aria-label="Home"
                     title="Home"
                     href="/"
-                    className="hover:opacity-50"
+                    className={`hover:opacity-50 text-${currentTheme}-100`}
                   >
                     Home
                   </Link>
@@ -558,7 +558,7 @@ export default function Footer({ page, initialData }) {
                     aria-label="About"
                     title="About"
                     href="/about"
-                    className="hover:opacity-50"
+                    className={`hover:opacity-50 text-${currentTheme}-100`}
                   >
                     About
                   </Link>
@@ -568,7 +568,7 @@ export default function Footer({ page, initialData }) {
                     aria-label="Careers"
                     title="Careers"
                     href="/careers"
-                    className="hover:opacity-50"
+                    className={`hover:opacity-50 text-${currentTheme}-100`}
                   >
                     Careers
                   </Link>
@@ -588,7 +588,7 @@ export default function Footer({ page, initialData }) {
                     aria-label="Contact"
                     title="Contact"
                     href="/contact"
-                    className="hover:opacity-50"
+                    className={`hover:opacity-50 text-${currentTheme}-100`}
                   >
                     Contact
                   </Link>
@@ -598,9 +598,9 @@ export default function Footer({ page, initialData }) {
             </div>
             {FilteredCategories()}
           </div>
-          <div className={`${page == 'home2' ? 'bg-events-900 border-events-100 [&>*]:text-events-100' : 'border-black'} flex justify-between border-t border-solid  py-[30px] [&>*]:text-[14px]`}>
+          <div className={`${page == 'home2' ? 'bg-events-900 border-events-100 [&>*]:text-events-100' : `border-${currentTheme}-100`} flex justify-between border-t border-solid  py-[30px] [&>*]:text-[14px]`}>
             <div >
-              <p>All rights reserved {year}</p>
+              <p className={`text-${currentTheme}-100`}>All rights reserved {year}</p>
             </div>
             <div >
               {socialLinks()}

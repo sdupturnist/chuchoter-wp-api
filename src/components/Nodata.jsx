@@ -4,11 +4,12 @@ export default function NoData({title}){
 
 
 
-    const {themeLayout} =  useThemeContext()
+  const { themeLayout } = useThemeContext();
+  const currentTheme = themeLayout.toString().toLowerCase()
 
 
     let color;
-    switch (themeLayout.toLowerCase()) {
+    switch (currentTheme) {
       case "white":
         color = "white";
         break;

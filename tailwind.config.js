@@ -70,7 +70,10 @@ module.exports = {
           900: '#eaf4f3',
         },
         black: '#c89a3f',
-        gray: '#c89a3f',
+        gray: {
+          100: '#FF0000', // Change gray.100 to red
+          DEFAULT: '#c89a3f',
+        },
         red: {
           DEFAULT: '#FF0000', // Set the default red color
         },
@@ -87,21 +90,21 @@ module.exports = {
     function ({ addComponents }) {
       addComponents({
         '.btn': {
-          backgroundColor: '#c89a3f', // Set button background to red
-          borderColor:'#c89a3f', 
-          color: '#FFFFFF', // Set button text color to white
+       //   backgroundColor: '#c89a3f',
+         // borderColor: '#c89a3f',
+         // color: '#FFFFFF',
           '&:hover': {
-            backgroundColor: '#e1be64', // Darker red on hover
-             borderColor:'#e1be64', 
+            backgroundColor: '#fff',
+            borderColor: '#fff',
           },
         },
         '.btn-outline': {
-          backgroundColor: '#fff', // Set button background to red
-          borderColor:'#c89a3f', 
-          color: '#c89a3f', // Set button text color to white
+         /// backgroundColor: '#fff',
+         // borderColor: '#c89a3f',
+          color: '#c89a3f',
           '&:hover': {
-            backgroundColor: '#e1be64', // Darker red on hover
-             borderColor:'#e1be64', 
+            backgroundColor: '#fff',
+            borderColor: '#fff',
           },
         },
       });

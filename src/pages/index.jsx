@@ -401,6 +401,13 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
               page="home2"
               theme='chocolate'
             />
+            <h2 className="text-red-600">
+            search
+            seo
+            full check
+            arabci rtl
+            api change with trasalation
+            </h2>
             <div className="wrpr sm:pt-[100px] pt-[80px]">
               <Images
                 width={190}

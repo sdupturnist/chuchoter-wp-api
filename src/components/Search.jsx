@@ -11,6 +11,7 @@ export default function SearchBox({ theme, page }) {
     const { themeLayout } = useThemeContext()
     const [searchTerm, setSearchTerm] = useState('');
 
+    const currentTheme =   themeLayout.toString().toLowerCase()
 
     const [isSearchVisible, setSearchVisible] = useState(false);
     const searchRef = useRef(null);
@@ -78,7 +79,7 @@ export default function SearchBox({ theme, page }) {
 
 
     let color2;
-    switch (themeLayout.toLowerCase()) {
+    switch (currentTheme) {
         case "white":
             color2 = "white";
             break;
@@ -111,7 +112,7 @@ export default function SearchBox({ theme, page }) {
                         <button
                             aria-label="Search"
                             title="Search"
-                            className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none"
+                            className="btn btn-link  !bg-transparent !border-none"
                             onClick={toggleSearchBox}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="none" viewBox="0 0 18 19">
@@ -166,7 +167,7 @@ export default function SearchBox({ theme, page }) {
                         <button
                             aria-label="Search"
                             title="Search"
-                            className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none"
+                            className="btn btn-link !bg-transparent !border-none"
                             onClick={toggleSearchBox}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="none" viewBox="0 0 18 19">
@@ -220,7 +221,7 @@ export default function SearchBox({ theme, page }) {
                             <button
                                 aria-label="Search"
                                 title="Search"
-                                className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none lg:flex hidden"
+                                className="btn btn-link  !bg-transparent !border-none lg:flex hidden"
                                 onClick={toggleSearchBox}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="none" viewBox="0 0 18 19">
@@ -236,7 +237,7 @@ export default function SearchBox({ theme, page }) {
                             <button
                                 aria-label="Search"
                                 title="Search"
-                                className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none lg:hidden"
+                                className="btn btn-link  !bg-transparent !border-none lg:hidden"
                                 onClick={toggleSearchBox}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="none" viewBox="0 0 18 19">
@@ -253,10 +254,10 @@ export default function SearchBox({ theme, page }) {
                     }
                     {isSearchVisible && (
                         <div ref={searchRef} className="search-box sm:relative sm:top-0 sm:right-0 sm:left-0 fixed left-[20px] right-[20px] top-[20px]">
-                            <label className="input  placeholder:text-black border-black flex items-center gap-2 border-${themeLayout.toLowerCase()}-100">
+                            <label className="input  placeholder:text-black border-black flex items-center gap-2 border-${currentTheme}-100">
                                 <input
                                     type="text"
-                                    className={`grow bg-white text-${themeLayout.toLowerCase()}-100`}
+                                    className={`grow bg-white text-${currentTheme}-100`}
                                     placeholder="Search"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -289,7 +290,7 @@ export default function SearchBox({ theme, page }) {
                     <button
                         aria-label="Search"
                         title="Search"
-                        className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none"
+                        className="btn btn-link  !bg-transparent !border-none"
                         onClick={toggleSearchBox}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" fill="none" viewBox="0 0 18 19">

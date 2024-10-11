@@ -24,6 +24,7 @@ export default function Layout({ children, type, page, header, initialData }) {
   const contactData = dataContact && dataContact?.data?.allContactInfo?.nodes[0]?.contactInfoAcf
 
   const { themeLayout, setThemeLayout } = useThemeContext()
+  const currentTheme =   themeLayout.toString().toLowerCase()
 
   const { dataCategory } = CategoryData(initialData);
   const { dataSubCategory } = SubCategoryData(initialData);
@@ -200,11 +201,10 @@ export default function Layout({ children, type, page, header, initialData }) {
 
 
 
- 
-  
+
 
   let color;
-  switch (themeLayout.toLowerCase()) {
+  switch (currentTheme) {
     case "white":
       color = "white";
       break;
@@ -322,7 +322,7 @@ export default function Layout({ children, type, page, header, initialData }) {
 
       {/* ALL POPUP MODALS START HERE */}
       {showModal &&
-        <div className="fixed top-0 left-0 right-0  z-[99] after:content-['']  after:fixed after:bg-black after:bg-opacity-80 after:left-0 after:right-0 after:top-0 after:bottom-0 after:z-[-1]">
+        <div className="fixed top-0 left-0 right-0  z-[99] after:content-['']  after:fixed after:bg-white after:bg-opacity-60 after:left-0 after:right-0 after:top-0 after:bottom-0 after:z-[-1]">
 
 
 
@@ -403,7 +403,7 @@ export default function Layout({ children, type, page, header, initialData }) {
           {modalFor == 'filter' ? <div className="container px-0">
             <div className="bg-white w-[280px] h-screen">
               <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
-                <span className="uppercase block font-semibold text-[14px] leading-[0] pt-[14px]">FILTER</span>
+                <span className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>FILTER</span>
                 <button aria-label='Home' title='Home' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none p-0 h-auto min-h-0" onClick={closeModal}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 14 14">
                     <path stroke={color} strokeLinecap="round" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
@@ -417,7 +417,7 @@ export default function Layout({ children, type, page, header, initialData }) {
                 <FilterProducts />
               </div>
               <div className="px-[16px] pt-[20px] pb-[24px]  border-t border-gray-200 border-solid">
-                <button style={{ background: color }} className={`btn rounded-[6px] w-full  text-white hover:border-${themeLayout.toLowerCase()}-100`} onClick={closeModal}>Apply</button>
+                <button style={{ background: color }} className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`} onClick={closeModal}>Apply</button>
               </div>
             </div>
           </div>

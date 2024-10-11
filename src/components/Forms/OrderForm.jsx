@@ -465,7 +465,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                 }
                 <div>
 
-                    <button title="Submit" aria-label="Submit" type="submit" className="btn btn-neutral bg-black rounded-[6px] w-full min-h-[55px]" onClick={submitEmail}>
+                    <button title="Submit" aria-label="Submit" type="submit" className="btn rounded-[6px] w-full min-h-[55px]" onClick={submitEmail}>
                         <span className={buttonLabel == false ? "hidden" : ""}>
                             Proceed to order
                         </span>

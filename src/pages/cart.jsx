@@ -20,9 +20,8 @@ export default function Cart({ pageData_, allProducts_ }) {
   const { cartItems } = useCartContext();
 
 
-  console.log(cartItems)
 
-  const filteredProducts = allProducts_.filter(product =>
+  const filteredProducts = allProducts_?.data?.filter(product =>
     cartItems && cartItems.some(item => item.id === product.id)
   );
 

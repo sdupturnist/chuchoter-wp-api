@@ -7,6 +7,7 @@ export default function Cart({ type, size, itemid, price, name }) {
     const { cartItems, setCartItems } = useCartContext();
     const { themeLayout } = useThemeContext();
     const [quantity, setQuantity] = useState(1);
+    const currentTheme = themeLayout.toString().toLowerCase()
 
     // Memoize safeCartItems to avoid unnecessary recalculations
     const safeCartItems = useMemo(() => Array.isArray(cartItems) ? cartItems : [], [cartItems]);
@@ -92,7 +93,7 @@ export default function Cart({ type, size, itemid, price, name }) {
 
     // Determine button color based on theme
     let color;
-    switch (themeLayout.toLowerCase()) {
+    switch (currentTheme) {
         case "white":
             color = "white";
             break;
@@ -132,9 +133,9 @@ export default function Cart({ type, size, itemid, price, name }) {
             cartType = (
                 <button
                     onClick={handleCartAction}
-                    className="btn btn-outline w-auto border-gray-300 border border-solid rounded-[4px] hover:bg-white hover:border-gray-300 hover:text-black"
+                    className={`border-${currentTheme}-100 text-${currentTheme}-100 btn btn-outline w-auto border-gray-300 border border-solid rounded-[4px] hover:bg-white hover:border-gray-300 hover:text-black`}
                 >
-           <PlusIcon className="text-black size-4"/>
+                    <PlusIcon className={`text-${currentTheme}-100 size-4`} />
                     {isInCart ? 'Remove' : 'Add'}
                 </button>
             );
@@ -147,19 +148,19 @@ export default function Cart({ type, size, itemid, price, name }) {
                         className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
                         onClick={CartMinus}
                     >
-                   <MinusIcon className="text-black size-5"/>
+                        <MinusIcon className="text-black size-5" />
                     </button>
                     <input
                         type="number"
                         value={quantity}
                         className="border-none sm:w-full max-w-[50px] text-center !focus:border-none min-h-[55px]"
-                       readOnly
+                        readOnly
                     />
                     <button
                         className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
                         onClick={CartPlus}
                     >
-                       <PlusIcon className="text-black size-5"/>
+                        <PlusIcon className="text-black size-5" />
                     </button>
                 </div>
             );

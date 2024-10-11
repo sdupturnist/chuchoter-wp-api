@@ -77,16 +77,13 @@ export default function AllProducts({ products, currentPage, totalCount }) {
           {!pageData_?.data?.subCategorie?.data[0]?.attributes?.seo && (
             <Metatags seo={pageDataMainCatSeo_?.data?.mainCategories?.data[0]?.attributes?.seo} />
           )} */}
-
-
       <Layout page="category">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[30px] lg:pt-[30px] xl:pb-[70px] pb-[20px] overflow-hidden">
-
-
           <PageHeader
             type="cat"
             catcount={5}
             title={query.category.replace(/-/g, ' ')}
+            mainCat={query.category}
             data={allProducts}
           />
 
@@ -94,9 +91,6 @@ export default function AllProducts({ products, currentPage, totalCount }) {
             <>
               <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
                 {products && allProducts.map((item, key) => {
-
-
-
                   return (
                     <div className="w-full" key={key}>
                       <Card
@@ -108,15 +102,18 @@ export default function AllProducts({ products, currentPage, totalCount }) {
                   );
                 })}
               </div>
-              <div className="text-center pb-[100px] lg:pb-[0]">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
 
+              {allProducts.length > productsPerPage - 3 ?
+                <div className="text-center pb-[100px] lg:pb-[0]">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+                : null
+              }
 
-              </div>
             </>
           ) : (
             <NoData title={`Sorry, no any ${query.category} available.`} />

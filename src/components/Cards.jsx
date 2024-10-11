@@ -15,6 +15,7 @@ const review = item?.acf?.user_reviews
 
 
     const { themeLayout } = useThemeContext();
+    const currentTheme =  themeLayout.toString().toLowerCase()
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -30,7 +31,7 @@ const review = item?.acf?.user_reviews
 
 
     let color;
-    switch (themeLayout.toLowerCase()) {
+    switch (currentTheme) {
         case "white":
             color = "white";
             break;
@@ -73,7 +74,8 @@ const review = item?.acf?.user_reviews
                 ) : (
                     <>
                         <AOSInit />
-                       <div data-aos="fade-up" className='grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2' data-id={item?.id ?? null} data-review={review?.length}>
+                        
+                       <div data-aos="fade-up" className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2`} data-id={item?.id ?? null} data-review={review?.length}>
                           <div className='relative overflow-hidden'>
                            
                                
@@ -100,16 +102,16 @@ const review = item?.acf?.user_reviews
                             <div className='grid gap-[7px] mt-[2px]'>
 
    <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
-                                    <h4 className='text-[14px] text-black'>{item?.name ?? null}</h4>
+                                    <h4 className={`text-${currentTheme}-100 text-[14px]`}>{item?.name ?? null}</h4>
                                 </Link>
                                 {item?.acf?.sub_categories && [0]?.sub_categories?.data[0]?.attributes?.slug}
                                 {!desc == true ?
-                                    <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.sub_categories && item?.acf?.sub_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
+                                    <span className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`} >{item?.acf?.sub_categories && item?.acf?.sub_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
                                     :
                                     null
                                 }
                                 {type == true ?
-                                    <p className='text-[12px] leading-[20px] text-black text-opacity-80'> {truncateWords(item?.short_description ?? null ?? null, 20)}</p>
+                                    <p className={`text-${currentTheme}-100 text-[12px] leading-[20px] text-opacity-80`}> {truncateWords(item?.short_description ?? null ?? null, 20)}</p>
                                     :
                                     null
                                 }
@@ -126,7 +128,7 @@ const review = item?.acf?.user_reviews
                                 : null
                             }
 
-                            <span className='flex gap-[8px]'>
+                            <span className={`text-${currentTheme}-100 flex gap-[8px]`}>
                                 {item?.sale_price && <del className='text-[14px] font-light'>
                                     {item?.regular_price}  QR
                                 </del>

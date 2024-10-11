@@ -22,6 +22,7 @@ export default function Nav({ theme, page, initialData }) {
   const { dataCategory } = CategoryData(initialData);
 
 
+  const currentTheme =   themeLayout.toString().toLowerCase()
 
 
   // TOGGLE MENU
@@ -95,7 +96,7 @@ export default function Nav({ theme, page, initialData }) {
 
 
   let headerColor;
-  switch (themeLayout.toLowerCase()) {
+  switch (currentTheme) {
     case "white":
       headerColor = "white";
       break;
@@ -119,7 +120,7 @@ export default function Nav({ theme, page, initialData }) {
 
 
   let headerColorLogo;
-  switch (themeLayout.toLowerCase()) {
+  switch (currentTheme) {
     case "white":
       headerColorLogo = "white";
       break;
@@ -188,10 +189,10 @@ export default function Nav({ theme, page, initialData }) {
                         aria-label={item?.title?.rendered}
                         title={item?.title?.rendered}
                         href={`/${item?.title?.rendered.toLowerCase()}`}
-                        onClick={() => setThemeLayout('gray')}
+                        onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
                         style={{ color: headerColor }}
                     >
-                        {item?.title?.rendered}
+                     {item?.title?.rendered}
                     </Link>
                 </li>
             ))
@@ -204,7 +205,7 @@ export default function Nav({ theme, page, initialData }) {
   function catHeader() {
     return (
       <>
-        <header className={`w-full ${themeLayout == 'black' ? 'bg-black' : `theme-${themeLayout.toLowerCase()}-header-mobile`} sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
+        <header className={`w-full ${themeLayout == 'black' ? 'bg-black' : `theme-${currentTheme}-header-mobile`} sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
           <div className="container">
             <div className='flex items-center justify-between'>
               <Logo url={'/'} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
@@ -232,7 +233,7 @@ export default function Nav({ theme, page, initialData }) {
             <p className='text-[17px] font-light'>Explore our {themeLayout}</p>
           </div>}
         </header>
-        <header className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-gray-200 bg-white lg:block hidden`} >
+        <header className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-${currentTheme}-100 bg-white lg:block hidden`} >
           <div className="container">
             <div className='flex items-center justify-between'>
               <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColor} />

@@ -31,6 +31,16 @@ export default function Contact({ initialData, pageData_ }) {
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%]">
+
+
+          {/* <PageHeader
+            type="cat"
+            catcount={5}
+            title={query.category.replace(/-/g, ' ')}
+            mainCat={query.category}
+            data={allProducts}
+          /> */}
+          
             <PageHeader title={pageData_ && pageData.title} />
 
             <div className="md:flex grid [&>*]:text-gray-600 lg:mb-[70px] sm:py-[50px] pb-[30px] justify-between lg:gap-[100px] gap-[50px]">

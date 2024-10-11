@@ -1,6 +1,12 @@
+import { useThemeContext } from "@/context/themeContext";
+
+
+
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
+  const { themeLayout } = useThemeContext();
+  const currentTheme = themeLayout[0].toString().toLowerCase()
 
   return (
   <div className="join mx-auto">
@@ -8,7 +14,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <button
           key={page}
           onClick={() => onPageChange(page)}
-          className={`join-item btn bg-transparent border-0 shadow-none hover:!bg-transparent hover:opacity-30 text-black ${page === currentPage ? 'text-opacity-30' : ''}`}
+          className={`border-${currentTheme}-100 text-${currentTheme}-100 join-item btn bg-transparent border-0 shadow-none hover:!bg-transparent hover:opacity-30  ${page === currentPage ? 'text-opacity-30' : ''}`}
         >
           {page}
         </button>
