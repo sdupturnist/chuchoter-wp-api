@@ -200,7 +200,8 @@ export default function Layout({ children, type, page, header, initialData }) {
 
 
 
-
+ 
+  
 
   let color;
   switch (themeLayout.toLowerCase()) {

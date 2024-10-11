@@ -40,14 +40,6 @@ export default function ProductSingle({ product, test, reviews }) {
 
 
 
-
-  // useEffect(() => {
-  //   // Redirect to 404 page if product ID is not available
-  //   if (product && !product?.id) {
-  //     router.push('/404');
-  //   }
-  // }, [product, router]);
-
   // Update product context
   useEffect(() => {
     setProductId(product?.id ?? null);
@@ -57,21 +49,7 @@ export default function ProductSingle({ product, test, reviews }) {
 
 
 
-  // // Initialize cartItems from localStorage
-  // useEffect(() => {
-  //   const storedItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-  //   if (Array.isArray(storedItems)) {
-  //     setCartItems(storedItems);
-  //   } else {
-  //     setCartItems([]);
-  //   }
-  // }, [setCartItems]);
 
-
-  // // Handle rendering while redirecting
-  // if (product&& !product?.data?.shops?.data[0]?.id) {
-  //   return null; // Render nothing while redirecting
-  // }
 
   const images = product?.images.map((item) => ({
     original: item?.src,
@@ -194,9 +172,9 @@ export default function ProductSingle({ product, test, reviews }) {
                     <div className="skeleton h-4 w-full"></div>
                     <div className="skeleton h-4 w-full"></div>
                   </div>}
-                  <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.main_categories[0]?.post_name ?? null}</span>
+                  <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.sub_categories[0]?.post_name ?? null}</span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">{product?.name ?? null}</h1>
-                  {reviews.length > 0 ? <span className='flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]'>
+                {filteredReviews.length > 0 ? <span className='flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" className='mb-[1px]' height="16" fill="none" viewBox="0 0 13 13">
                       <path fill="#E7B66B" d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z" />
                     </svg>
@@ -243,7 +221,7 @@ export default function ProductSingle({ product, test, reviews }) {
                   </span>}
 
                   {
-                    !reviews.length &&
+                    !filteredReviews.length &&
                     <button
                       className="btn border border-black text-black border-solid bg-white sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                       onClick={openAddReviewModal}
@@ -313,7 +291,7 @@ export default function ProductSingle({ product, test, reviews }) {
                 }
 
 
-                {reviews.length > 0 &&
+                {filteredReviews.length > 0 &&
                   <>
                     <input type="radio"
                       defaultChecked={!product.Includes || !product.Description}
@@ -339,7 +317,7 @@ export default function ProductSingle({ product, test, reviews }) {
               {product.content ||
                 product?.acf?.includes
                 ||
-                reviews.length > 0
+                filteredReviews.length > 0
                 ? <button
                   className="btn border border-black border-solid bg-black sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                   onClick={openAddReviewModal}

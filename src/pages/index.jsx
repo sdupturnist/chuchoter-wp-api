@@ -24,7 +24,7 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
 
 
-
+  const feaProducts = featuredProducts_?.data ?? [];
   const homePageData = pageData_?.data?.pages?.nodes[0] ?? [];
   const homePageTwoData = homeTwoData_?.data?.allStoreSectionsAcf?.nodes ?? [];
 
@@ -692,7 +692,7 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
                   <Slider {...featuredProductsSlider}>
 
-  {featuredProducts_ && featuredProducts_
+  {featuredProducts_ && feaProducts
                 .filter(item => item?.acf?.featured === true) // Filter for items with show_in_menu true
                 .map((item, index) => (
                  <>

@@ -1,11 +1,13 @@
 import { useModalContext } from "@/context/modalContext";
 import { useThemeContext } from "@/context/themeContext";
+import { CategoryData } from "@/hooks/categoryData";
+import { SubCategoryData } from "@/hooks/subCategoryData";
 import Link from "next/link";
 
 
 
 
-export default function PageHeader({ title, type, data }) {
+export default function PageHeader({ title, type, data, initialData }) {
 
 
 
@@ -14,7 +16,8 @@ export default function PageHeader({ title, type, data }) {
     const { themeLayout } = useThemeContext();
     const { setModalFor, setShowModal } = useModalContext();
 
-
+    const { dataCategory } = CategoryData(initialData);
+    const { dataSubCategory } = SubCategoryData(initialData);
 
 
     const getTotalSubcategoryCount = (data) => {
@@ -34,39 +37,31 @@ export default function PageHeader({ title, type, data }) {
     const totalSubcategoryCount = getTotalSubcategoryCount(data);
 
 
-    const FilteredCategories = (themeLayout) => {
-      
-      // Extract and filter subcategories
-    const subCategories = data?.acf?.sub_categories[0]?.post_name(shop =>
-        shop.attributes.sub_categories.data.map(cat => cat.attributes.slug)
-    );
-
-    // Remove duplicates by converting to a Set
-    const uniqueSubCategories = [...new Set(subCategories)];
-
-    // Limit to the first 4 unique subcategories
-    const limitedSubCategories = uniqueSubCategories.slice(0, 3);
-
-    return (
-      
-            limitedSubCategories.length > 0 ? (
-                limitedSubCategories.map((category, index) => (
-                    <Link
-                        key={index}
-                        aria-label={category.replace(/-/g, ' ')}
-                        className={`btn bg-transparent hover:bg-${themeLayout.toLowerCase()}-100 hover:border-${themeLayout.toLowerCase()}-100 text-${themeLayout.toLowerCase()}-100 hover:text-white border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                        title={category.replace(/-/g, ' ')}
-                        href={`/${category.replace(/-/g, '-').toLowerCase()}`}
-                    >
-                        {category.replace(/-/g, ' ')}
-                    </Link>
-                ))
-            ) : (
-                null
-            )
-      
-    );
+    const FilteredCategories = (themeLayout, mainCategoryTitle) => {
+        // Log the incoming data for debugging
+ 
+    
+        return dataSubCategory && dataSubCategory
+            .filter(item => {
+                const showInMenu = item?.acf?.show_in_menu === true;
+                console.log(item?.acf?.main_cat?.some(cat => cat.post_title.toLowerCase()))
+                //const hasMatchingTitle = item?.acf?.main_cat?.some(cat => cat.post_title.toLowerCase() === mainCategoryTitle.toLowerCase()); // Case-insensitive comparison
+                const hasMatchingTitle = "Chocolates" === "Chocolates"; // Case-insensitive comparison
+                return showInMenu && hasMatchingTitle;
+            })
+            .map((item, index) => (
+                <Link
+                    key={index}
+                    aria-label={item?.title?.rendered}
+                    title={item?.title?.rendered}
+                    className={`btn bg-transparent hover:bg-${themeLayout.toLowerCase()}-100 hover:border-${themeLayout.toLowerCase()}-100 text-${themeLayout.toLowerCase()}-100 hover:text-white border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                    href={`/${item?.acf?.main_cat[0]?.post_name?.toLowerCase()}?sub_categories=${item?.title?.rendered?.toLowerCase()}`}
+                >
+                    {item?.title?.rendered?.replace(/-/g, ' ')}
+                </Link>
+            ));
     };
+    
 
     
 
@@ -148,6 +143,9 @@ export default function PageHeader({ title, type, data }) {
     switch (type) {
         case 'cat':
             pageHeaderType = (
+
+
+                
                 <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
                     <div className="xl:w-[50%] hidden lg:block">
                         <h1 className={`font-primary first-letter:uppercase text-[40px] text-${themeLayout.toLowerCase()}-100`}>{title}</h1>
@@ -167,7 +165,9 @@ export default function PageHeader({ title, type, data }) {
                                 all
                             </Link> */}
                             <div className="sm:flex hidden gap-2">
-                            {FilteredCategories(themeLayout)}
+                           
+                            {FilteredCategories('light', 'Chocolates')}
+                            {/* {FilteredCategories(themeLayout)} */}
                             </div>
                             <div className="dropdown dropdown-hover sm:dropdown-end dropdown-start  rounded-[6px] hover:bg-transparent !hover:text-white">
                                 <div tabIndex={0} role="button" className={`btn px-[20px] bg-transparent text-${themeLayout}-100 hover:bg-white hover:border-gray-100 !hover:text-white border border-solid rounded-[6px] !capitalize !font-regular !text-[13px] px-[10px]`}>

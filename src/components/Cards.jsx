@@ -104,7 +104,7 @@ const review = item?.acf?.user_reviews
                                 </Link>
                                 {item?.acf?.sub_categories && [0]?.sub_categories?.data[0]?.attributes?.slug}
                                 {!desc == true ?
-                                    <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
+                                    <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.sub_categories && item?.acf?.sub_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
                                     :
                                     null
                                 }
@@ -131,9 +131,10 @@ const review = item?.acf?.user_reviews
                                     {item?.regular_price}  QR
                                 </del>
                                 }
+                               
                                 <span className='text-[14px] font-semibold'>
                                     {item?.sale_price || item?.price}
-                                    {!item?.sale_price || !item?.price && <span>{item?.regular_price ?? null}</span>} QR {item?.attributes[0]?.options[0] && <span className='text-[11px] font-light uppercase '>/ {item?.attributes[0]?.options[0]}</span>}
+                                    {!item?.sale_price || !item?.price && <span>{item?.regular_price ?? null}</span>} QR {item?.acf?.unit && <span className='text-[11px] font-light uppercase '>/ {item?.acf?.unit}</span>}
                                 </span>
                             </span>
                             <div className='xl:hidden mt-[4px]'>
@@ -236,7 +237,7 @@ const review = item?.acf?.user_reviews
                                 </Link>
                                 {item?.acf?.sub_categories && [0]?.sub_categories?.data[0]?.attributes?.slug}
                                 {!desc == true ?
-                                    <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
+                                   <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.sub_categories && item?.acf?.sub_categories[0]?.post_title?.replace(/-/g, ' ')}</span>
                                     :
                                     null
                                 }
@@ -264,7 +265,7 @@ const review = item?.acf?.user_reviews
                                 }
                                 <span className='text-[14px] font-semibold'>
                                     {item?.sale_price || item?.price}
-                                    {!item?.sale_price || !item?.price && <span>{item?.regular_price ?? null}</span>} QR {item?.attributes[0]?.options[0] && <span className='text-[11px] font-light uppercase '>/ {item?.attributes[0]?.options[0]}</span>}
+                                    {!item?.sale_price || !item?.price && <span>{item?.regular_price ?? null}</span>} QR {item?.acf?.unit && <span className='text-[11px] font-light uppercase '>/ {item?.acf?.unit}</span>}
                                 </span>
                             </span>
                             <div className='xl:hidden mt-[4px]'>

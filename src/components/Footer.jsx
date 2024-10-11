@@ -49,13 +49,15 @@ export default function Footer({ page, initialData }) {
                 .filter(item => item?.acf?.show_in_menu === true) // Filter for items with show_in_menu true
                 .map((item, index) => (
                   <li key={index}>
-                    <Link
-                      onClick={() => {
-                        setThemeLayout(mainCategory);
-                      }}
+
+                    {/* {console.log(item?.acf?.main_cat[0]?.post_name)} */}
+   <Link
+                      // onClick={() => {
+                      //   setThemeLayout(mainCategory);
+                      // }}
                       aria-label={item?.title?.rendered}
                       title={item?.title?.rendered}
-                      href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
+                      href={`/${item?.acf?.main_cat[0]?.post_name?.replace(/-/g, '-').toLowerCase()}?sub_categories=${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
                       className="hover:opacity-50"
                     >
                       {item?.title?.rendered?.replace(/-/g, ' ')}
@@ -113,12 +115,12 @@ export default function Footer({ page, initialData }) {
                     <li key={index}>
 
                       <Link
-                        onClick={() => {
-                          setThemeLayout(mainCategory);
-                        }}
+                        // onClick={() => {
+                        //   setThemeLayout(mainCategory);
+                        // }}
                         aria-label={item?.title?.rendered}
                         title={item?.title?.rendered}
-                        href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
+                        href={`/${item?.acf?.main_cat[0]?.post_name?.replace(/-/g, '-').toLowerCase()}?sub_categories=${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
                         className="hover:opacity-50"
                       >
                         {item?.title?.rendered?.replace(/-/g, ' ')}

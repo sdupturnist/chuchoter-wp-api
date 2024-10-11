@@ -18,7 +18,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   const { query } = router;
 
 
-  const allProducts = products ?? [];
+  const allProducts = products?.data ?? [];
   const totalProducts = totalCount; // Replace this with actual total products count from your API if available
   const productsPerPage = 30; // This should match the per_page value used in the API call
   const totalPages = Math.ceil(totalProducts / productsPerPage);
@@ -36,13 +36,13 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   };
 
 
-  const filteredProducts = products
-  .filter(product =>
-    product.acf.main_categories.some(category => category.post_title === toCapitalize(query.category))
-  );
+  // const filteredProducts = products
+  // .filter(product =>
+  //   product.acf.main_categories.some(category => category.post_title === toCapitalize(query.category))
+  // );
 
 
-  
+
   //console.log(filteredProducts)
 
 
@@ -81,35 +81,32 @@ export default function AllProducts({ products, currentPage, totalCount }) {
 
       <Layout page="category">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[30px] lg:pt-[30px] xl:pb-[70px] pb-[20px] overflow-hidden">
-         
-         
+
+
           <PageHeader
-          type="cat"
-          catcount={5}
-          title={query.category.replace(/-/g, ' ')}
-          data={allProducts}
+            type="cat"
+            catcount={5}
+            title={query.category.replace(/-/g, ' ')}
+            data={allProducts}
           />
 
-          {filteredProducts.length > 0 ? (
+          {allProducts.length > 0 ? (
             <>
               <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
-              {filteredProducts.map((item, key) => {
-   
-
-
-    return (
-        <div className="w-full" key={key}>
-            <Card
-                type="cat"
-                item={item}
-                theme={themeLayout}
-            />
-        </div>
-    );
-})}
+                {products && allProducts.map((item, key) => {
 
 
 
+                  return (
+                    <div className="w-full" key={key}>
+                      <Card
+                        type="cat"
+                        item={item}
+                        theme={themeLayout}
+                      />
+                    </div>
+                  );
+                })}
               </div>
               <div className="text-center pb-[100px] lg:pb-[0]">
                 <Pagination
@@ -139,21 +136,30 @@ export async function getServerSideProps(context) {
   const { page = 1 } = context.query; // Get the page number from query parameters
 
   const minPrice = context.query.minPrice
-
+  const reviewVal = context.query.minReviewCount
+  const cat1 = context.query.category
+  const cat2 = context.query.sub_categories
 
   try {
     const res = await axios.get(`${frontendUrl}/api/products`, {
-      params: { 
-       page, 
-      per_page: 29,
-      min_price:minPrice,
-     reviews_count:0
-       }, 
+      params: {
+        page,
+        per_page: 29,
+        min_price: minPrice,
+        reviews_count: reviewVal,
+        main_categories: cat1,
+        sub_categories: cat2
+      },
     });
+
+
+    // https://demo.chuchoterqatar.com/wp-json/wc-custom/v1/products?reviews_count=0&min_price=0&page=1&per_page=1&sub_categories=flavours&main_categories=chocolates
+
+
 
     // Fetch total product count
     const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
-    
+
 
 
 
@@ -161,7 +167,8 @@ export async function getServerSideProps(context) {
       props: {
         products: res.data,
         currentPage: Number(page),
-        totalCount: resCount.data.totalCount, 
+        totalCount: resCount.data.totalCount,
+
       }
     };
 

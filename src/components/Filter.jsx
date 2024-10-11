@@ -1,6 +1,7 @@
 import { useThemeContext } from "@/context/themeContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { StarIcon } from '@heroicons/react/24/solid'
 
 export default function FilterProducts() {
   const router = useRouter();
@@ -147,15 +148,51 @@ export default function FilterProducts() {
               type="radio"
               className='radio w-[18px] h-[18px]'
               name="minReviewCount"
+              value="1"
+              checked={minReviewCount === 1}
+              onChange={handleReviewChange}
+            />
+           <div className="flex gap-[3px]">
+           <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+           </div>
+        </li>
+          <li className="flex justify-start items-center gap-2">
+            <input
+              type="radio"
+              className='radio w-[18px] h-[18px]'
+              name="minReviewCount"
+              value="2"
+              checked={minReviewCount === 2}
+              onChange={handleReviewChange}
+            />
+           <div className="flex gap-[3px]">
+           <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+           </div>
+          </li>
+          <li className="flex justify-start items-center gap-2">
+            <input
+              type="radio"
+              className='radio w-[18px] h-[18px]'
+              name="minReviewCount"
               value="3"
               checked={minReviewCount === 3}
               onChange={handleReviewChange}
             />
-            3
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="none" viewBox="0 0 69 13">
-              <path fill={color} d="m6.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35L.318 4.99l4.455-.368L6.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L20.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L34.5.5Z" />
-              <path fill="#E2DFDA" fill-opacity=".5" d="m48.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L48.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L62.5.5Z" />
-            </svg>
+            <div className="flex gap-[3px]">
+           <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+           </div>
           </li>
           <li className="flex justify-start items-center gap-2">
             <input
@@ -166,11 +203,13 @@ export default function FilterProducts() {
               checked={minReviewCount === 4}
               onChange={handleReviewChange}
             />
-            4
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="none" viewBox="0 0 69 13">
-              <path fill={color} d="m6.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35L.318 4.99l4.455-.368L6.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L20.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L34.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L48.5.5Z" />
-              <path fill="#E2DFDA" fill-opacity=".5" d="m62.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L62.5.5Z" />
-            </svg>
+            <div className="flex gap-[3px]">
+           <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black opacity-30"/>
+           </div>
           </li>
           <li className="flex justify-start items-center gap-2">
             <input
@@ -181,10 +220,13 @@ export default function FilterProducts() {
               checked={minReviewCount === 5}
               onChange={handleReviewChange}
             />
-            5
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="none" viewBox="0 0 69 13">
-              <path fill={color} d="m6.5.5 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35L.318 4.99l4.455-.368L6.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L20.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L34.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L48.5.5Zm14 0 1.727 4.123 4.455.368-3.388 2.917 1.027 4.35-3.82-2.32-3.821 2.32 1.026-4.35-3.388-2.917 4.455-.368L62.5.5Z" />
-            </svg>
+            <div className="flex gap-[3px]">
+           <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+            <StarIcon className="size-[20px] text-black"/>
+           </div>
           </li>
         </ul>
       </div>
