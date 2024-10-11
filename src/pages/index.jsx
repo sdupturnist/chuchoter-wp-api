@@ -402,11 +402,12 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
               theme='chocolate'
             />
             <h2 className="text-red-600">
-            search
-            seo
-            full check
-            arabci rtl
-            api change with trasalation
+            search<br/>
+            seo<br/>
+            full check<br/>
+            arabci rtl<br/>
+            api change with trasalation<br/>
+            remove console.log<br/>
             </h2>
             <div className="wrpr sm:pt-[100px] pt-[80px]">
               <Images
