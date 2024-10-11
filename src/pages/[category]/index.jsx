@@ -144,10 +144,10 @@ export async function getServerSideProps(context) {
   try {
     const res = await axios.get(`${frontendUrl}/api/products`, {
       params: { 
-        page, 
-        per_page: 29,
-        min_price:minPrice,
-        user_reviews: null, // Use user_reviews here
+       page, 
+      per_page: 29,
+      min_price:minPrice,
+     reviews_count:0
        }, 
     });
 

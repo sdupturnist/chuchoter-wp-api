@@ -1,6 +1,7 @@
 export const wordpressGraphQlApiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const wordpressRestApiUrl = process.env.NEXT_PUBLIC_API_REST_WP_URL;
 export const wordpressRestApiUrlWoocommerce = process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_URL;
+export const wordpressRestApiUrlWoocommerceCustom = process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_CUSTOM_URL;
 export const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
 export let frontendUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export let sitemapPerPage = process.env.NEXT_PUBLIC_ITEM_PER_SITEMAP || 500; //1000
