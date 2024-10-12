@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
+
+
 const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
@@ -14,30 +16,12 @@ export function LanguageProvider({ children }) {
   const toggleLanguage = () => {
     setLanguage((prev) => {
       const newLanguage = prev === 'en' ? 'ar' : 'en';
-      // Update the URL parameter
-      const params = new URLSearchParams(window.location.search);
-      if (newLanguage === 'ar') {
-        params.set('lang', 'ar');
-      } else {
-        params.delete('lang');
-      }
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({}, '', newUrl);
+  
       return newLanguage;
     });
   };
 
-  const updateUrlWithLanguage = (href) => {
-    const params = new URLSearchParams(window.location.search);
-    if (language === 'ar') {
-      params.set('lang', 'ar');
-    } else {
-      params.delete('lang');
-    }
-    const url = new URL(href, window.location.origin);
-    url.search = params.toString();
-    return url.toString();
-  };
+
 
   useEffect(() => {
     document.documentElement.setAttribute('lang', language);
@@ -50,7 +34,7 @@ export function LanguageProvider({ children }) {
   }, [language]);
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, updateUrlWithLanguage }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage }}>
       {children}
     </LanguageContext.Provider>
   );

@@ -10,6 +10,7 @@ import { CategoryData } from '@/hooks/categoryData';
 import SearchBox from './Search';
 import LanguageSwitch from './LangaugeSwitch';
 import { NavigationData } from '@/hooks/navigationData';
+import { useLanguageContext } from '@/context/LanguageContext';
 
 
 
@@ -20,6 +21,7 @@ export default function Nav({ theme, page, initialData }) {
   const { setModalFor, setShowModal } = useModalContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
+  const { language, toggleLanguage } = useLanguageContext();
 
 
   const { dataCategory } = CategoryData(initialData);
@@ -41,7 +43,7 @@ export default function Nav({ theme, page, initialData }) {
 
   const color = "#c89a3f"
 
-  console.log(dataNavigation)
+ // console.log(dataNavigation)
 
 
   function update() {
@@ -96,9 +98,10 @@ export default function Nav({ theme, page, initialData }) {
   };
 
 
-  function Navigations(color) {
+  function Navigations(color, language) {
     return (
       <>
+     
    <Link
           aria-label="Home"
           title="Home"
@@ -110,7 +113,7 @@ export default function Nav({ theme, page, initialData }) {
         >
           Home
         </Link>
-        {FilteredCategories(headerColor)}
+        {FilteredCategories(headerColor, language)}
         {dataNavigation && dataNavigation
           .filter(item => item?.acf?.visible_in_menu) // Filter based on visible_in_menu
           .sort((a, b) => {
@@ -124,7 +127,7 @@ export default function Nav({ theme, page, initialData }) {
                 <Link
                   aria-label={item?.title?.rendered}
                   title={item?.title?.rendered}
-                  href={item?.title?.rendered.toLowerCase().replace(/ /g, '-')}
+                  href={`/${item?.title?.rendered.toLowerCase().replace(/ /g, '-')}/${language}`}
                   onClick={() => setThemeLayout('gray')}
                   style={{
                     color
@@ -136,6 +139,27 @@ export default function Nav({ theme, page, initialData }) {
             );
           })}
 
+      </>
+    )
+  }
+
+
+  function NavigationRight(){
+    return(
+      <>
+        <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
+        <LanguageSwitch
+              label="test language toggle"
+            />
+                <SearchBox
+                  theme={headerColor}
+                  page={page}
+                />
+                <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
+                    <path stroke={`#c89a3f`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
+                  </svg>
+                </button>
       </>
     )
   }
@@ -216,7 +240,7 @@ export default function Nav({ theme, page, initialData }) {
   //console.log(dataCategory)
 
 
-  const FilteredCategories = (headerColor) => {
+  const FilteredCategories = (headerColor, language) => {
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
     const sortedCategories = dataCategory
@@ -235,7 +259,7 @@ export default function Nav({ theme, page, initialData }) {
           <Link
             aria-label={item?.title?.rendered}
             title={item?.title?.rendered}
-            href={`/${item?.title?.rendered.toLowerCase()}`}
+            href={`/${item?.title?.rendered.toLowerCase()}/${language}`}
             onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
             style={{ color: headerColor }}
           >
@@ -255,22 +279,23 @@ export default function Nav({ theme, page, initialData }) {
         <header className={`w-full ${themeLayout == 'black' ? 'bg-black' : `theme-${currentTheme}-header-mobile`} sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
           <div className="container">
             <div className='flex items-center justify-between'>
-              <Logo url={'/'} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
+              <Logo url={`/${language}`} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
 
               />
               <div className='flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  <Link href={"/cart"} className='hover:bg-transparent mr-2 mr-sm-0'>CART ({currentCartCOunt})</Link>
-                  <SearchBox
-                    theme={headerColor}
-                    page={'category'}
-                  />
-
-                  <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                      <path stroke="#fff" strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                    </svg>
-                  </button>
+                  {/* <Link href={"/cart"} className='hover:bg-transparent mr-2 mr-sm-0'>CART ({currentCartCOunt})</Link> */}
+                  {/* <SearchBox */}
+                    {/* theme={headerColor} */}
+                    {/* page={'category'} */}
+                  {/* /> */}
+{/*  */}
+                  {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
+                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
+                      {/* <path stroke="#fff" strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
+                    {/* </svg> */}
+                  {/* </button> */}
+                  {NavigationRight()}
                 </div>
               </div>
             </div>
@@ -283,29 +308,24 @@ export default function Nav({ theme, page, initialData }) {
         <header className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-${currentTheme}-100 bg-white lg:block hidden`} >
           <div className="container">
             <div className='flex items-center justify-between'>
-              <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColor} />
+              <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColor} />
 
               <div className={`flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]`}>
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                {Navigations(headerColor)}
-                  {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Home</Link></li> */}
-                  {/* {FilteredCategories(headerColor)} */}
-                  {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>About</Link></li> */}
-                  {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Careers</Link></li> */}
-                  {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Blog</Link></li> ~~> */}
-                  {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Contact</Link></li> */}
-                </ul>
+                {Navigations(headerColor, language)}
+               </ul>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  <Link href={"/cart"} className={`mr-2 mr-sm-0`} style={{ color: headerColor }}>CART ({currentCartCOunt})</Link>
-                  <SearchBox
-                    theme={headerColor}
-                    page={'category'}
-                  />
-                  <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                      <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                    </svg>
-                  </button>
+                  {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`} style={{ color: headerColor }}>CART ({currentCartCOunt})</Link> */}
+                  {/* <SearchBox */}
+                    {/* theme={headerColor} */}
+                    {/* page={'category'} */}
+                  {/* /> */}
+                  {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
+                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
+                      {/* <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
+                    {/* </svg> */}
+                  {/* </button> */}
+                  {NavigationRight()}
                 </div>
               </div>
             </div>
@@ -326,31 +346,23 @@ export default function Nav({ theme, page, initialData }) {
       headerType = <header className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50`} >
         <div className="container">
           <div className='flex items-center justify-between'>
-            <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
+            <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-              
-              {Navigations()}
-
-
-                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li> */}
-                {/* {FilteredCategories(headerColor)} */}
-                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li> */}
-                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li> */}
-                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
-                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li> */}
-              </ul>
+              {Navigations(headerColor, language)}
+  </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
-                <SearchBox
-                  theme={theme}
-                  page={'home'}
-                />
-                <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                    <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                  </svg>
-                </button>
+                {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link> */}
+                {/* <SearchBox */}
+                  {/* theme={theme} */}
+                  {/* page={'home'} */}
+                {/* /> */}
+                {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
+                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
+                    {/* <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
+                  {/* </svg> */}
+                {/* </button> */}
+                {NavigationRight()}
               </div>
             </div>
           </div>
@@ -362,26 +374,13 @@ export default function Nav({ theme, page, initialData }) {
       headerType = <header className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50`} >
         <div className="container">
           <div className='flex items-center justify-between'>
-            <Logo url={'#'} alt={'#'} logoTitle={'#'} theme="#c89a3f" />
-            <LanguageSwitch
-              label="test language toggle"
-            />
-
-            <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
+            <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme="#c89a3f" />
+         <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
- {Navigations()}
+ {Navigations(headerColor, language)}
   </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
-                <SearchBox
-                  theme={headerColor}
-                  page={page}
-                />
-                <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                    <path stroke={`#c89a3f`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                  </svg>
-                </button>
+              {NavigationRight()}
               </div>
             </div>
           </div>
@@ -399,48 +398,26 @@ export default function Nav({ theme, page, initialData }) {
       headerType = <header className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-gray-200 bg-white`} >
         <div className="container">
           <div className='flex items-center justify-between'>
-            <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={color} />
+            <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={color} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-              {Navigations(headerColor)}
-                
-                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} */}
-                  {/* style={{ */}
-                    {/* color: headerColor */}
-                  {/* }} */}
-                {/* >Home</Link></li> */}
-                {/* {FilteredCategories(headerColor)} */}
-                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} */}
-                  {/* style={{ */}
-                    {/* color: headerColor */}
-                  {/* }} */}
-                {/* >About</Link></li> */}
-                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')} */}
-                  {/* style={{ */}
-                    {/* color: headerColor */}
-                  {/* }} */}
-                {/* >Careers</Link></li> */}
-                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
-                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')} */}
-                  {/* style={{ */}
-                    {/* color: headerColor */}
-                  {/* }} */}
-                {/* >Contact</Link></li> */}
-              </ul>
+              {Navigations(headerColor, language)}
+               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                <Link href={"/cart"} className={`mr-2 mr-sm-0`}
-                  style={{
-                    color: headerColor
-                  }}
-                >CART ({currentCartCOunt})</Link>
-                <SearchBox
-                  theme={headerColor}
-                />
-                <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                    <path stroke={`${color}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                  </svg>
-                </button>
+                {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`} */}
+                  {/* style={{ */}
+                    {/* color: headerColor */}
+                  {/* }} */}
+                {/* >CART ({currentCartCOunt})</Link> */}
+                {/* <SearchBox */}
+                  {/* theme={headerColor} */}
+                {/* /> */}
+                {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
+                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
+                    {/* <path stroke={`${color}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
+                  {/* </svg> */}
+                {/* </button> */}
+                {NavigationRight()}
               </div>
             </div>
           </div>
