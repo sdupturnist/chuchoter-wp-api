@@ -25,7 +25,7 @@ export default function Nav({ theme, page, initialData }) {
   const { dataCategory } = CategoryData(initialData);
   const { dataNavigation } = NavigationData(initialData);
 
-  const currentTheme =   themeLayout.toString().toLowerCase()
+  const currentTheme = themeLayout.toString().toLowerCase()
 
 
   // TOGGLE MENU
@@ -41,8 +41,8 @@ export default function Nav({ theme, page, initialData }) {
 
   const color = "#c89a3f"
 
-console.log(dataNavigation)
- 
+  console.log(dataNavigation)
+
 
   function update() {
     if (scrollY?.current < scrollY?.prev) {
@@ -95,6 +95,50 @@ console.log(dataNavigation)
     setModalFor('nav');
   };
 
+
+  function Navigations(color) {
+    return (
+      <>
+   <Link
+          aria-label="Home"
+          title="Home"
+          href="/"
+          onClick={() => setThemeLayout('gray')}
+          style={{
+            color
+          }}
+        >
+          Home
+        </Link>
+        {FilteredCategories(headerColor)}
+        {dataNavigation && dataNavigation
+          .filter(item => item?.acf?.visible_in_menu) // Filter based on visible_in_menu
+          .sort((a, b) => {
+            const titleA = a?.title?.rendered?.toLowerCase() || '';
+            const titleB = b?.title?.rendered?.toLowerCase() || '';
+            return titleA.localeCompare(titleB); // Sort titles in ascending order
+          })
+          .map((item, key) => {
+            return (
+              <li key={key}>
+                <Link
+                  aria-label={item?.title?.rendered}
+                  title={item?.title?.rendered}
+                  href={item?.title?.rendered.toLowerCase().replace(/ /g, '-')}
+                  onClick={() => setThemeLayout('gray')}
+                  style={{
+                    color
+                  }}
+                >
+                  {item?.title?.rendered}
+                </Link>
+              </li>
+            );
+          })}
+
+      </>
+    )
+  }
 
 
 
@@ -176,31 +220,31 @@ console.log(dataNavigation)
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
     const sortedCategories = dataCategory
-        ? dataCategory
-            .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
-            .sort((a, b) => {
-                const indexA = customOrder.indexOf(a?.title?.rendered);
-                const indexB = customOrder.indexOf(b?.title?.rendered);
-                return indexA - indexB;
-            })
-        : [];
+      ? dataCategory
+        .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
+        .sort((a, b) => {
+          const indexA = customOrder.indexOf(a?.title?.rendered);
+          const indexB = customOrder.indexOf(b?.title?.rendered);
+          return indexA - indexB;
+        })
+      : [];
 
     return (
-       sortedCategories.map((item, index) => (
-                <li key={index}>
-                    <Link
-                        aria-label={item?.title?.rendered}
-                        title={item?.title?.rendered}
-                        href={`/${item?.title?.rendered.toLowerCase()}`}
-                        onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
-                        style={{ color: headerColor }}
-                    >
-                     {item?.title?.rendered}
-                    </Link>
-                </li>
-            ))
+      sortedCategories.map((item, index) => (
+        <li key={index}>
+          <Link
+            aria-label={item?.title?.rendered}
+            title={item?.title?.rendered}
+            href={`/${item?.title?.rendered.toLowerCase()}`}
+            onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
+            style={{ color: headerColor }}
+          >
+            {item?.title?.rendered}
+          </Link>
+        </li>
+      ))
     );
-};
+  };
 
 
 
@@ -243,12 +287,13 @@ console.log(dataNavigation)
 
               <div className={`flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]`}>
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                  <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Home</Link></li>
-                  {FilteredCategories(headerColor)}
-                  <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>About</Link></li>
-                  <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Careers</Link></li>
-                  {/* <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Blog</Link></li> */}
-                  <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Contact</Link></li>
+                {Navigations(headerColor)}
+                  {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Home</Link></li> */}
+                  {/* {FilteredCategories(headerColor)} */}
+                  {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>About</Link></li> */}
+                  {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Careers</Link></li> */}
+                  {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Blog</Link></li> ~~> */}
+                  {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Contact</Link></li> */}
                 </ul>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                   <Link href={"/cart"} className={`mr-2 mr-sm-0`} style={{ color: headerColor }}>CART ({currentCartCOunt})</Link>
@@ -284,12 +329,16 @@ console.log(dataNavigation)
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li>
-                {FilteredCategories(headerColor)}
-                <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li>
-                <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li>
-                {/* <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> */}
-                <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li>
+              
+              {Navigations()}
+
+
+                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li> */}
+                {/* {FilteredCategories(headerColor)} */}
+                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li> */}
+                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li> */}
+                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
+                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li> */}
               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
@@ -315,42 +364,13 @@ console.log(dataNavigation)
           <div className='flex items-center justify-between'>
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme="#c89a3f" />
             <LanguageSwitch
-     label="test language toggle"
-     />
+              label="test language toggle"
+            />
 
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-               
-               
-
-
-              {dataNavigation && dataNavigation.map((item, key) => {
-                  return (
-                    <li><Link aria-label={item?.title?.rendered} title={item?.title?.rendered} href={item?.title?.rendered} onClick={(e) => setThemeLayout('gray')}>{item?.title?.rendered}</Link></li>
-                    );
-                })}
-
-
-           
-
-
-          
-
-
-
-
-
-                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li> */}
-                {/* {FilteredCategories(headerColor)} */}
-                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li> */}
-                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li> */}
-                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
-                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li> */}
-           
-           
-           
-           
-              </ul>
+ {Navigations()}
+  </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
                 <SearchBox
@@ -382,28 +402,30 @@ console.log(dataNavigation)
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={color} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}
-                  style={{
-                    color: headerColor
-                  }}
-                >Home</Link></li>
-                {FilteredCategories(headerColor)}
-                <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}
-                  style={{
-                    color: headerColor
-                  }}
-                >About</Link></li>
-                <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}
-                  style={{
-                    color: headerColor
-                  }}
-                >Careers</Link></li>
-                {/* <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> */}
-                <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}
-                  style={{
-                    color: headerColor
-                  }}
-                >Contact</Link></li>
+              {Navigations(headerColor)}
+                
+                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} */}
+                  {/* style={{ */}
+                    {/* color: headerColor */}
+                  {/* }} */}
+                {/* >Home</Link></li> */}
+                {/* {FilteredCategories(headerColor)} */}
+                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} */}
+                  {/* style={{ */}
+                    {/* color: headerColor */}
+                  {/* }} */}
+                {/* >About</Link></li> */}
+                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')} */}
+                  {/* style={{ */}
+                    {/* color: headerColor */}
+                  {/* }} */}
+                {/* >Careers</Link></li> */}
+                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
+                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')} */}
+                  {/* style={{ */}
+                    {/* color: headerColor */}
+                  {/* }} */}
+                {/* >Contact</Link></li> */}
               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 <Link href={"/cart"} className={`mr-2 mr-sm-0`}
