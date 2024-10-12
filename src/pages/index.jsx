@@ -17,6 +17,11 @@ import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 
 
+import { useLanguageContext } from "@/context/LanguageContext";
+import translations from "@/hooks/translations";
+import LanguageSwitch from "@/components/LangaugeSwitch";
+
+
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 
@@ -24,6 +29,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
 
+  const { language, toggleLanguage } = useLanguageContext();
+  const t = translations[language];
+
+  
   const { setThemeLayout } = useThemeContext()
 
 
@@ -380,10 +389,9 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               page="home2"
               theme='chocolate'
             />
-            <h2 className="text-red-600">
+ <h2 className="text-red-600">
              full check<br />
-              arabci rtl<br />
-              api change with trasalation<br />
+          api change with trasalation<br />
               remove console.log<br />
             </h2>
             <div className="wrpr sm:pt-[100px] pt-[80px]">

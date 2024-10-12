@@ -7,11 +7,18 @@ const Wordpress = axios.create({
 
 // Handler function
 export default async function handler(req, res) {
-  try {
-    // Fetch product reviews
-    const response = await Wordpress.get('pages/41');
+ 
+  const { slug } = req.query; // Get the slug from the query parameters
 
-    // Return only the data portion of the response
+  try {
+    // Fetch products filtered by slug
+    const response = await Wordpress.get('pages', {
+      params: {
+        slug, // Filter products by the slug
+      },
+    });
+
+    // Return the filtered products
     res.status(200).json(response.data);
   } catch (error) {
     console.error('Error fetching products:', error.response ? error.response.data : error.message);
@@ -21,3 +28,6 @@ export default async function handler(req, res) {
     });
   }
 }
+
+
+

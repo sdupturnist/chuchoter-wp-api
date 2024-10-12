@@ -19,6 +19,7 @@ export default function Cart({ pageData, allProducts_ }) {
   const { themeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
 
+  console.log(pageData)
 
 
   const filteredProducts = allProducts_?.data?.filter(product =>
@@ -76,19 +77,19 @@ export default function Cart({ pageData, allProducts_ }) {
 
   return (
     <>
-     <Metatags seo={pageData && pageData?.yoast_head_json} />
+     <Metatags seo={pageData && pageData[0]?.yoast_head_json} />
       <Layout page="cart">
         <AOSInit/>
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid">
             <div className="flex justify-between items-center border-b border-black">
               <h1 className="uppercase text-[20px] font-semibold tracking-[1%] sm:my-[20px] my-[10px]">
-                {pageData && pageData?.title?.rendered}
-              </h1>
+                {pageData && pageData[0]?.title?.rendered}
+                </h1>
               <Breadcrumbs
                 pages={[
                   {
-                    "name": "cart",
+                    "name": pageData && pageData[0]?.title?.rendered,
                     "link": "",
                   },
                 ]}
@@ -161,11 +162,22 @@ export default function Cart({ pageData, allProducts_ }) {
 
 export async function getServerSideProps(context) {
 
+  const { params } = context;
+
+  // Extract the language from the params
+  const lang = params.slug; // Assuming you have a dynamic route like /about/[slug]
+  const slug = `cart-${lang}`; // Constructing the slug
 
 
   try {
 
-    const cartRes = await axios.get(`${frontendUrl}/api/cart`);
+   
+
+    const cartRes = await axios.get(`${frontendUrl}/api/cart`, {
+      params: { slug },
+    });
+
+
     
     const productsRes = await axios.get(`${frontendUrl}/api/products`, {
       params: { 

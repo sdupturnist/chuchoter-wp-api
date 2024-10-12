@@ -82,6 +82,12 @@ module.exports = {
         primary: ['Italiana', 'sans-serif'],
         secondary: ['bon_vivantregular'],
         tertiary: ['Inter', 'sans-serif'],
+        ar: ['Cairo', 'sans-serif'],
+      },
+      // Adding the direction configuration
+      direction: {
+        'rtl': 'rtl',
+        'ltr': 'ltr',
       },
     },
   },
@@ -90,17 +96,12 @@ module.exports = {
     function ({ addComponents }) {
       addComponents({
         '.btn': {
-       //   backgroundColor: '#c89a3f',
-         // borderColor: '#c89a3f',
-         // color: '#FFFFFF',
           '&:hover': {
             backgroundColor: '#fff',
             borderColor: '#fff',
           },
         },
         '.btn-outline': {
-         /// backgroundColor: '#fff',
-         // borderColor: '#c89a3f',
           color: '#c89a3f',
           '&:hover': {
             backgroundColor: '#fff',

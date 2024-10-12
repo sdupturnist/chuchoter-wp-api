@@ -31,103 +31,6 @@ export default function Layout({ children, type, page, header, initialData }) {
 
 
 
-  // const FilteredCategoriesAccordin = () => {
-  //   // Define custom order
-  //   const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events']; // Adjust according to your custom order
-  
-  //   // Create a map to store unique main categories and their subcategories
-  //   const categoriesMap = dataCategory?.data?.shops?.data.reduce((acc, item) => {
-  //     // Extract main categories and subcategories
-  //     const mainCategories = item?.attributes?.main_categories?.data || [];
-  //     const subcategories = item?.attributes?.sub_categories?.data || []; 
-  
-  //     // Process each main category
-  //     mainCategories.forEach(mainCategoryItem => {
-  //       const mainCategory = mainCategoryItem?.attributes?.Title;
-  
-  //       if (mainCategory) {
-  //         if (!acc[mainCategory]) {
-  //           acc[mainCategory] = new Set();
-  //         }
-          
-  //         // Add each subcategory to the set if it's not empty
-  //         subcategories.forEach(subcatItem => {
-  //           const subcategory = subcatItem?.attributes?.slug;
-  //           if (subcategory) {
-  //             acc[mainCategory].add(subcategory);
-  //           }
-  //         });
-  //       }
-  //     });
-  
-  //     return acc;
-  //   }, {});
-  
-  //   // Ensure categoriesMap is an object and filter out categories with no subcategories
-  //   const filteredCategories = categoriesMap
-  //     ? Object.entries(categoriesMap).filter(([mainCategory, subcategories]) => subcategories.size > 0)
-  //     : [];
-  
-  //   // Sort categories based on custom order
-  //   const sortedCategories = filteredCategories.sort(([a], [b]) => {
-  //     const indexA = customOrder.indexOf(a);
-  //     const indexB = customOrder.indexOf(b);
-      
-  //     // Handle categories not in customOrder by placing them at the end
-  //     if (indexA === -1) return 1;
-  //     if (indexB === -1) return -1;
-      
-  //     return indexA - indexB;
-  //   });
-  
-  //   // Return null if there are no categories to display
-  //   if (sortedCategories.length === 0) return null;
-  
-  //   return (
-  //     <>
-  //       {sortedCategories && sortedCategories.map(([mainCategory, subcategories]) => (
-  //         <div key={mainCategory} className="collapse collapse-plus rounded-none">
-  //           <input
-  //             type="radio"
-  //             className="min-h-[10px] after:top-0"
-  //             name="my-accordion-3"
-  //             id={mainCategory}
-  //           />
-  //           <div
-  //             className="collapse-title p-0 min-h-0"
-  //             style={{ color: style?.color || 'defaultColor' }} // Use default color if style.color is undefined
-  //           >
-  //             {mainCategory || 'Default Category'}
-  //           </div>
-  //           <div className="collapse-content p-0 m-0 !pb-0">
-  //             <ul className="grid m-0 p-0">
-  //               {[...subcategories].map((subcategory) => (
-  //                 <li key={subcategory?.replace(/_/g, '-').toLowerCase()}
-  //                     className="mt-[24px]"
-  //                 >
-  //                   <Link
-  //                     onClick={() => {
-  //                       setThemeLayout(mainCategory || 'Default Category');
-  //                       setShowModal(prev => !prev);
-  //                     }}
-  //                     style={{ color: style?.color || 'defaultColor' }}
-  //                     aria-label={subcategory ? subcategory.replace(/_/g, ' ') : 'Default Label'}
-  //                     title={subcategory ? subcategory.replace(/_/g, ' ') : 'Default Title'}
-  //                     href={`/${subcategory ? subcategory.replace(/_/g, '-').toLowerCase() : 'default-category'}`}
-  //                   >
-  //                     {subcategory ? subcategory.replace(/_/g, ' ') : 'Default Category'}
-  //                   </Link>
-  //                 </li>
-  //               ))}
-  //             </ul>
-  //           </div>
-  //         </div>
-  //       ))}
-  //     </>
-  //   );
-  // };
-
-
 
   const FilteredCategoriesAccordin = () => {
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
@@ -305,6 +208,7 @@ export default function Layout({ children, type, page, header, initialData }) {
 
   return (
     <>
+    
       {header !== 'color' && <Header
         page={page}
       />}

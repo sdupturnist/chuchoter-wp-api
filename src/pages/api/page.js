@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 import { wordpressRestApiUrl } from "@/utils/variables";
 
@@ -9,13 +8,13 @@ const Wordpress = axios.create({
 // Handler function
 export default async function handler(req, res) {
  
-  const { slug } = req.query; // Get the slug from the query parameters
+ // const { slug } = req.query; // Get the slug from the query parameters
 
   try {
     // Fetch products filtered by slug
-    const response = await Wordpress.get('contact-info', {
+    const response = await Wordpress.get('pages', {
       params: {
-        slug, // Filter products by the slug
+        slug: 'about-en', // Filter products by the slug
       },
     });
 
@@ -29,6 +28,3 @@ export default async function handler(req, res) {
     });
   }
 }
-
-
-

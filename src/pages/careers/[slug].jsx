@@ -50,24 +50,52 @@ export default function Career({ pageData }) {
 
 
 
-export async function getStaticProps() {
-  try {
-    const careersRes = await axios.get(`${frontendUrl}/api/careers`);
 
+export async function getStaticProps(context) {
+  const { params } = context;
+
+  // Extract the language from the params
+  const lang = params.slug; // Assuming you have a dynamic route like /about/[slug]
+  const slug = `careers-${lang}`; // Constructing the slug
+
+  try {
+    // Fetch data based on the slug
+    const res = await axios.get(`${frontendUrl}/api/careers`, {
+      params: { slug },
+    });
+
+    // Check if the data is empty or undefined
+    if (!res.data || res.data.length === 0) {
+      return {
+        notFound: true, // Redirect to 404 page if no data found
+      };
+    }
 
     return {
       props: {
-        pageData: careersRes.data,
+        pageData: res.data[0], // Return the first item from the response
       },
-      revalidate: 60, // revalidate every 60 seconds
+      revalidate: 60, // Regenerate the page every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching data:', error.message);
+    console.error('Error fetching about data:', error.message);
     return {
-      props: {
-        pageData: [],
-      },
-      revalidate: 60, // still revalidate even on error
+      notFound: true, // Redirect to 404 page in case of an error
     };
   }
 }
+
+export async function getStaticPaths() {
+  // Define the paths that should be pre-rendered at build time
+  const paths = [
+    { params: { slug: 'en' } }, // Add other languages as needed
+    { params: { slug: 'es' } },
+    // ...more paths
+  ];
+
+  return {
+    paths,
+    fallback: 'blocking', // Use blocking fallback for SSR if not found
+  };
+}
+

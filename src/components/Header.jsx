@@ -8,6 +8,9 @@ import { useThemeContext } from '@/context/themeContext';
 import { useCartContext } from '@/context/cartContext';
 import { CategoryData } from '@/hooks/categoryData';
 import SearchBox from './Search';
+import LanguageSwitch from './LangaugeSwitch';
+import { NavigationData } from '@/hooks/navigationData';
+
 
 
 
@@ -20,7 +23,7 @@ export default function Nav({ theme, page, initialData }) {
 
 
   const { dataCategory } = CategoryData(initialData);
-
+  const { dataNavigation } = NavigationData(initialData);
 
   const currentTheme =   themeLayout.toString().toLowerCase()
 
@@ -38,7 +41,7 @@ export default function Nav({ theme, page, initialData }) {
 
   const color = "#c89a3f"
 
-
+console.log(dataNavigation)
  
 
   function update() {
@@ -239,7 +242,7 @@ export default function Nav({ theme, page, initialData }) {
               <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColor} />
 
               <div className={`flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]`}>
-                <ul className="xl:flex hidden gap-[24px] items-center justify-end">
+                <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                   <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>Home</Link></li>
                   {FilteredCategories(headerColor)}
                   <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')} style={{ color: headerColor }}>About</Link></li>
@@ -280,7 +283,7 @@ export default function Nav({ theme, page, initialData }) {
           <div className='flex items-center justify-between'>
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
-              <ul className="xl:flex hidden gap-[24px] items-center justify-end">
+              <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                 <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li>
                 {FilteredCategories(headerColor)}
                 <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li>
@@ -311,14 +314,42 @@ export default function Nav({ theme, page, initialData }) {
         <div className="container">
           <div className='flex items-center justify-between'>
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme="#c89a3f" />
+            <LanguageSwitch
+     label="test language toggle"
+     />
+
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
-              <ul className="xl:flex hidden gap-[24px] items-center justify-end">
-                <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li>
-                {FilteredCategories(headerColor)}
-                <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li>
-                <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li>
-                {/* <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> */}
-                <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li>
+              <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
+               
+               
+
+
+              {dataNavigation && dataNavigation.map((item, key) => {
+                  return (
+                    <li><Link aria-label={item?.title?.rendered} title={item?.title?.rendered} href={item?.title?.rendered} onClick={(e) => setThemeLayout('gray')}>{item?.title?.rendered}</Link></li>
+                    );
+                })}
+
+
+           
+
+
+          
+
+
+
+
+
+                {/* <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}>Home</Link></li> */}
+                {/* {FilteredCategories(headerColor)} */}
+                {/* <li><Link aria-label='About' title='About' href={"/about"} onClick={(e) => setThemeLayout('gray')}>About</Link></li> */}
+                {/* <li><Link aria-label='Careers' title='Careers' href={"/careers"} onClick={(e) => setThemeLayout('gray')}>Careers</Link></li> */}
+                {/* <!~~ <li><Link aria-label='Blog' title='Blog' href={"/blogs"} onClick={(e) => setThemeLayout('gray')}>Blog</Link></li> ~~> */}
+                {/* <li><Link aria-label='Contact' title='Vontact' href={"/contact"} onClick={(e) => setThemeLayout('gray')}>Contact</Link></li> */}
+           
+           
+           
+           
               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
@@ -350,7 +381,7 @@ export default function Nav({ theme, page, initialData }) {
           <div className='flex items-center justify-between'>
             <Logo url={'#'} alt={'#'} logoTitle={'#'} theme={color} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
-              <ul className="xl:flex hidden gap-[24px] items-center justify-end">
+              <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                 <li><Link aria-label='Home' title='Home' href={"/"} onClick={(e) => setThemeLayout('gray')}
                   style={{
                     color: headerColor

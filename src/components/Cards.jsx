@@ -66,7 +66,7 @@ const review = item?.acf?.user_reviews
             cardType = <>
                 {isLoading ? (
                     <div className='grid gap-[12px]'>
-                        <div className="skeleton h-32 w-full sm:min-h-[100px] rounded-[10px]"></div>
+                        <div className="skeleton rounded-[10px] aspect-square 2xl:min-w-[170px]"></div>
                         <div className="skeleton h-4 w-[80%] rounded-[10px]"></div>
                         <div className="skeleton h-4 w-full rounded-[10px]"></div>
                         <div className="skeleton h-4 w-full rounded-[10px]"></div>

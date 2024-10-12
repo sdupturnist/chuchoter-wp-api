@@ -7,9 +7,19 @@ const Wordpress = axios.create({
 
 // Handler function
 export default async function handler(req, res) {
+
+  const { slug } = req.query; // Get the slug from the query parameters
+
+
+
   try {
     // Fetch product reviews
-    const response = await Wordpress.get('pages/33');
+    
+   const response = await Wordpress.get('pages', {
+      params: {
+        slug, // Filter products by the slug
+      },
+    });
 
     // Return only the data portion of the response
     res.status(200).json(response.data);

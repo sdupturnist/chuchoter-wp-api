@@ -18,6 +18,7 @@ export default function Contact({ initialData, pageData }) {
   const contactData = dataContact && dataContact[0]?.acf
 
 
+  console.log(pageData)
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,7 +45,7 @@ export default function Contact({ initialData, pageData }) {
             data={allProducts}
           /> */}
 
-            <PageHeader title={pageData && pageData.title?.rendered} />
+            <PageHeader title={pageData && pageData?.acf?.page_title} />
 
             <div className="md:flex grid [&>*]:text-black lg:mb-[70px] sm:py-[50px] pb-[30px] justify-between lg:gap-[100px] gap-[50px]">
               <div className="grid gap-[32px] w-full" data-aos="fade-up">
@@ -58,8 +59,10 @@ export default function Contact({ initialData, pageData }) {
                   ) : (
                     <div>
                       <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
-                        Office
-                      </h2>
+                     
+                        {pageData && pageData?.acf?.contact_heading }
+                      
+                       </h2>
                       <p className="mb-[8px]">
                         <div dangerouslySetInnerHTML={{ __html: dataContact && dataContact[0].content?.rendered }} />
                       </p>
@@ -74,14 +77,23 @@ export default function Contact({ initialData, pageData }) {
 
                   <div>
                     <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
-                      Business Inquiries
+                    {pageData && pageData?.acf?.enquiry_heading }
                     </h2>
                     <div dangerouslySetInnerHTML={{ __html: pageData && pageData.content?.rendered }} />
                   </div>
                 </div>
               </div>
               <div className="w-full block" data-aos="fade-up" data-aos-delay="500">
-                <ContactForm />
+                <ContactForm 
+                content={[
+                  pageData && pageData?.acf?.field_name, 
+                  pageData && pageData?.acf?.field_phone,
+                  pageData && pageData?.acf?.field_email,
+                  pageData && pageData?.acf?.field_message, 
+                  pageData && pageData?.acf?.button_submit, 
+                  
+                   ]}
+                />
               </div>
             </div>
           </div>
@@ -93,25 +105,51 @@ export default function Contact({ initialData, pageData }) {
 
 
 
-export async function getStaticProps() {
-  try {
-    const contactRes = await axios.get(`${frontendUrl}/api/contact`);
+export async function getStaticProps(context) {
+  const { params } = context;
 
+  // Extract the language from the params
+  const lang = params.slug; // Assuming you have a dynamic route like /about/[slug]
+  const slug = `contact-${lang}`; // Constructing the slug
+
+  try {
+    // Fetch data based on the slug
+    const res = await axios.get(`${frontendUrl}/api/contact`, {
+      params: { slug },
+    });
+
+    // Check if the data is empty or undefined
+    if (!res.data || res.data.length === 0) {
+      return {
+        notFound: true, // Redirect to 404 page if no data found
+      };
+    }
 
     return {
       props: {
-        pageData: contactRes.data,
+        pageData: res.data[0], // Return the first item from the response
       },
-      revalidate: 60, // revalidate every 60 seconds
+      revalidate: 60, // Regenerate the page every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching data:', error.message);
+    console.error('Error fetching about data:', error.message);
     return {
-      props: {
-        pageData: [],
-      },
-      revalidate: 60, // still revalidate even on error
+      notFound: true, // Redirect to 404 page in case of an error
     };
   }
+}
+
+export async function getStaticPaths() {
+  // Define the paths that should be pre-rendered at build time
+  const paths = [
+    { params: { slug: 'en' } }, // Add other languages as needed
+    { params: { slug: 'es' } },
+    // ...more paths
+  ];
+
+  return {
+    paths,
+    fallback: 'blocking', // Use blocking fallback for SSR if not found
+  };
 }
 

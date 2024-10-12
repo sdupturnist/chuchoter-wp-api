@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-export default function ContactForm() {
+export default function ContactForm({content}) {
 
   const router = useRouter()
 
@@ -113,7 +113,7 @@ export default function ContactForm() {
 
         <input
           type="text"
-          placeholder="Full name"
+          placeholder={content[0]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -123,7 +123,7 @@ export default function ContactForm() {
         {errors.name && <p className='text-red-500'>{errors.name}</p>}
         <input
           type="number"
-          placeholder="Phone Number"
+          placeholder={content[1]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -133,7 +133,7 @@ export default function ContactForm() {
         {errors.phone && <p className='text-red-500'>{errors.phone}</p>}
         <input
           type="email"
-          placeholder="Email"
+          placeholder={content[2]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +143,7 @@ export default function ContactForm() {
         {errors.email && <p className='text-red-500'>{errors.email}</p>}
         <textarea
           className="textarea  placeholder:text-black border-black textarea-bordered w-full text-black rounded-[6px]"
-          placeholder="Message"
+          placeholder={content[3]}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           name="message"
@@ -155,7 +155,7 @@ export default function ContactForm() {
 
           <button title="Submit" aria-label="Submit" type="submit" className="btn rounded-[6px] w-full" onClick={submitEmail}>
           <span className={buttonLabel == false ? "hidden" : ""}>
-                            Proceed to order
+          {content[4]}
                         </span>
                         <span className={successLabel == false ? "hidden" : ""}>
                             Done! Order finished
