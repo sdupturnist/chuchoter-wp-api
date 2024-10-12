@@ -1,152 +1,82 @@
 import Layout from "@/components/Layout";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { gql, useLazyQuery } from '@apollo/client';
-import client from '@/lib/apolloClient';
+import axios from "axios";
 import Loading from "@/components/Loading";
 import PageHeader from "@/components/PageHeader";
 import Card from "@/components/Cards";
 import NoData from "@/components/Nodata";
 import Metatags from "@/components/Seo";
-import { wordpressGraphQlApiUrl } from "@/utils/variables";
+import { frontendUrl } from "@/utils/variables";
+import { useThemeContext } from "@/context/themeContext";
 
-
-// GraphQL query for search
-const SEARCH_PAGES = gql`
-  query($searchTerm: String) {
-    shops(
-      filters: {
-        ShortDescription: { contains: $searchTerm }
-      }
-      pagination: { limit: 100 }
-    ) {
-      data {
-        id
-        attributes {
-          Featured
-          Slug
-          Heading
-          photo {
-            data {
-              attributes {
-                alternativeText
-                width
-                height
-                url
-              }
-            }
-          }
-          Description
-          normalPrice
-          offerPrice
-          productCode
-          Includes
-          ShortDescription
-          main_categories {
-            data {
-              attributes {
-                Title
-                Slug
-              }
-            }
-          }
-          sub_categories {
-            data {
-              attributes {
-                slug
-                Title
-              }
-            }
-          }
-          createdAt
-          updatedAt
-          publishedAt
-          seo {
-            metaTitle
-            metaDescription
-            metaImage {
-              data {
-                attributes {
-                  alternativeText
-                  url
-                }
-              }
-            }
-            metaSocial {
-              image {
-                data {
-                  attributes {
-                    url
-                  }
-                }
-              }
-              description
-              title
-            }
-            keywords
-            metaRobots
-            metaViewport
-            canonicalURL
-            OGSitename
-            OGmodifiedtime
-            OGdescription
-          }
-          photo {
-            data {
-              attributes {
-                alternativeText
-                width
-                height
-                url
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-export default function Search({ pageData_, reviewCountData_ }) {
+export default function Search({ pageData, products }) {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchPages, { loading, data }] = useLazyQuery(SEARCH_PAGES, {
-    client,
-    variables: { searchTerm }
-  });
+  const [loading, setLoading] = useState(true);
+  const [searchedProducts, setSearchedProducts] = useState([]);
+
+  const { themeLayout } = useThemeContext();
+
+
 
   useEffect(() => {
     const { query } = router.query;
     if (query) {
       const decodedQuery = decodeURIComponent(query.replace(/\+/g, ' '));
       setSearchTerm(decodedQuery);
-      searchPages({ variables: { searchTerm: decodedQuery } });
+      fetchProducts(decodedQuery);
     }
   }, [router.query]);
 
+  const fetchProducts = async (term) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${frontendUrl}/api/products`, {
+        params: {
+          per_page: 29,
+          min_price: 0,
+          reviews_count: 0,
+          main_categories: '',
+          sub_categories: '',
+          search: term,
+        },
+      });
+      setSearchedProducts(res.data);
+    } catch (error) {
+      console.error('Error fetching products:', error.message);
+      setSearchedProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+
+
   return (
     <>
-      <Metatags seo={pageData_ && pageData_?.data?.search?.data?.attributes?.seo} />
+      <Metatags seo={pageData && pageData?.yoast_head_json} />
       <Layout page="search">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[5px] lg:pt-[30px] xl:pb-[70px] pb-[20px]">
           <PageHeader title={`Search ${searchTerm}`} />
 
           {loading && <Loading />}
 
-          {!loading && data?.shops?.data.length === 0 && (
+          {!loading && searchedProducts?.data?.length === 0 && (
             <NoData title={"Sorry, no products were found. Please try searching with different keywords."} />
           )}
 
-          {data?.shops?.data.length > 0 && (
+          {searchedProducts?.data?.length > 0 && (
             <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
-              {data.shops.data.map((item, key) => {
-                const publicReviews = item?.attributes?.reviews?.filter(review => review.showPublic);
+              {products && searchedProducts?.data?.map((item, key) => {
+                const publicReviews = item?.reviews?.filter(review => review.showPublic);
                 return (
                   <div className="w-full" key={key}>
                     <Card
                       type="cat"
                       item={item}
-                      review={publicReviews ? publicReviews.length : null}
+                      theme={themeLayout}
                     />
                   </div>
                 );
@@ -159,86 +89,42 @@ export default function Search({ pageData_, reviewCountData_ }) {
   );
 }
 
-export async function getStaticProps() {
+
+
+
+
+export async function getServerSideProps(context) {
+
+  const searchTerm = context.query.query || '';
+
   try {
-    // Fetch the data for the page
-    const pageDataResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `query {
-          search {
-            data {
-              attributes {
-                Heading
-                seo {
-                  metaTitle
-                  metaDescription
-                  metaImage {
-                    data {
-                      attributes {
-                        url
-                      }
-                    }
-                  }
-                  metaSocial {
-                    title
-                    description
-                    socialNetwork
-                  }
-                  keywords
-                  metaRobots
-                  canonicalURL
-                  OGtitle
-                  OGSitename
-                  OGdescription
-                  OGmodifiedtime
-                }
-              }
-            }
-          }
-        }`,
-      }),
-    });
-    const pageData_ = await pageDataResponse.json();
 
-    // Fetch review count data
-    const reviewCountResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await axios.get(`${frontendUrl}/api/products`, {
+      params: {
+        per_page: 29,
+        min_price: 0,
+        reviews_count: 0,
+        main_categories: '',
+        sub_categories: '',
+        search: searchTerm,
       },
-      body: JSON.stringify({
-        query: `query {
-          review(pagination: { limit: 6 }) {
-            data {
-              attributes {
-                productId
-              }
-            }
-          }
-        }`,
-      }),
     });
-    const reviewCountData_ = await reviewCountResponse.json();
+
+
+    const searchPageRes = await axios.get(`${frontendUrl}/api/search`);
+
 
     return {
       props: {
-        pageData_,
-        reviewCountData_,
-      },
-      revalidate: 60, // Revalidate every 60 seconds
+        products: res.data,
+        pageData: searchPageRes.data,
+      }
     };
+
   } catch (error) {
-    console.error('Error fetching data:', error);
-    return {
-      props: {
-        pageData_: null,
-        reviewCountData_: null,
-      },
-      revalidate: 60, // Optional: still allow revalidation even on error
-    };
+    console.error('Error fetching products:', error.message);
+    return { props: { pageData: [], products: [], } }; // Set default total count to 0 on error
   }
 }
+
+

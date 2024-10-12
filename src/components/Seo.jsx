@@ -13,13 +13,15 @@ export default function Metatags({ seo }) {
 
 
 
+    
+
 
     return (
         <>
             <Head>
                 <>
 
-                    <title>{seo && seo?.metaTitle}</title>
+                    <title>{seo?.title && seo?.title}</title>
 
 
                     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -32,22 +34,22 @@ export default function Metatags({ seo }) {
 
 
 
-                    <meta name="description" content={seo && seo?.metaDescription} />
-                    <meta name="keywords" content={seo && seo?.keywords} />
+                    <meta name="description" content={seo?.description && seo?.description} />
+                    {/* <meta name="keywords" content={seo && seo?.keywords} /> */}
                     <link rel="canonical" href={(frontendUrl + currentPath + '/').replace(/([^:]\/)\/+/g, "$1")} />
                     <meta name="robots" content="index, follow" />
                     <meta property="og:locale" content="en_US" />
                     <meta property="og:type" content="website" />
-                    <meta property="og:title" content={seo && seo?.OGtitle} />
-                    <meta property="og:description" content={seo && seo?.OGdescription} />
+                    <meta property="og:title" content={seo?.og_title && seo?.og_title} />
+                    <meta property="og:description" content={seo?.og_description && seo?.og_description} />
                     <meta property="og:url" content={(frontendUrl + currentPath + '/').replace(/([^:]\/)\/+/g, "$1")} />
-                    <meta property="og:site_name" content={seo && seo?.opengraphSiteName} />
-                    <meta property="article:modified_time" content={seo && seo?.OGmodifiedtime} />
-                    <meta property="og:image" content={seo ? (adminUrl) + seo?.metaImage?.data?.attributes?.url : ''} />
-                    <meta property="og:image:width" content="479" />
-                    <meta property="og:image:height" content="482" />
-                    <meta property="og:image:type" content="image/webp" />
-                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta property="og:site_name" content={seo?.og_site_name && seo?.og_site_name} />
+                    <meta property="article:modified_time" content={seo?.article_modified_time && seo?.article_modified_time} />
+                    <meta property="og:image" content={seo?.og_image ? (adminUrl) + seo?.og_image[0]?.url : ''} />
+                    <meta property="og:image:width" content={seo?.og_image ? seo?.og_image[0]?.width : ''} /> 
+                    <meta property="og:image:height" content={seo?.og_image ? seo?.og_image[0]?.height : ''} /> 
+                    <meta property="og:image:type" content={seo?.og_image ? seo?.og_image[0]?.type : ''} /> 
+                    <meta name="twitter:card" content={seo?.twitter_card ? seo?.twitter_card : ''} /> 
                 </>
             </Head>
         </>

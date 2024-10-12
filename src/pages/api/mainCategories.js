@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { wordpressRestApiUrl } from "@/utils/variables";
 
-const WooCommerce = axios.create({
+const Wordpress = axios.create({
   baseURL: wordpressRestApiUrl,
 });
 
@@ -9,7 +9,7 @@ const WooCommerce = axios.create({
 export default async function handler(req, res) {
   try {
     // Fetch product reviews
-    const response = await WooCommerce.get('main-category');
+    const response = await Wordpress.get('main-category');
 
     // Return only the data portion of the response
     res.status(200).json(response.data);

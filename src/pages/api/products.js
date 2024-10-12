@@ -13,7 +13,8 @@ export default async function handler(req, res) {
     min_price = 0 ,
       reviews_count = 0,
       main_categories,
-      sub_categories
+      sub_categories,
+      search
     } = req.query; // Default to page 1 and 100 items per page
 
     
@@ -28,7 +29,8 @@ export default async function handler(req, res) {
       per_page,
       page,
       main_categories,
-      sub_categories
+      sub_categories,
+      search
       },
     });
 

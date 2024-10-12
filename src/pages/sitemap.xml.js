@@ -74,9 +74,7 @@ export async function getServerSideProps({ res }) {
     const productsData = await productsResponse.json();
     const products = productsData?.data || []; // Default to empty array if data is null or undefined
 
-    // Log data for debugging purposes
-    console.log('Posts:', posts);
-    console.log('Products:', products);
+
 
     // Generate the XML sitemap with the posts and products data
     const sitemap = generateSiteMap(posts, products);

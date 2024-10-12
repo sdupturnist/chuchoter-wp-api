@@ -15,7 +15,7 @@ import { AOSInit } from '@/components/Aos';
 import axios from 'axios';
 
 
-export default function ProductSingle({ product, test, reviews }) {
+export default function ProductSingle({ product, reviews }) {
   const router = useRouter();
   const { query } = router;
 
@@ -355,7 +355,6 @@ export async function getServerSideProps(context) {
     return {
       props: {
         product: res.data[0], // Set the fetched products
-        test: slug,
         reviews: reviewsData.data,
       },
     };

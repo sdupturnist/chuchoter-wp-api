@@ -1,32 +1,30 @@
-import { adminUrl, wordpressGraphQlApiUrl } from "@/utils/variables";
+import { frontendUrl } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from '@/components/Seo';
-import { BlocksRenderer } from '@strapi/blocks-react-renderer';
 import Images from '@/components/Images';
 import PageHeader from "@/components/PageHeader";
 import { useEffect, useState } from "react";
 import { AOSInit } from '@/components/Aos';
+import axios from "axios";
 
-export default function About({ pageData_ }) {
-  const pageData = pageData_?.data?.pages?.nodes[0];
+export default function About({ pageData }) {
 
 
 
-  console.log(pageData)
 
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
 
-    if (pageData_) {
+    if (pageData) {
       setIsLoading(false);
     }
-  }, [pageData_]);
+  }, [pageData]);
 
   return (
     <>
-      <Metatags seo={pageData_?.data?.about?.data?.attributes?.seo} />
+      <Metatags seo={pageData && pageData?.yoast_head_json} />
       <Layout page={'about'}>
         <AOSInit />
         <div className="container [&>*]:text-black">
@@ -41,7 +39,7 @@ export default function About({ pageData_ }) {
             ) : (
               <>
                 <div data-aos="fade-up">
-                  <PageHeader title={pageData?.title} />
+                  <PageHeader title={pageData?.title?.rendered} />
                 </div>
                 <div>
                   <div data-aos="fade-up" data-aos-delay="500">
@@ -50,15 +48,15 @@ export default function About({ pageData_ }) {
                       height="600"
                       quality={100}
                       placeholder={true}
-                      imageurl={pageData?.featuredImage?.node?.sourceUrl}
+                      imageurl={pageData?.fea_data?.url}
                       classes={'mx-auto w-full block rounded-[10px]'}
-                      alt={pageData?.featuredImage?.node?.altText}
-                      title={pageData?.featuredImage?.node?.altText}
+                      alt={pageData?.fea_data?.alt}
+                      title={pageData?.fea_data?.alt}
 
                     />
                   </div>
                   <div className="grid gap-[30px] md:pt-[60px] sm:pt-[30px] pt-[20px] sm:pb-[100px] pb-[30px] justify-end [&>*]:text-justify" data-aos="fade-up" data-aos-delay="700">
-                    <div className="[&>*]:mb-[20px]" dangerouslySetInnerHTML={{ __html: pageData && pageData?.content }} />
+                    <div className="[&>*]:mb-[20px]" dangerouslySetInnerHTML={{ __html: pageData && pageData?.content?.rendered }} />
                   </div>
                 </div>
               </>
@@ -72,68 +70,22 @@ export default function About({ pageData_ }) {
 
 export async function getStaticProps() {
   try {
-    const pageDataResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `query Pages {
-  pages(where: {id: 25}) {
-    nodes {
-      title
-      content
-      featuredImage{
-        node{
-          altText
-          sourceUrl
-        }
-      }
-      seo {
-        canonical
-        focuskw
-        opengraphSiteName
-        metaDesc
-        metaKeywords
-        title
-        opengraphDescription
-        opengraphSiteName
-        opengraphUrl
-        opengraphImage {
-          altText
-          link
-          sourceUrl
-        }
-        opengraphType
-        opengraphTitle
-        opengraphModifiedTime
-        twitterDescription
-        twitterTitle
-        twitterImage {
-          sourceUrl
-        }
-      }
-    }
-  }
-}`,
-      }),
-    });
+    const aboutRes = await axios.get(`${frontendUrl}/api/about`);
 
-    const pageData_ = await pageDataResponse.json();
 
     return {
       props: {
-        pageData_,
+        pageData: aboutRes.data,
       },
-      revalidate: 60, // Revalidate every 60 seconds
+      revalidate: 60, // revalidate every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error.message);
     return {
       props: {
-        pageData_: null,
+        pageData: [],
       },
-      revalidate: 60, // Optional: allow revalidation even on error
+      revalidate: 60, // still revalidate even on error
     };
   }
 }

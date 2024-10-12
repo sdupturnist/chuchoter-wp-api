@@ -12,7 +12,7 @@ import { useThemeContext } from "@/context/themeContext";
 import axios from "axios";
 
 
-export default function Cart({ pageData_, allProducts_ }) {
+export default function Cart({ pageData, allProducts_ }) {
 
 
  
@@ -76,19 +76,19 @@ export default function Cart({ pageData_, allProducts_ }) {
 
   return (
     <>
-      {/* <Metatags seo={pageData_ && pageData_?.data?.itemsCart?.data?.attributes?.seo} /> */}
+     <Metatags seo={pageData && pageData?.yoast_head_json} />
       <Layout page="cart">
         <AOSInit/>
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid">
             <div className="flex justify-between items-center border-b border-black">
               <h1 className="uppercase text-[20px] font-semibold tracking-[1%] sm:my-[20px] my-[10px]">
-                {pageData_ && pageData_?.title?.rendered}
+                {pageData && pageData?.title?.rendered}
               </h1>
               <Breadcrumbs
                 pages={[
                   {
-                    "name": "order",
+                    "name": "cart",
                     "link": "",
                   },
                 ]}
@@ -122,7 +122,7 @@ export default function Cart({ pageData_, allProducts_ }) {
                     <p className="flex justify-between w-full border-b border-solid border-gray-200 pb-[16px]">
                       <span className="block text-black text-opacity-50">Subtotal</span>
                       <span className="block text-black text-opacity-50">{totalAmount} QR</span>
-                      {console.log(totalAmount)}
+                   
                     </p>
                     <p className="flex justify-between w-full border-b border-solid border-black py-[16px]">
                       <span className="block text-black text-opacity-50">Delivery fee</span>
@@ -165,8 +165,7 @@ export async function getServerSideProps(context) {
 
   try {
 
-    // Fetch total product count
-    const res = await axios.get(`${frontendUrl}/api/itemsCart`);
+    const cartRes = await axios.get(`${frontendUrl}/api/cart`);
     
     const productsRes = await axios.get(`${frontendUrl}/api/products`, {
       params: { 
@@ -175,136 +174,18 @@ export async function getServerSideProps(context) {
     });
 
     
-
+   
     return {
       props: {
-        pageData_: res.data,
+        pageData: cartRes.data,
         allProducts_:productsRes.data,
-      }
+       }
     };
 
   } catch (error) {
     console.error('Error fetching products:', error.message);
-    return { props: { pageData_: [], allProducts_: [], } }; // Set default total count to 0 on error
+    return { props: { pageData: [], allProducts_: [], } }; // Set default total count to 0 on error
   }
 }
 
 
-
-
-// export async function getStaticProps() {
-//   try {
-//     // Fetch data for items in the cart
-//     const pageDataResponse = await fetch(wordpressGraphQlApiUrl, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         query: `query {
-//           itemsCart {
-//             data {
-//               attributes {
-//                 Title
-//                 seo {
-//                   metaTitle
-//                   metaDescription
-//                   metaImage {
-//                     data {
-//                       attributes {
-//                         url
-//                       }
-//                     }
-//                   }
-//                   metaSocial {
-//                     title
-//                     description
-//                     socialNetwork
-//                   }
-//                   keywords
-//                   metaRobots
-//                   canonicalURL
-//                   OGtitle
-//                   OGSitename
-//                   OGdescription
-//                   OGmodifiedtime
-//                 }
-//               }
-//             }
-//           }
-//         }`,
-//       }),
-//     });
-//     const pageData_ = await pageDataResponse.json();
-
-//     // Fetch all products
-//     const allProductsResponse = await fetch(wordpressGraphQlApiUrl, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         query: `query {
-//           shops(
-//             pagination: { limit: 500 }
-//           ) {
-//             data {
-//               id
-//               attributes {
-//                 Slug
-//                 Heading
-//                 normalPrice
-//                 offerPrice
-//                 productCode
-//                 sub_categories {
-//                   data {
-//                     attributes {
-//                       Title
-//                       slug
-//                     }
-//                   }
-//                 }
-//                 main_categories {
-//                   data {
-//                     attributes {
-//                       Title
-//                       Slug
-//                     }
-//                   }
-//                 }
-//                 photo {
-//                   data {
-//                     attributes {
-//                       alternativeText
-//                       width
-//                       height
-//                       url
-//                     }
-//                   }
-//                 }
-//               }
-//             }
-//           }
-//         }`,
-//       }),
-//     });
-//     const allProducts_ = await allProductsResponse.json();
-
-//     return {
-//       props: {
-//         pageData_,
-//         allProducts_,
-//       },
-//       revalidate: 60, // Revalidate every 60 seconds
-//     };
-//   } catch (error) {
-//     console.error('Error fetching data:', error);
-//     return {
-//       props: {
-//         pageData_: null,
-//         allProducts_: null,
-//       },
-//       revalidate: 60, // Optional: still allow revalidation even on error
-//     };
-//   }
-// }

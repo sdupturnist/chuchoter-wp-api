@@ -20,13 +20,7 @@ import axios from "axios";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 
-export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featuredProducts_ }) {
-
-
-
-  const feaProducts = featuredProducts_?.data ?? [];
-  const homePageData = pageData_?.data?.pages?.nodes[0] ?? [];
-  const homePageTwoData = homeTwoData_?.data?.allStoreSectionsAcf?.nodes ?? [];
+export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
 
@@ -349,17 +343,7 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
   }, []);
 
 
-  // const heroSlider = {
-  //   dots: true,
-  //   fade: true,
-  //   infinite: true,
-  //   speed: 3500,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  //   waitForAnimate: false,
-  //   autoplay: true,
-  //   pauseOnHover: false,
-  // };
+
 
   const featuredProductsSlider = {
     dots: false,
@@ -378,14 +362,9 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
 
 
-  // console.log(pageData_)
-
-
-
-
   return (
     <>
-      <Metatags seo={pageData_ && pageData_?.data?.pages?.nodes[0]?.seo} />
+      <Metatags seo={pageData && pageData?.yoast_head_json} />
       <Layout
         page="home2"
         header="color"
@@ -402,12 +381,10 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
               theme='chocolate'
             />
             <h2 className="text-red-600">
-            search<br/>
-            seo<br/>
-            full check<br/>
-            arabci rtl<br/>
-            api change with trasalation<br/>
-            remove console.log<br/>
+             full check<br />
+              arabci rtl<br />
+              api change with trasalation<br />
+              remove console.log<br />
             </h2>
             <div className="wrpr sm:pt-[100px] pt-[80px]">
               <Images
@@ -416,19 +393,21 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                 quality={100}
                 placeholder={true}
                 classes={'chocolate-image-1 max-width-[100%] absolute top-0 left-[2%] hidden xl:block max-w-[150px]'}
-                imageurl={homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl ? homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl : ''}
-                alt={homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                title={homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                imageurl={homeSections[3]?.acf?.banner1?.url ? homeSections[3]?.acf?.banner1?.url : ''}
+                alt={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
+                title={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
               />
               <div className="container relative z-[1] content">
                 <div className="mx-auto 2xl:w-[80%] xl:w-[90%] grid gap-[20px] px-[20px]">
                   <div className="w-[100%]">
                     <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" data-aos="fade-up">
                       <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%] xl:text-end block pb-[40px] xl:pb-[0]">
-                        {homeTwoData_ && homePageTwoData[3]?.storeHomeSectionsAcf?.category}
+                        {homeSections && homeSections[3]?.acf?.category}
+
+                       
                       </span>
                       <span className="mt-[-50px] block">
-                        {homeTwoData_ && homePageTwoData[3]?.title}
+                        {homeSections && homeSections[3]?.title.rendered}
                       </span>
                     </h1>
                     <div
@@ -442,20 +421,20 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                         placeholder={false}
                         imageurl={`/images/chocolates-hero-bg_new3.webp`}
                         classes={'mx-auto w-full block xl:hidden my-[30px] max-w-[330px]'}
-                        alt={homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                        title={homePageTwoData[3]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                        alt={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
+                        title={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
                       />
                     </div>
                     <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
                       <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
-                        <div dangerouslySetInnerHTML={{ __html: homeTwoData_ && homePageTwoData[3]?.content }} />
+                        <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[3]?.content?.rendered }} />
                       </div>
                       <div>
                         <Link
-                          aria-label={homeTwoData_ && homePageTwoData[3]?.storeHomeSectionsAcf?.category}
-                          title={homeTwoData_ && homePageTwoData[3]?.storeHomeSectionsAcf?.category}
-                          href={`/${homeTwoData_ && homePageTwoData[3].storeHomeSectionsAcf.category.toString().toLowerCase()}`}
-                          onClick={(e) => setThemeLayout(homeTwoData_ && homePageTwoData[3]?.storeHomeSectionsAcf?.category)}
+                          aria-label={homeSections && homeSections[3]?.acf?.category}
+                          title={homeSections && homeSections[3]?.acf?.category}
+                          href={`/${homeSections && homeSections[3].acf.category.toString().toLowerCase()}`}
+                          onClick={(e) => setThemeLayout(homeSections && homeSections[3]?.acf?.category)}
                           className="btn btn-lg px-[40px] bg-transparent border border-solid border-chocolates-100 hover:bg-chocolates-100 text-chocolates-100 hover:border-chocolates-100 hover:text-white rounded-full"
                         >
                           Shop Now
@@ -472,9 +451,9 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                 quality={100}
                 placeholder={true}
                 classes={'chocolate-image-2 max-width-[100%] block lg:absolute bottom-[0%] right-[0%] hidden xl:block max-w-[250px]'}
-                imageurl={homePageTwoData[3]?.storeHomeSectionsAcf?.banner2?.node?.sourceUrl ? homePageTwoData[3]?.storeHomeSectionsAcf?.banner2?.node?.sourceUrl : ''}
-                alt={homePageTwoData[3]?.storeHomeSectionsAcf?.banner2?.node?.altText || 'Default title text'}
-                title={homePageTwoData[3]?.storeHomeSectionsAcf?.banner2?.node?.altText || 'Default title text'}
+                imageurl={homeSections[3]?.acf?.banner2?.url ? homeSections[3]?.acf?.banner2?.url : ''}
+                alt={homeSections[3]?.acf?.banner2?.alt || 'Default title text'}
+                title={homeSections[3]?.acf?.banner2?.alt || 'Default title text'}
               />
             </div>
           </section>
@@ -488,10 +467,10 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                     <div className="content z-20 relative" data-aos="fade-up">
                       <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
                         <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%]  block pb-[40px] xl:pb-[0]">
-                          {homeTwoData_ && homePageTwoData[2]?.storeHomeSectionsAcf?.category}
+                          {homeSections && homeSections[2]?.acf?.category}
                         </span>
                         <span className="mt-[-50px] block">
-                          {homeTwoData_ && homePageTwoData[2]?.title}
+                          {homeSections && homeSections[2]?.title.rendered}
                         </span>
                       </h2>
                     </div>
@@ -501,24 +480,24 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                       quality={100}
                       placeholder={true}
                       classes={'chocolate-image-1 max-width-[100%] block mx-auto  bottom-[5%] right-0 left-0 z-[-1] hidden xl:block'}
-                      imageurl={homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl ? homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl : ''}
-                      alt={homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                      title={homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                      imageurl={homeSections[2]?.acf?.banner1?.url ? homeSections[2]?.acf?.banner1?.url : ''}
+                      alt={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
+                      title={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
                     />
 
                     <div className="content2" data-aos="fade-up">
                       <div className="grid gap-[30px] xl:mt-[50px] mt-[30px]">
                         <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase mx-auto">
                           <p className="">
-                            <div dangerouslySetInnerHTML={{ __html: homeTwoData_ && homePageTwoData[2]?.content }} />
+                            <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[2]?.content?.rendered }} />
                           </p>
                         </div>
                         <div >
                           <Link
-                            aria-label={homeTwoData_ && homePageTwoData[2]?.storeHomeSectionsAcf?.category}
-                            title={homeTwoData_ && homePageTwoData[2]?.storeHomeSectionsAcf?.category}
-                            href={`/${homeTwoData_ && homePageTwoData[2].storeHomeSectionsAcf.category.toString().toLowerCase()}`}
-                            onClick={(e) => setThemeLayout(homeTwoData_ && homePageTwoData[2]?.storeHomeSectionsAcf?.category)}
+                            aria-label={homeSections && homeSections[2]?.acf?.category}
+                            title={homeSections && homeSections[2]?.acf?.category}
+                            href={`/${homeSections && homeSections[2].acf.category.toString().toLowerCase()}`}
+                            onClick={(e) => setThemeLayout(homeSections && homeSections[2]?.acf?.category)}
                             className="btn btn-lg px-[40px] bg-transparent border border-solid border-flowers-100 hover:bg-flowers-100 text-flowers-100 hover:border-flowers-100 hover:text-white rounded-full"
                           >
                             Shop Now
@@ -531,8 +510,8 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                             placeholder={false}
                             imageurl={`/images/flowers-hero-bg.webp`}
                             classes={'mx-auto w-full block xl:hidden'}
-                            alt={homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                            title={homePageTwoData[2]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                            alt={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
+                            title={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
                           />
                         </div>
                       </div>
@@ -552,9 +531,9 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                 quality={100}
                 placeholder={true}
                 classes={'cakes-image-1 max-width-[100%] absolute top-0 left-[2%] hidden xl:block'}
-                imageurl={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl ? homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl : ''}
-                alt={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                title={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                imageurl={homeSections[1]?.acf?.banner1?.url ? homeSections[1]?.acf?.banner1?.url : ''}
+                alt={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
+                title={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
 
               />
               <div className="container relative z-[1] content">
@@ -562,24 +541,24 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                   <div className="w-[100%]">
                     <h2 data-aos="fade-up" className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] xl:pl-[20%] sm:pt-[50px] pt-[50px] xl:pt-[0]">
                       <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%] xl:text-end block pb-[40px] xl:pb-[0]">
-                        {homeTwoData_ && homePageTwoData[1]?.storeHomeSectionsAcf?.category}
+                        {homeSections && homeSections[1]?.acf?.category}
                       </span>
                       <span className="mt-[-50px] block">
-                        {homeTwoData_ && homePageTwoData[1]?.title}
+                        {homeSections && homeSections[1]?.title.rendered}
                       </span>
                     </h2>
                     <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
                       <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
                         <p className="">
-                          <div dangerouslySetInnerHTML={{ __html: homeTwoData_ && homePageTwoData[1]?.content }} />
+                          <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[1]?.content?.rendered }} />
                         </p>
                       </div>
                       <div>
                         <Link
-                          aria-label={homeTwoData_ && homePageTwoData[1]?.storeHomeSectionsAcf?.category}
-                          title={homeTwoData_ && homePageTwoData[1]?.storeHomeSectionsAcf?.category}
-                          href={`/${homeTwoData_ && homePageTwoData[1].storeHomeSectionsAcf.category.toString().toLowerCase()}`}
-                          onClick={(e) => setThemeLayout(homeTwoData_ && homePageTwoData[1]?.storeHomeSectionsAcf?.category)}
+                          aria-label={homeSections && homeSections[1]?.acf?.category}
+                          title={homeSections && homeSections[1]?.acf?.category}
+                          href={`/${homeSections && homeSections[1].acf.category.toString().toLowerCase()}`}
+                          onClick={(e) => setThemeLayout(homeSections && homeSections[1]?.acf?.category)}
                           className="btn btn-lg px-[40px] bg-transparent border border-solid border-cakes-100 hover:bg-cakes-100 text-cakes-100 hover:border-cakes-100 hover:text-white rounded-full"
                         >
                           Shop Now
@@ -600,8 +579,8 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                   placeholder={false}
                   imageurl={`/images/cakes-hero-bg-1.webp`}
                   classes={'mx-auto w-full block xl:hidden mx-auto max-w-[300px] mt-[30px]'}
-                  alt={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                  title={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                  alt={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
+                  title={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
                 />
               </div>
               <Images
@@ -610,9 +589,9 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                 quality={100}
                 placeholder={true}
                 classes={'cakes-image-2 max-width-[100%] block lg:absolute bottom-[5%] right-[2%] hidden xl:block'}
-                imageurl={homePageTwoData[1]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl ? homePageTwoData[1]?.storeHomeSectionsAcf?.banner2?.node?.sourceUrl : ''}
-                alt={homePageTwoData[1]?.storeHomeSectionsAcf?.banner2?.node?.altText || 'Default title text'}
-                title={homePageTwoData[1]?.storeHomeSectionsAcf?.banner2?.node?.altText || 'Default title text'}
+                imageurl={homeSections[1]?.acf?.banner1?.url ? homeSections[1]?.acf?.banner2?.url : ''}
+                alt={homeSections[1]?.acf?.banner2?.alt || 'Default title text'}
+                title={homeSections[1]?.acf?.banner2?.alt || 'Default title text'}
               />
 
             </div>
@@ -627,10 +606,10 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                     <div className="content z-20 relative" data-aos="fade-up">
                       <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
                         <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%]  block pb-[40px] xl:pb-[0]">
-                          {homeTwoData_ && homePageTwoData[0]?.storeHomeSectionsAcf?.category}
+                          {homeSections && homeSections[0]?.acf?.category}
                         </span>
                         <span className="mt-[-50px] block">
-                          {homeTwoData_ && homePageTwoData[0]?.title}
+                          {homeSections && homeSections[0]?.title.rendered}
                         </span>
                       </h2>
                     </div>
@@ -641,9 +620,9 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                         quality={100}
                         placeholder={true}
                         classes={'chocolate-image-1 max-width-[100%] block mx-auto  bottom-[5%] right-0 left-0 z-[-1] hidden xl:block'}
-                        imageurl={homePageTwoData[0]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl ? homePageTwoData[0]?.storeHomeSectionsAcf?.banner1?.node?.sourceUrl : ''}
-                        alt={homePageTwoData[0]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
-                        title={homePageTwoData[0]?.storeHomeSectionsAcf?.banner1?.node?.altText || 'Default title text'}
+                        imageurl={homeSections[0]?.acf?.banner1?.url ? homeSections[0]?.acf?.banner1?.url : ''}
+                        alt={homeSections[0]?.acf?.banner1?.alt || 'Default title text'}
+                        title={homeSections[0]?.acf?.banner1?.alt || 'Default title text'}
                       />
                     </div>
 
@@ -651,15 +630,15 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                       <div className="grid gap-[30px] xl:mt-[50px] mt-[10px]">
                         <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] mx-auto tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase">
                           <p className="">
-                            <div dangerouslySetInnerHTML={{ __html: homeTwoData_ && homePageTwoData[0]?.content }} />
+                            <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[0]?.content?.rendered }} />
                           </p>
                         </div>
                         <div>
                           <Link
-                            aria-label={homeTwoData_ && homePageTwoData[0]?.storeHomeSectionsAcf?.category}
-                            title={homeTwoData_ && homePageTwoData[0]?.storeHomeSectionsAcf?.category}
-                            href={`/${homeTwoData_ && homePageTwoData[0].storeHomeSectionsAcf.category.toString().toLowerCase()}`}
-                            onClick={(e) => setThemeLayout(homeTwoData_ && homePageTwoData[0]?.storeHomeSectionsAcf?.category)}
+                            aria-label={homeSections && homeSections[0]?.acf?.category}
+                            title={homeSections && homeSections[0]?.acf?.category}
+                            href={`/${homeSections && homeSections[0].acf.category.toString().toLowerCase()}`}
+                            onClick={(e) => setThemeLayout(homeSections && homeSections[0]?.acf?.category)}
                             className="btn btn-lg px-[40px] bg-transparent border border-solid border-events-100 hover:bg-events-100 text-events-100 hover:border-events-100 hover:text-white rounded-full"
                           >
                             Shop Now
@@ -683,13 +662,13 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
                   placeholder={false}
                   imageurl={`/images/events-hero-bg-1.webp`}
                   classes={'mx-auto w-full block xl:hidden'}
-                  alt={homePageTwoData[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
-                  title={homePageTwoData[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
+                  alt={homeSections[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
+                  title={homeSections[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
                 />
               </div>
             </div>
           </section>
-          {featuredProducts_.length !== 0 && windowWidth > 999 ? <section>
+          {featuredProducts.length !== 0 && windowWidth > 999 ? <section>
 
             <div className="container" data-aos="fade-in">
               <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
@@ -700,18 +679,18 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
                   <Slider {...featuredProductsSlider}>
 
-  {featuredProducts_ && feaProducts
-                .filter(item => item?.acf?.featured === true) // Filter for items with show_in_menu true
-                .map((item, index) => (
-                 <>
-<Card
-                 key={index}
-                 theme="chocolates"
-                 item={item}
-            />
+                    {featuredProducts && featuredProducts?.data
+                      .filter(item => item?.acf?.featured === true) // Filter for items with show_in_menu true
+                      .map((item, index) => (
+                        <>
+                          <Card
+                            key={index}
+                            theme="chocolates"
+                            item={item}
+                          />
 
-              </>
-                ))}
+                        </>
+                      ))}
                   </Slider>
                 </div>
               </div>
@@ -721,14 +700,14 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
           }
           <section data-aos="fade-in">
             <div className="container">
-              <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${featuredProducts_.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
+              <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${featuredProducts.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
                 <div className="md:pl-[15%]">
                   <h3 className="md:text-[30px] sm:text-[26px] text-[22px] uppercase font-medium">
-                    {pageData_ && homePageData?.title}
+                    {pageData && pageData?.title.rendered}
                   </h3>
                 </div>
                 <div className="grid gap-[8px] sm:gap-[4px] md:pl-[40%]">
-                  <div dangerouslySetInnerHTML={{ __html: pageData_ && homePageData?.content }} />
+                  <div dangerouslySetInnerHTML={{ __html: pageData && pageData?.content?.rendered }} />
                   <Link
                     href="/about"
                     aria-label="About"
@@ -749,155 +728,28 @@ export default function Home({ homeTwoData_, pageData_, pageDataAbout_, featured
 
 
 export async function getStaticProps() {
-  const pageSize = 4; // Set your desired page size
-
   try {
-    // Fetch the data for the home page
-    const pageDataAboutResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-        query Pages {
-  pages(where: {id: 171}) {
-    nodes {
-      title
-      content
-      seo {
-        canonical
-        focuskw
-        opengraphSiteName
-        metaDesc
-        metaKeywords
-        title
-        opengraphDescription
-        opengraphSiteName
-        opengraphUrl
-        opengraphImage {
-          altText
-          link
-          sourceUrl
-        }
-        opengraphType
-        opengraphTitle
-        opengraphModifiedTime
-        twitterDescription
-        twitterTitle
-        twitterImage {
-          sourceUrl
-        }
-      }
-    }
-  }
-}
-  `,
-      }),
-    });
-    const pageDataAbout_ = await pageDataAboutResponse.json();
-
-    const pageDataResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `query Pages {
-  pages(where: {id: 54}) {
-    nodes {
-      title
-      content
-      seo {
-        canonical
-        focuskw
-        opengraphSiteName
-        metaDesc
-        metaKeywords
-        title
-        opengraphDescription
-        opengraphSiteName
-        opengraphUrl
-        opengraphImage {
-          altText
-          link
-          sourceUrl
-        }
-        opengraphType
-        opengraphTitle
-        opengraphModifiedTime
-        twitterDescription
-        twitterTitle
-        twitterImage {
-          sourceUrl
-        }
-      }
-    }
-  }
-}`,
-      }),
-    });
-    const pageData_ = await pageDataResponse.json();
-
-    // Fetch HOME2DATA
-    const homeTwoDataResponse = await fetch(wordpressGraphQlApiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `query CustomPost {
-  allStoreSectionsAcf {
-    nodes {
-      title
-      content
-      storeHomeSectionsAcf {
-        banner1 {
-          node {
-            altText
-            sourceUrl
-          }
-        }
-        banner2 {
-          node {
-            altText
-            sourceUrl
-          }
-        }
-        category
-      }
-  
-    }
-  }
-}`,
-      }),
-    });
-    const homeTwoData_ = await homeTwoDataResponse.json();
-
-    // Fetch featured products
- 
-      const featuredProducts = await axios.get(`${frontendUrl}/api/products`);
-   
+    const homeRes = await axios.get(`${frontendUrl}/api/home`);
+    const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
+    const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
 
     return {
       props: {
-        pageData_,
-        homeTwoData_,
-        pageDataAbout_,
-        featuredProducts_: featuredProducts.data,
+        pageData: homeRes.data,
+        homeSections: homeSectionsRes.data,
+        featuredProducts: featuredProductsRes.data,
       },
-      revalidate: 60, // Revalidate every 60 seconds
+      revalidate: 60, // revalidate every 60 seconds
     };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error.message);
     return {
       props: {
-        pageData_: null,
-        homeTwoData_: null,
-        pageDataAbout_: null,
-        featuredProducts_: null,
+        pageData: [],
+        homeSections: [],
+        featuredProducts: [],
       },
-      revalidate: 60, // Optional: still allow revalidation even on error
+      revalidate: 60, // still revalidate even on error
     };
   }
 }

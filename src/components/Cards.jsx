@@ -170,25 +170,23 @@ const review = item?.acf?.user_reviews
                 ) : (
                     <>
                         <AOSInit />
-                        <Link data-aos="fade-up" href={`${frontendUrl}/blogs/${item && item.attributes.Slug}`} className="grid gap-[20px]">
-
-                            <Images
-                                width={item?.attributes?.Banner?.data?.attributes?.width || 0}  // Provide a default value
-                                height={item?.attributes?.Banner?.data?.attributes?.height || 0} // Ensure height is also set
+                        <Link data-aos="fade-up" href={`${frontendUrl}/blogs/${item && item?.title?.rendered.toLowerCase().replace(/ /g, '-')}`} className="grid gap-[20px]">
+      {item?.fea_data &&  <Images
+                                width="500" 
+                                height="400"  
                                 quality={100}
                                 placeholder={true}
-                                imageurl={item?.attributes?.Banner?.data?.attributes?.url ? adminUrl + item.attributes.Banner.data.attributes.url : ''} // Provide a fallback URL
-                                classes={'mx-auto w-full block rounded-[8px] object-cover sm:min-h-[380px]'}
-                                alt={item?.attributes?.Banner?.data?.attributes?.alternativeText || 'Default alt text'} // Provide a default alt text
-                                title={item?.attributes?.Banner?.data?.attributes?.alternativeText || 'Default title text'} // Provide a default title text
+                                imageurl={item?.fea_data?.url ? item?.fea_data?.url  : ''} // Provide a fallback URL
+                                classes={'mx-auto w-full block rounded-[8px] object-cover sm:min-h-[380px] sm:max-h-[380px]'}
+                                alt={item?.fea_data?.alt  || 'Default alt text'} // Provide a default alt text
+                                title={item?.fea_data?.alt || 'Default title text'} // Provide a default title text
                             />
+                      }
 
                             <div className="grid gap-[15px]">
-                                <h2 className="font-semibold text-[20px]">{item && item.attributes.Title}</h2>
-                                <p className="text-gray-500 hidden sm:block">
-                                    {truncateWords(item?.attributes?.Content[0]?.children[0]?.text ?? null, 30)}
-                                </p>
-                            </div>
+                                <h2 className="font-semibold text-[20px]">{item && item.title?.rendered}</h2>
+                               <div className="[&>*]:mb-[20px]" dangerouslySetInnerHTML={{ __html: truncateWords(item?.content?.rendered ?? null, 30) }} />
+   </div>
                         </Link>
                     </>
                 )}
