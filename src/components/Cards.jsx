@@ -6,13 +6,16 @@ import { useEffect, useState } from 'react';
 import { adminUrl, frontendUrl } from '@/utils/variables';
 import { truncateWords } from '@/utils/TruncateWords';
 import { AOSInit } from './Aos';
+import { useLanguageContext } from '@/context/LanguageContext';
 
 
 export default function Card({ theme, desc, type, item }) {
 
+    
 
 const review = item?.acf?.user_reviews
 
+const { language } = useLanguageContext();
 
     const { themeLayout } = useThemeContext();
     const currentTheme =  themeLayout.toString().toLowerCase()
@@ -79,7 +82,7 @@ const review = item?.acf?.user_reviews
                           <div className='relative overflow-hidden'>
                            
                                
-                                <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
+                                <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}/${language}`}>
                                     <Images
                                         width="170"
                                         height="170"

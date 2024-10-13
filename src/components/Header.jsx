@@ -21,7 +21,7 @@ export default function Nav({ theme, page, initialData }) {
   const { setModalFor, setShowModal } = useModalContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
-  const { language, toggleLanguage } = useLanguageContext();
+  const { language } = useLanguageContext();
 
 
   const { dataCategory } = CategoryData(initialData);
@@ -147,7 +147,7 @@ export default function Nav({ theme, page, initialData }) {
   function NavigationRight(){
     return(
       <>
-        <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
+        <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
         <LanguageSwitch
               label="test language toggle"
             />

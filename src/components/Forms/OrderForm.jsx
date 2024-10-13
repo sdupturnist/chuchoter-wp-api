@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import { wordpressGraphQlApiUrl, frontendUrl, siteEmail, siteFromEmail } from '@/utils/variables'
 import { useRouter } from 'next/navigation'
+import { orderFormTranslations } from '@/utils/transalations'
+import { useLanguageContext } from '@/context/LanguageContext'
+
 
 
 
@@ -11,6 +14,8 @@ export default function OrderForm({ totalAmountOrder, items }) {
 
     const router = useRouter()
 
+    console.log(orderFormTranslations.action.ar)
+    const { language } = useLanguageContext();
 
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
@@ -175,25 +180,25 @@ export default function OrderForm({ totalAmountOrder, items }) {
     
 
         if (!fullname) {
-            errors.fullname = 'Full name is required.';
+            errors.fullname = `${orderFormTranslations.full_name[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         }
 
 
 
         if (!email) {
-            errors.email = 'Email is required.';
+            errors.email = `${orderFormTranslations.email[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            errors.email = 'Email is invalid.';
+            errors.email = `${orderFormTranslations.email[language]} ${language === 'en' ? 'is required.' : 'غير صالح'}`;
         }
 
         if (!phone) {
-            errors.phone = 'Phone is required.';
+            errors.phone = `${orderFormTranslations.phone[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         }
         if (!address) {
-            errors.address = 'Address is required.';
+            errors.address = `${orderFormTranslations.address[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         }
         if (!city) {
-            errors.city = 'City is required.';
+            errors.city = `${orderFormTranslations.city[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         }
         // if (!deliveryDate) {
         //     errors.deliveryDate = 'Date is required.';
@@ -204,16 +209,16 @@ export default function OrderForm({ totalAmountOrder, items }) {
 
         if (giftItem == true) {
             if (!receiverName) {
-                errors.receiverName = 'Receiver name is required.';
+                errors.receiverName = `${orderFormTranslations.receiver_name[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
             }
             if (!receiverAddress) {
-                errors.receiverAddress = 'Receiver address is required.';
+                errors.receiverAddress = `${orderFormTranslations.receiver_address[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
             }
             if (!receiverPhone) {
-                errors.receiverPhone = 'Receiver phone is required.';
+                errors.receiverPhone = `${orderFormTranslations.receiver_phone[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
             }
             if (!receiverCity) {
-                errors.receiverCity = 'Receiver city is required.';
+                errors.receiverCity = `${orderFormTranslations.receiver_city[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
             }
 
         }
@@ -287,7 +292,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
             <div className="w-full grid gap-[16px]">
                 <div className='grid gap-[16px]'>
                     <h2 className="uppercase text-[18px] font-semibold tracking-[1%] sm:mb-[10px] mb-[10px]">
-                        Delivery Information
+                    {orderFormTranslations.additional_information_title[language]}
                     </h2>
 
                     <div className='sm:flex grid gap-[16px]'>
@@ -323,7 +328,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                         <input
                             autocomplete="off"
                             type="text"
-                            placeholder="Full name"
+                            placeholder={orderFormTranslations.full_name[language]}
                             className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                             value={fullname}
                             onChange={(e) => setFullname(e.target.value)}
@@ -337,7 +342,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                             <input
                                 autocomplete="off"
                                 type="number"
-                                placeholder="Phone"
+                                placeholder={orderFormTranslations.phone[language]}
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
@@ -351,7 +356,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                             <input
                                 autocomplete="off"
                                 type="email"
-                                placeholder="Email"
+                                placeholder={orderFormTranslations.email[language]}
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -366,7 +371,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                         <input
                             autocomplete="off"
                             className="input  placeholder:text-black border-black w-full text-black rounded-[6px]  min-h-[55px] text-[14px]"
-                            placeholder="Address"
+                            placeholder={orderFormTranslations.address[language]}
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                             name="address"
@@ -377,7 +382,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                         <input
                             autocomplete="off"
                             type="text"
-                            placeholder="City"
+                            placeholder={orderFormTranslations.city[language]}
                             className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                             value={city}
                             onChange={(e) => setCity(e.target.value)}
@@ -390,7 +395,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                         <input
                             autocomplete="off"
                             className="input  placeholder:text-black border-black w-full text-black rounded-[6px]  min-h-[55px] text-[14px]"
-                            placeholder="Additional Instructions"
+                            placeholder={orderFormTranslations.additional_instructions[language]}
                             value={instructions}
                             onChange={(e) => setInstructions(e.target.value)}
                             name="instructions"
@@ -400,20 +405,20 @@ export default function OrderForm({ totalAmountOrder, items }) {
                     <div className='flex items-center gap-[10px] uppercase text-[14px] tracking-[0.5px]'>
                         <input
                             autocomplete="off" type="checkbox" onChange={(e) => setGiftItem(!giftItem)} className={`checkbox checkbox-xs mb-1 border-black [--chkbg:theme(colors.black)] [--chkfg:white] checked:border-black-100 rounded-[4px]`} />
-                        This order is a gift
+                        {orderFormTranslations.is_gift[language]}
                     </div>
                 </div>
                 {giftItem &&
                     <div className="w-full grid gap-[16px] mt-[10px]">
                         <h2 className="uppercase text-[18px] font-semibold tracking-[1%] sm:mb-[10px] mb-[10px]">
-                            Receiver Information
+                        {orderFormTranslations.receiver_information_title[language]}
                         </h2>
 
                         <div>
                             <input
                                 autocomplete="off"
                                 type="text"
-                                placeholder="Receiver name"
+                                placeholder={orderFormTranslations.receiver_name[language]}
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                                 value={receiverName}
                                 onChange={(e) => setReceiverName(e.target.value)}
@@ -426,7 +431,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                             <input
                                 autocomplete="off"
                                 type="number"
-                                placeholder="Receiver phone"
+                                placeholder={orderFormTranslations.receiver_phone[language]}
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                                 value={receiverPhone}
                                 onChange={(e) => setReceiverPhone(e.target.value)}
@@ -439,7 +444,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                             <input
                                 autocomplete="off"
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px]  min-h-[55px] text-[14px]"
-                                placeholder="Receiver address"
+                                placeholder={orderFormTranslations.receiver_address[language]}
                                 value={receiverAddress}
                                 onChange={(e) => setReceiverAddress(e.target.value)}
                                 name="receiverAddress"
@@ -450,7 +455,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
                             <input
                                 autocomplete="off"
                                 type="text"
-                                placeholder="Receiver city"
+                                placeholder={orderFormTranslations.receiver_city[language]}
                                 className="input  placeholder:text-black border-black w-full text-black rounded-[6px] min-h-[55px] text-[14px]"
                                 value={receiverCity}
                                 onChange={(e) => setReceiverCity(e.target.value)}
@@ -467,7 +472,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
 
                     <button title="Submit" aria-label="Submit" type="submit" className="btn rounded-[6px] w-full min-h-[55px]" onClick={submitEmail}>
                         <span className={buttonLabel == false ? "hidden" : ""}>
-                            Proceed to order
+                        {orderFormTranslations.action[language]}
                         </span>
                         <span className={successLabel == false ? "hidden" : ""}>
                             Done! Order finished

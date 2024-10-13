@@ -390,6 +390,19 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               page="home2"
               theme='chocolate'
             />
+home
+Search 
+QR
+Subtotal
+Total
+SITEMAP
+All rights reserved 2024
+
+contact form dield validations
+
+
+
+            -----------------
  <h2 className="text-red-600">
              full check<br />
           api change with trasalation<br />

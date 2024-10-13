@@ -24,6 +24,7 @@
         "graphql": "^16.9.0",
         "gsap": "^3.12.5",
         "next": "14.2.5",
+        "next-i18next": "^15.3.1",
         "node-fetch": "^3.3.2",
         "nodemailer": "^6.9.14",
         "nookies": "^2.5.2",

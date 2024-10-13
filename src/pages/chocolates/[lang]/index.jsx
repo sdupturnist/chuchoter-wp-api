@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+import { frontendUrl } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import Card from '@/components/Cards';
@@ -6,19 +8,25 @@ import NoData from '@/components/Nodata';
 import { useEffect, useState } from 'react';
 import { useThemeContext } from '@/context/themeContext';
 import Metatags from '@/components/Seo';
-import { useRouter } from 'next/router';
+import axios from 'axios';
 
-export default function ProductListing({products, totalCount, currentPage, title, mainCat}){
 
-    
+
+export default function AllProducts({ products, currentPage, totalCount }) {
+
   const router = useRouter();
   const { query } = router;
-   
 
-    const allProducts = products?.data ?? [];
-    const totalProducts = totalCount; // Replace this with actual total products count from your API if available
-    const productsPerPage = 30; // This should match the per_page value used in the API call
-    const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+  const allProducts = products?.data ?? [];
+  const totalProducts = totalCount; // Replace this with actual total products count from your API if available
+  const productsPerPage = 30; // This should match the per_page value used in the API call
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+
+
+
+
   //query.category
 
 
@@ -61,8 +69,9 @@ export default function ProductListing({products, totalCount, currentPage, title
 
 
 
-    return(<>
-    {/* {pageData_?.data?.subCategorie?.data[0]?.attributes?.seo && (
+  return (
+    <>
+      {/* {pageData_?.data?.subCategorie?.data[0]?.attributes?.seo && (
             <Metatags seo={pageData_?.data?.subCategorie?.data[0]?.attributes?.seo} />
           )}
           {!pageData_?.data?.subCategorie?.data[0]?.attributes?.seo && (
@@ -73,11 +82,11 @@ export default function ProductListing({products, totalCount, currentPage, title
           {/* <PageHeader */}
             {/* type="cat" */}
             {/* catcount={5} */}
-            {/* title={title} */}
-            {/* mainCat={mainCat} */}
+            {/* title={query.category.replace(/-/g, ' ')} */}
+            {/* mainCat={query.category} */}
             {/* data={allProducts} */}
           {/* /> */}
-
+{/*  */}
           {allProducts.length > 0 ? (
             <>
               <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
@@ -111,5 +120,61 @@ export default function ProductListing({products, totalCount, currentPage, title
           )}
         </div>
       </Layout>
-    </>)
+
+    </>
+
+  );
 }
+
+
+export async function getServerSideProps(context) {
+
+
+  const { page = 1 } = context.query; // Get the page number from query parameters
+
+  const minPrice = context.query.minPrice
+  const reviewVal = context.query.minReviewCount
+  const cat1 = context.query.category
+  const cat2 = context.query.sub_categories
+
+  try {
+    const res = await axios.get(`${frontendUrl}/api/products`, {
+      params: {
+        page,
+        per_page: 29,
+        min_price: minPrice,
+        reviews_count: reviewVal,
+        main_categories: cat1,
+        sub_categories: cat2
+      },
+    });
+
+
+    // https://demo.chuchoterqatar.com/wp-json/wc-custom/v1/products?reviews_count=0&min_price=0&page=1&per_page=1&sub_categories=flavours&main_categories=chocolates
+
+
+
+    // Fetch total product count
+    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
+
+
+
+
+    return {
+      props: {
+        products: res.data,
+        currentPage: Number(page),
+        totalCount: resCount.data.totalCount,
+
+      }
+    };
+
+  } catch (error) {
+    console.error('Error fetching products:', error.message);
+    return { props: { products: [], currentPage: 1, totalCount: 0 } }; // Set default total count to 0 on error
+  }
+}
+
+
+
+
