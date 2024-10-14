@@ -19,6 +19,7 @@ export default function LanguageSwitch() {
 
         // Update the language context
         toggleLanguage();
+      
 
         // Get the current pathname
         const currentPath = router.pathname;
@@ -29,6 +30,7 @@ export default function LanguageSwitch() {
 
         // Push the new path to the router
         router.push(newPath);
+        
     };
 
     return (

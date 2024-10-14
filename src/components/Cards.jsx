@@ -82,7 +82,7 @@ const { language } = useLanguageContext();
                           <div className='relative overflow-hidden'>
                            
                                
-                                <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}/${language}`}>
+                                <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}/${language}`}>
                                     <Images
                                         width="170"
                                         height="170"
@@ -210,7 +210,7 @@ const { language } = useLanguageContext();
                 ) : (
                     <>
                         <AOSInit />
-                        <div data-aos="fade-up" className='grid gap-[10px] w-full card-cat sm:mb-[10px] max-w-[190px]' data-id={item?.id ?? null}  data-review={review?.length}>
+                        <div  className='grid gap-[10px] w-full card-cat sm:mb-[10px] max-w-[190px]' data-id={item?.id ?? null}  data-review={review?.length}>
                             <div className='relative overflow-hidden'>
                                 <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
                                     <Images

@@ -9,14 +9,13 @@ import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
 
 
-export default function About({ pageData, test }) {
+export default function About({ pageData }) {
 
 
   const { language, toggleLanguage } = useLanguageContext();
 
 
 
-console.log(test)
 
 
   const [isLoading, setIsLoading] = useState(true);

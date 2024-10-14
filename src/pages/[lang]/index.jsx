@@ -15,11 +15,9 @@ import Card from "@/components/Cards";
 import useWindowWidth from "@/components/WindowWidth";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
-
-
 import { useLanguageContext } from "@/context/LanguageContext";
 import translations from "@/hooks/translations";
-import LanguageSwitch from "@/components/LangaugeSwitch";
+import { generalTranslations } from "@/utils/transalations";
 
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -27,13 +25,14 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home({ featuredProducts, pageData, homeSections }) {
 
-    
+
+
 
 
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
 
-  
+
   const { setThemeLayout } = useThemeContext()
 
 
@@ -48,16 +47,16 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   useGSAP(
     () => {
 
-      const imageLeft = gsap.utils.toArray('.section-chocolate .wrpr .chocolate-image-1');
-      const imageRight = gsap.utils.toArray('.section-chocolate .wrpr .chocolate-image-2');
-      const content = gsap.utils.toArray('.section-chocolate .wrpr .content');
+      const imageLeft = gsap.utils.toArray('.section-chocolates .wrpr .image-1');
+      const imageRight = gsap.utils.toArray('.section-chocolates .wrpr .image-2');
+      const content = gsap.utils.toArray('.section-chocolates .wrpr .content');
 
 
 
       imageLeft.forEach((box) => {
         gsap.fromTo(box,
           {
-            x: 100,
+            // x: 100,
             opacity: 0.9,
             y: 170
           },
@@ -70,7 +69,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               start: 0, // Start when the top of the box hits the top of the viewport
               end: 'bottom top', // End when the bottom of the box hits the top of the viewport
               scrub: true,
-              //markers: true,
+              // markers: true,
             },
           }
         );
@@ -81,7 +80,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
       imageRight.forEach((box) => {
         gsap.fromTo(box,
           {
-            x: -50,
+            // x: -50,
             opacity: 0.9,
             y: -70
           },
@@ -94,7 +93,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               start: 0, // Start when the top of the box hits the top of the viewport
               end: 'bottom top', // End when the bottom of the box hits the top of the viewport
               scrub: true,
-              //markers: true,
+              // markers: true,
             },
           }
         );
@@ -129,7 +128,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   useGSAP(
     () => {
 
-      const imageLeft = gsap.utils.toArray('.section-flowers .wrpr .chocolate-image-1');
+      const imageLeft = gsap.utils.toArray('.section-flowers .wrpr .image-1');
       const content = gsap.utils.toArray('.section-flowers .wrpr .content');
       const content2 = gsap.utils.toArray('.section-flowers .wrpr .content2');
 
@@ -153,7 +152,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               start: '+=100',
               end: 'bottom top', // End when the bottom of the box hits the top of the viewport
               scrub: true,
-              //markers: true,
+              // markers: true,
             },
           }
         );
@@ -188,8 +187,8 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   useGSAP(
     () => {
 
-      const imageLeft = gsap.utils.toArray('.section-cakes .wrpr .cakes-image-1');
-      const imageRight = gsap.utils.toArray('.section-cakes .wrpr .cakes-image-2');
+      const imageLeft = gsap.utils.toArray('.section-cakes .wrpr .image-1');
+      const imageRight = gsap.utils.toArray('.section-cakes .wrpr .image-2');
       const content = gsap.utils.toArray('.section-cakes .wrpr .content');
 
 
@@ -197,7 +196,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
       imageLeft.forEach((box) => {
         gsap.fromTo(box,
           {
-            x: 400,
+            // x: 400,
             opacity: 0.3,
             y: 200
           },
@@ -221,7 +220,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
       imageRight.forEach((box) => {
         gsap.fromTo(box,
           {
-            x: -100,
+            //  x: -100,
             opacity: 0.3,
             y: -500
           },
@@ -268,7 +267,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   useGSAP(
     () => {
 
-      const imageLeft = gsap.utils.toArray('.section-events .wrpr .events-image-1');
+      const imageLeft = gsap.utils.toArray('.section-events .wrpr .image-1');
       const content = gsap.utils.toArray('.section-events .wrpr .content');
 
 
@@ -366,10 +365,25 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: false,
+    rtl: true
 
   };
 
 
+  const filteredSectionsByLanguage = homeSections
+    ? homeSections.filter(item => item?.acf?.language === language)
+    : [];
+    
+
+  // Define the desired order
+  const categoryOrder = ['chocolates', 'flowers', 'cakes', 'events'];
+
+  // Sort the sections based on the defined order
+  const sortedSections = [...filteredSectionsByLanguage].sort((a, b) => {
+    const categoryA = a?.acf?.cateogary;
+    const categoryB = b?.acf?.cateogary;
+    return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
+  });
 
 
   return (
@@ -383,318 +397,223 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
         {/* LARGE DEVICES */}
         <>
 
-          <section
-            ref={chocolate}
-            className="section-chocolate lg:min-h-screen bg-chocolates-900  items-start grid text-chocolates-100 relative overflow-hidden sm:pb-[100px] pb-[50px]  text-center xl:text-start py-">
-            <Header
-              page="home2"
-              theme='chocolate'
-            />
-home
-Search 
-QR
-Subtotal
-Total
-SITEMAP
-All rights reserved 2024
-
-contact form dield validations
 
 
 
-            -----------------
- <h2 className="text-red-600">
-             full check<br />
-          api change with trasalation<br />
-              remove console.log<br />
-            </h2>
-            <div className="wrpr sm:pt-[100px] pt-[80px]">
-              <Images
-                width={190}
-                height={290}
-                quality={100}
-                placeholder={true}
-                classes={'chocolate-image-1 max-width-[100%] absolute top-0 left-[2%] hidden xl:block max-w-[150px]'}
-                imageurl={homeSections[3]?.acf?.banner1?.url ? homeSections[3]?.acf?.banner1?.url : ''}
-                alt={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
-                title={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
-              />
-              <div className="container relative z-[1] content">
-                <div className="mx-auto 2xl:w-[80%] xl:w-[90%] grid gap-[20px] px-[20px]">
-                  <div className="w-[100%]">
-                    <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" data-aos="fade-up">
-                      <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%] xl:text-end block pb-[40px] xl:pb-[0]">
-                        {homeSections && homeSections[3]?.acf?.category}
 
 
-                      </span>
-                      <span className="mt-[-50px] block">
-                        {homeSections && homeSections[3]?.title.rendered}
-                      </span>
-                    </h1>
-                    <div
-                      data-aos="fade-up"
-                      data-aos-delay="500"
-                    >
-                      <Images
-                        width={300}
-                        height={300}
-                        quality={100}
-                        placeholder={false}
-                        imageurl={`/images/chocolates-hero-bg_new3.webp`}
-                        classes={'mx-auto w-full block xl:hidden my-[30px] max-w-[330px]'}
-                        alt={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
-                        title={homeSections[3]?.acf?.banner1?.alt || 'Default title text'}
-                      />
-                    </div>
-                    <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
-                      <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
-                        <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[3]?.content?.rendered }} />
-                      </div>
-                      <div>
-                        <Link
-                          aria-label={homeSections && homeSections[3]?.acf?.category}
-                          title={homeSections && homeSections[3]?.acf?.category}
-                          href={`/${homeSections && homeSections[3].acf.category.toString().toLowerCase()}`}
-                          onClick={(e) => setThemeLayout(homeSections && homeSections[3]?.acf?.category)}
-                          className="btn btn-lg px-[40px] bg-transparent border border-solid border-chocolates-100 hover:bg-chocolates-100 text-chocolates-100 hover:border-chocolates-100 hover:text-white rounded-full"
-                        >
-                          Shop Now
-                        </Link>
 
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Images
-                width={388}
-                height={489}
-                quality={100}
-                placeholder={true}
-                classes={'chocolate-image-2 max-width-[100%] block lg:absolute bottom-[0%] right-[0%] hidden xl:block max-w-[250px]'}
-                imageurl={homeSections[3]?.acf?.banner2?.url ? homeSections[3]?.acf?.banner2?.url : ''}
-                alt={homeSections[3]?.acf?.banner2?.alt || 'Default title text'}
-                title={homeSections[3]?.acf?.banner2?.alt || 'Default title text'}
-              />
-            </div>
-          </section>
-          <section
-            ref={flowers}
-            className="section-flowers lg:min-h-screen bg-flowers-900 xl:py-[150px] pt-[50px] items-center grid text-flowers-100 text-center relative overflow-hidden">
-            <div className="wrpr">
-              <div className="container z-[1] relative">
-                <div className="mx-auto 2xl:w-[60%] xl:w-[70%] grid gap-[20px] px-[20px]">
-                  <div >
-                    <div className="content z-20 relative" data-aos="fade-up">
-                      <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
-                        <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%]  block pb-[40px] xl:pb-[0]">
-                          {homeSections && homeSections[2]?.acf?.category}
-                        </span>
-                        <span className="mt-[-50px] block">
-                          {homeSections && homeSections[2]?.title.rendered}
-                        </span>
-                      </h2>
-                    </div>
-                    <Images
-                      width={707}
-                      height={829}
-                      quality={100}
-                      placeholder={true}
-                      classes={'chocolate-image-1 max-width-[100%] block mx-auto  bottom-[5%] right-0 left-0 z-[-1] hidden xl:block'}
-                      imageurl={homeSections[2]?.acf?.banner1?.url ? homeSections[2]?.acf?.banner1?.url : ''}
-                      alt={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
-                      title={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
+          {sortedSections.map((item, index) => {
+            const isOdd = index % 2 !== 0;
+
+            // Determine which ref to use based on the category
+            let currentRef;
+            const category = item?.acf?.cateogary;
+            if (category === 'flowers') {
+              currentRef = flowers;
+            } else if (category === 'chocolates') {
+              currentRef = chocolate;
+            } else if (category === 'cakes') {
+              currentRef = cakes;
+            } else if (category === 'events') {
+              currentRef = events;
+            }
+
+            return (
+              <>
+                {!isOdd ? (
+                  <section
+                    key={index}
+                    ref={currentRef}
+                    className={`
+              section-${item?.acf?.cateogary}
+              lg:min-h-screen
+              bg-${item?.acf?.cateogary}-900
+              ${index === 0 ?
+                        `
+              xl:pb-[150px]
+              pb-[50px]
+              `
+                        :
+                        `
+              xl:py-[150px]
+              py-[50px]
+              `
+                      }
+              items-center
+              grid
+              text-${item?.acf?.cateogary}-100
+              lg:text-start 
+              text-center 
+              relative
+              overflow-hidden`}
+                  >
+
+                    {index === 0 ? <Header
+                      page="home2"
+                      theme='chocolate'
                     />
+                      : null
+                    }
 
-                    <div className="content2" data-aos="fade-up">
-                      <div className="grid gap-[30px] xl:mt-[50px] mt-[30px]">
-                        <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase mx-auto">
-                          <p className="">
-                            <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[2]?.content?.rendered }} />
-                          </p>
-                        </div>
-                        <div >
-                          <Link
-                            aria-label={homeSections && homeSections[2]?.acf?.category}
-                            title={homeSections && homeSections[2]?.acf?.category}
-                            href={`/${homeSections && homeSections[2].acf.category.toString().toLowerCase()}`}
-                            onClick={(e) => setThemeLayout(homeSections && homeSections[2]?.acf?.category)}
-                            className="btn btn-lg px-[40px] bg-transparent border border-solid border-flowers-100 hover:bg-flowers-100 text-flowers-100 hover:border-flowers-100 hover:text-white rounded-full"
-                          >
-                            Shop Now
-                          </Link>
 
-                          <Images
-                            width={300}
-                            height={300}
-                            quality={100}
-                            placeholder={false}
-                            imageurl={`/images/flowers-hero-bg.webp`}
-                            classes={'mx-auto w-full block xl:hidden'}
-                            alt={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
-                            title={homeSections[2]?.acf?.banner1?.alt || 'Default title text'}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            ref={cakes}
-            className="section-cakes lg:min-h-screen bg-cakes-900  items-center grid text-cakes-100 relative overflow-hidden sm:py-[100px] py-[50px] text-center xl:text-start">
-            <div className="wrpr sm:pt-[0] pt-[0]">
-              <Images
-                width={190}
-                height={290}
-                quality={100}
-                placeholder={true}
-                classes={'cakes-image-1 max-width-[100%] absolute top-0 left-[2%] hidden xl:block'}
-                imageurl={homeSections[1]?.acf?.banner1?.url ? homeSections[1]?.acf?.banner1?.url : ''}
-                alt={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
-                title={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
 
-              />
-              <div className="container relative z-[1] content">
-                <div className="mx-auto 2xl:w-[80%] xl:w-[90%] grid gap-[20px] px-[20px]">
-                  <div className="w-[100%]">
-                    <h2 data-aos="fade-up" className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] xl:pl-[20%] sm:pt-[50px] pt-[50px] xl:pt-[0]">
-                      <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%] xl:text-end block pb-[40px] xl:pb-[0]">
-                        {homeSections && homeSections[1]?.acf?.category}
-                      </span>
-                      <span className="mt-[-50px] block">
-                        {homeSections && homeSections[1]?.title.rendered}
-                      </span>
-                    </h2>
-                    <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
-                      <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
-                        <p className="">
-                          <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[1]?.content?.rendered }} />
-                        </p>
-                      </div>
-                      <div>
-                        <Link
-                          aria-label={homeSections && homeSections[1]?.acf?.category}
-                          title={homeSections && homeSections[1]?.acf?.category}
-                          href={`/${homeSections && homeSections[1].acf.category.toString().toLowerCase()}`}
-                          onClick={(e) => setThemeLayout(homeSections && homeSections[1]?.acf?.category)}
-                          className="btn btn-lg px-[40px] bg-transparent border border-solid border-cakes-100 hover:bg-cakes-100 text-cakes-100 hover:border-cakes-100 hover:text-white rounded-full"
-                        >
-                          Shop Now
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                <Images
-                  width={300}
-                  height={300}
-                  quality={100}
-                  placeholder={false}
-                  imageurl={`/images/cakes-hero-bg-1.webp`}
-                  classes={'mx-auto w-full block xl:hidden mx-auto max-w-[300px] mt-[30px]'}
-                  alt={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
-                  title={homeSections[1]?.acf?.banner1?.alt || 'Default title text'}
-                />
-              </div>
-              <Images
-                width={388}
-                height={489}
-                quality={100}
-                placeholder={true}
-                classes={'cakes-image-2 max-width-[100%] block lg:absolute bottom-[5%] right-[2%] hidden xl:block'}
-                imageurl={homeSections[1]?.acf?.banner1?.url ? homeSections[1]?.acf?.banner2?.url : ''}
-                alt={homeSections[1]?.acf?.banner2?.alt || 'Default title text'}
-                title={homeSections[1]?.acf?.banner2?.alt || 'Default title text'}
-              />
-
-            </div>
-          </section>
-          <section
-            ref={events}
-            className="section-events lg:min-h-screen bg-events-900 xl:py-[150px] pt-[50px] items-center grid text-events-100 text-center relative overflow-hidden">
-            <div className="wrpr">
-              <div className="container z-[1] relative">
-                <div className="mx-auto 2xl:w-[60%] xl:w-[70%] grid gap-[20px] px-[20px]">
-                  <div >
-                    <div className="content z-20 relative" data-aos="fade-up">
-                      <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
-                        <span className="text-[6vw] font-secondary leading-[1.4] xl:ml-[5%]  block pb-[40px] xl:pb-[0]">
-                          {homeSections && homeSections[0]?.acf?.category}
-                        </span>
-                        <span className="mt-[-50px] block">
-                          {homeSections && homeSections[0]?.title.rendered}
-                        </span>
-                      </h2>
-                    </div>
-                    <div className="overflow-hidden events-image-1 mx-auto h-[70vh] w-[50%] hidden xl:block">
+                    <div className="wrpr sm:pt-[100px] pt-[80px]">
                       <Images
-                        width={707}
-                        height={829}
+                        width={190}
+                        height={290}
                         quality={100}
                         placeholder={true}
-                        classes={'chocolate-image-1 max-width-[100%] block mx-auto  bottom-[5%] right-0 left-0 z-[-1] hidden xl:block'}
-                        imageurl={homeSections[0]?.acf?.banner1?.url ? homeSections[0]?.acf?.banner1?.url : ''}
-                        alt={homeSections[0]?.acf?.banner1?.alt || 'Default title text'}
-                        title={homeSections[0]?.acf?.banner1?.alt || 'Default title text'}
+                        classes={`image-1 max-width-[100%] absolute top-0 ${language == 'en' ? 'left-[10%]' : 'right-[2%]'} hidden xl:block max-w-[150px] `}
+                        imageurl={item?.acf?.banner1?.url || ''}
+                        alt={item?.acf?.banner1?.alt || 'Default title text'}
+                        title={item?.acf?.banner1?.alt || 'Default title text'}
+                      />
+                      <div className="container relative z-[1] content">
+                        <div className="mx-auto 2xl:w-[80%] xl:w-[90%] grid gap-[20px] px-[20px]">
+                          <div className="w-[100%]">
+                            <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" data-aos="fade-up">
+                              <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0] xl:text-end' : 'text-[3vw] pb-[70px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
+                                {item?.acf?.main_cat[0]?.post_title}
+                              </span>
+                              <span className="mt-[-50px] block">
+                                {item?.title.rendered}
+                              </span>
+                            </h1>
+                            <div data-aos="fade-up" data-aos-delay="500">
+                              <Images
+                                width={300}
+                                height={300}
+                                quality={100}
+                                placeholder={false}
+                                imageurl={`/images/${item?.acf?.cateogary}-hero.webp`}
+                                classes={'mx-auto w-full block xl:hidden my-[30px] max-w-[330px]'}
+                                alt={item?.acf?.banner1?.alt || 'Default title text'}
+                                title={item?.acf?.banner1?.alt || 'Default title text'}
+                              />
+                            </div>
+                            <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
+                              <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
+                                <div dangerouslySetInnerHTML={{ __html: item?.content?.rendered }} />
+                              </div>
+                              <div>
+                                <Link
+                                  aria-label={item?.acf?.main_cat[0]?.post_title}
+                                  title={item?.acf?.main_cat[0]?.post_title}
+                                  href={`/${item.acf.main_cat.toString().toLowerCase()}`}
+                                  onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
+                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
+                                >
+                                  {generalTranslations.shop_now[language]}
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <Images
+                        width={388}
+                        height={489}
+                        quality={100}
+                        placeholder={true}
+                        classes={`image-2 max-width-[100%] block lg:absolute bottom-[0%] ${language == 'en' ? 'right-[2%]' : 'left-[2%]'} hidden xl:block max-w-[250px]`}
+                        imageurl={item?.acf?.banner2?.url || ''}
+                        alt={item?.acf?.banner2?.alt || 'Default title text'}
+                        title={item?.acf?.banner2?.alt || 'Default title text'}
                       />
                     </div>
-
-                    <div className="content2" data-aos="fade-up">
-                      <div className="grid gap-[30px] xl:mt-[50px] mt-[10px]">
-                        <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] mx-auto tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase">
-                          <p className="">
-                            <div dangerouslySetInnerHTML={{ __html: homeSections && homeSections[0]?.content?.rendered }} />
-                          </p>
-                        </div>
-                        <div>
-                          <Link
-                            aria-label={homeSections && homeSections[0]?.acf?.category}
-                            title={homeSections && homeSections[0]?.acf?.category}
-                            href={`/${homeSections && homeSections[0].acf.category.toString().toLowerCase()}`}
-                            onClick={(e) => setThemeLayout(homeSections && homeSections[0]?.acf?.category)}
-                            className="btn btn-lg px-[40px] bg-transparent border border-solid border-events-100 hover:bg-events-100 text-events-100 hover:border-events-100 hover:text-white rounded-full"
-                          >
-                            Shop Now
-                          </Link>
+                  </section>
+                ) : (
+                  <section
+                    key={index}
+                    ref={currentRef}
+                    className={`section-${item?.acf?.cateogary} lg:min-h-screen bg-${item?.acf?.cateogary}-900 items-start grid text-${item?.acf?.cateogary}-100 relative overflow-hidden sm:py-[150px] py-[50px]  xl:text-start`}
+                  >
+                    <div className="wrpr text-center">
+                      <div className="container z-[1] relative">
+                        <div className="mx-auto 2xl:w-[60%] xl:w-[70%] grid gap-[20px] px-[20px]">
+                          <div>
+                            <div className="content z-20 relative" data-aos="fade-up">
+                              <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
 
 
+                                <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0]' : 'text-[3vw] pb-[50px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
+                                  {item?.acf?.main_cat[0]?.post_title}
+                                </span>
+                                <span className="mt-[-50px] block">
+                                  {item?.title.rendered}
+                                </span>
+                              </h2>
+                            </div>
+                            <Images
+                              width={707}
+                              height={829}
+                              quality={100}
+                              placeholder={true}
+                              classes={`image-1 max-width-[100%] block mx-auto bottom-[5%] right-0 left-0 z-[-1] hidden xl:block`}
+                              imageurl={item?.acf?.banner1?.url || ''}
+                              alt={item?.acf?.banner1?.alt || 'Default title text'}
+                              title={item?.acf?.banner1?.alt || 'Default title text'}
+                            />
+                            <div className="content2" data-aos="fade-up">
+                              <div className="grid gap-[30px] xl:mt-[50px] mt-[30px]">
+                                <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase mx-auto">
+                                  <p>
+                                    <div dangerouslySetInnerHTML={{ __html: item?.content?.rendered }} />
+                                  </p>
+                                </div>
+                                <div>
+                                  <Link
+                                    aria-label={item?.acf?.main_cat[0]?.post_title}
+                                    title={item?.acf?.main_cat[0]?.post_title}
+                                    href={`/${item.acf.main_cat.toString().toLowerCase()}`}
+                                    onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
+                                    className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
+                                  >
+                                    {generalTranslations.shop_now[language]}
+                                  </Link>
+                                  <Images
+                                    width={300}
+                                    height={300}
+                                    quality={100}
+                                    placeholder={false}
+                                    imageurl={`/images/flowers-hero-bg.webp`}
+                                    classes={'mx-auto w-full block xl:hidden'}
+                                    alt={item?.acf?.banner1?.alt || 'Default title text'}
+                                    title={item?.acf?.banner1?.alt || 'Default title text'}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                data-aos="fade-up"
-                data-aos-delay="500"
-              >
-                <Images
-                  width={300}
-                  height={300}
-                  quality={100}
-                  placeholder={false}
-                  imageurl={`/images/events-hero-bg-1.webp`}
-                  classes={'mx-auto w-full block xl:hidden'}
-                  alt={homeSections[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
-                  title={homeSections[1]?.attributes?.Banner1?.data?.attributes?.alternativeText || 'Default title text'}
-                />
-              </div>
-            </div>
-          </section>
+                  </section>
+                )}
+              </>
+            );
+          })
+          }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           {featuredProducts.length !== 0 && windowWidth > 999 ? <section>
 
             <div className="container" data-aos="fade-in">
               <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
-                <h2 className="text-[16px] uppercase font-semibold mb-[30px]">Featured products</h2>
+                <h2 className="text-[16px] uppercase font-semibold mb-[30px]">{generalTranslations.featured_products[language]}</h2>
                 <div className="slider-container slider-featured-items mt-[30px]">
 
 
@@ -725,18 +644,17 @@ contact form dield validations
               <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${featuredProducts.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
                 <div className="md:pl-[15%]">
                   <h3 className="md:text-[30px] sm:text-[26px] text-[22px] uppercase font-medium">
-                    {pageData && pageData?.title.rendered}
+                    {pageData && pageData[0]?.acf?.main_heading}
                   </h3>
                 </div>
                 <div className="grid gap-[8px] sm:gap-[4px] md:pl-[40%]">
-                  <div dangerouslySetInnerHTML={{ __html: pageData && pageData?.content?.rendered }} />
+                  <div dangerouslySetInnerHTML={{ __html: pageData && pageData[0]?.content?.rendered }} />
                   <Link
-                    href="/about"
+                    href={`/about/${language}`}
                     aria-label="About"
                     title="About"
-                    className="font-secondary text-[50px]"
-                  >
-                    read full
+                    className={`${language === 'en' ? 'text-[50px]' : 'text-[20px] mt-[20px]'} font-secondary`}
+                  > {generalTranslations.read_full[language]}
                   </Link>
                 </div>
               </div>
@@ -750,40 +668,51 @@ contact form dield validations
 
 
 export async function getStaticPaths() {
+  const paths = [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    // Add more languages as needed
+  ];
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+}
+
+
+
+export async function getStaticProps(context) {
+  const { params } = context;
+  const lang = params.lang; // Change 'slug' to 'lang'
+  const slug = `home-${lang}`;
+
+  try {
+    const homeRes = await axios.get(`${frontendUrl}/api/home`, {
+      params: { slug },
+    });
+
+    const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
+    const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
+
     return {
-      paths: [
-        { params: { lang: 'en' } },
-        { params: { lang: 'ar' } },
-      ],
-      fallback: 'blocking', // or true, depending on your needs
+      props: {
+        pageData: homeRes.data,
+        homeSections: homeSectionsRes.data,
+        featuredProducts: featuredProductsRes.data,
+
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    return {
+      props: {
+        pageData: [],
+        homeSections: [],
+        featuredProducts: [],
+      },
+      revalidate: 60,
     };
   }
-  
-  export async function getStaticProps({ params }) {
-  
-  
-    try {
-      const homeRes = await axios.get(`${frontendUrl}/api/home`);
-      const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
-      const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
-  
-      return {
-        props: {
-          pageData: homeRes.data,
-          homeSections: homeSectionsRes.data,
-          featuredProducts: featuredProductsRes.data,
-        },
-        revalidate: 60, // revalidate every 60 seconds
-      };
-    } catch (error) {
-      console.error('Error fetching data:', error.message);
-      return {
-        props: {
-          pageData: [],
-          homeSections: [],
-          featuredProducts: [],
-        },
-        revalidate: 60, // still revalidate even on error
-      };
-    }
-  }
+}

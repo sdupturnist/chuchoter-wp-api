@@ -10,6 +10,9 @@ import NoData from "@/components/Nodata";
 import { AOSInit } from "@/components/Aos";
 import { useThemeContext } from "@/context/themeContext";
 import axios from "axios";
+import { useLanguageContext } from "@/context/LanguageContext";
+import { generalTranslations } from "@/utils/transalations";
+
 
 
 export default function Cart({ pageData, allProducts_ }) {
@@ -18,8 +21,8 @@ export default function Cart({ pageData, allProducts_ }) {
  
   const { themeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
+  const { language } = useLanguageContext();
 
-  console.log(pageData)
 
 
   const filteredProducts = allProducts_?.data?.filter(product =>
@@ -97,7 +100,7 @@ export default function Cart({ pageData, allProducts_ }) {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-[10px] lg:gap-[50px] lg:mb-0 mb-[30px]">
-              <div className={`${cartItems && cartItems.length !== 0 ? 'lg:col-span-3' : 'lg:col-span-12'} sm:py-[50px]`} data-aos="fade-up">
+              <div className={`${cartItems && cartItems.length !== 0 ? 'lg:col-span-3' : 'lg:col-span-12'} sm:py-[50px]`}>
                 {cartItems && cartItems.length !== 0 ? (
                   <div className="cart-item-wrpr grid sm:gap-[16px] border-b lg:border-none border-black border-solid sm:pb-[20px] lg:pb-[0]">
                     {filteredProducts.map((product, key) => {
@@ -121,30 +124,28 @@ export default function Cart({ pageData, allProducts_ }) {
                 {cartItems && cartItems.length !== 0 &&
                   <div className="lg:border lg:rounded-[6px] rounded-none border-solid lg:border-gray-200 border-black lg:p-[20px] py-[16px] lg:mt-[20px] lg:border-t ">
                     <p className="flex justify-between w-full border-b border-solid border-gray-200 pb-[16px]">
-                      <span className="block text-black text-opacity-50">Subtotal</span>
-                      <span className="block text-black text-opacity-50">{totalAmount} QR</span>
+                      <span className="block text-black text-opacity-50"> {generalTranslations.subtotal[language]}</span>
+                      <span className="block text-black text-opacity-50">{totalAmount}  {generalTranslations.qr[language]}</span>
                    
                     </p>
                     <p className="flex justify-between w-full border-b border-solid border-black py-[16px]">
-                      <span className="block text-black text-opacity-50">Delivery fee</span>
-                      <span className="block text-black text-opacity-50">{deliveryFee} QR</span>
+                      <span className="block text-black text-opacity-50"> {generalTranslations.delivery_fee[language]}</span>
+                      <span className="block text-black text-opacity-50">{deliveryFee}  {generalTranslations.qr[language]}</span>
                     </p>
                     <p className="flex justify-between w-full lg:pt-[16px] pt-[16px] pb-[4px]">
                       <span className="block font-semibold text-[16px] uppercase">
-                        Total
+                      {generalTranslations.total[language]}
                       </span>
                       <span className="block font-semibold text-[16px] uppercase">
-                        {parseFloat(totalAmount) + parseFloat(deliveryFee)} QR
+                        {parseFloat(totalAmount) + parseFloat(deliveryFee)}  {generalTranslations.qr[language]}
                       </span>
                     </p>
                   </div>
                 }
               </div>
               {cartItems && cartItems.length !== 0 &&
-                <div className="lg:col-span-2 lg:border-l border-black border-solid lg:p-[50px]"  data-aos="fade-in" data-aos-delay="500">
-              
-               
-                  <OrderForm
+                <div className={`${language === 'ar' ? 'lg:border-r' : 'lg:border-l'} lg:col-span-2  border-black border-solid lg:p-[50px]`} >
+                <OrderForm
                     totalAmountOrder={parseFloat(totalAmount) + parseFloat(deliveryFee)}
                     items={cartItems}
                   />

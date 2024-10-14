@@ -11,6 +11,8 @@ import SearchBox from './Search';
 import LanguageSwitch from './LangaugeSwitch';
 import { NavigationData } from '@/hooks/navigationData';
 import { useLanguageContext } from '@/context/LanguageContext';
+import { generalTranslations } from '@/utils/transalations';
+import { frontendUrl } from '@/utils/variables';
 
 
 
@@ -43,7 +45,7 @@ export default function Nav({ theme, page, initialData }) {
 
   const color = "#c89a3f"
 
- // console.log(dataNavigation)
+  // console.log(dataNavigation)
 
 
   function update() {
@@ -98,36 +100,49 @@ export default function Nav({ theme, page, initialData }) {
   };
 
 
+
+
+
+  const filterMainCatByLanguage = dataNavigation
+    ? dataNavigation.filter(item => item?.acf?.language === language)
+    : [];
+
+
+
+
+
   function Navigations(color, language) {
     return (
       <>
-     
-   <Link
+
+
+        <Link
           aria-label="Home"
           title="Home"
-          href="/"
+          href={`${frontendUrl}/${language}`}
           onClick={() => setThemeLayout('gray')}
           style={{
             color
           }}
         >
-          Home
+          {generalTranslations.home[language]}
         </Link>
         {FilteredCategories(headerColor, language)}
+
         {dataNavigation && dataNavigation
-          .filter(item => item?.acf?.visible_in_menu) // Filter based on visible_in_menu
+          .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language) // Filter based on visible_in_menu
           .sort((a, b) => {
             const titleA = a?.title?.rendered?.toLowerCase() || '';
             const titleB = b?.title?.rendered?.toLowerCase() || '';
             return titleA.localeCompare(titleB); // Sort titles in ascending order
           })
           .map((item, key) => {
-            return (
+  return (
               <li key={key}>
                 <Link
                   aria-label={item?.title?.rendered}
                   title={item?.title?.rendered}
-                  href={`/${item?.title?.rendered.toLowerCase().replace(/ /g, '-')}/${language}`}
+                  href={`/${item?.slug?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}`}
                   onClick={() => setThemeLayout('gray')}
                   style={{
                     color
@@ -144,22 +159,22 @@ export default function Nav({ theme, page, initialData }) {
   }
 
 
-  function NavigationRight(){
-    return(
+  function NavigationRight() {
+    return (
       <>
-        <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link>
+        <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}>{generalTranslations.cart[language]} ({currentCartCOunt})</Link>
         <LanguageSwitch
-              label="test language toggle"
-            />
-                <SearchBox
-                  theme={headerColor}
-                  page={page}
-                />
-                <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
-                    <path stroke={`#c89a3f`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
-                  </svg>
-                </button>
+          label="test language toggle"
+        />
+        <SearchBox
+          theme={headerColor}
+          page={page}
+        />
+        <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14">
+            <path stroke={`#c89a3f`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" />
+          </svg>
+        </button>
       </>
     )
   }
@@ -241,33 +256,35 @@ export default function Nav({ theme, page, initialData }) {
 
 
   const FilteredCategories = (headerColor, language) => {
+
+
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
     const sortedCategories = dataCategory
       ? dataCategory
-        .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
-        .sort((a, b) => {
-          const indexA = customOrder.indexOf(a?.title?.rendered);
-          const indexB = customOrder.indexOf(b?.title?.rendered);
-          return indexA - indexB;
-        })
+        .filter(item => item?.acf?.show_in_menu === true && item?.acf?.language === language) // Filter by show_in_menu and language
+        .sort((a, b) => customOrder.indexOf(a.title.rendered) - customOrder.indexOf(b.title.rendered)) // Optional: sort based on customOrder
       : [];
 
+
     return (
-      sortedCategories.map((item, index) => (
-        <li key={index}>
-          <Link
-            aria-label={item?.title?.rendered}
-            title={item?.title?.rendered}
-            href={`/${item?.title?.rendered.toLowerCase()}/${language}`}
-            onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
-            style={{ color: headerColor }}
-          >
-            {item?.title?.rendered}
-          </Link>
-        </li>
-      ))
+      <>
+        {sortedCategories.map((item, index) => (
+          <li key={index}>
+            <Link
+              aria-label={item?.title?.rendered}
+              title={item?.title?.rendered}
+              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}`}
+              onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
+              style={{ color: headerColor }}
+            >
+              {item?.title?.rendered}
+            </Link>
+          </li>
+        ))}
+      </>
     );
+
   };
 
 
@@ -284,17 +301,6 @@ export default function Nav({ theme, page, initialData }) {
               />
               <div className='flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {/* <Link href={"/cart"} className='hover:bg-transparent mr-2 mr-sm-0'>CART ({currentCartCOunt})</Link> */}
-                  {/* <SearchBox */}
-                    {/* theme={headerColor} */}
-                    {/* page={'category'} */}
-                  {/* /> */}
-{/*  */}
-                  {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
-                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
-                      {/* <path stroke="#fff" strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
-                    {/* </svg> */}
-                  {/* </button> */}
                   {NavigationRight()}
                 </div>
               </div>
@@ -312,19 +318,9 @@ export default function Nav({ theme, page, initialData }) {
 
               <div className={`flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]`}>
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                {Navigations(headerColor, language)}
-               </ul>
+                  {Navigations(headerColor, language)}
+                </ul>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`} style={{ color: headerColor }}>CART ({currentCartCOunt})</Link> */}
-                  {/* <SearchBox */}
-                    {/* theme={headerColor} */}
-                    {/* page={'category'} */}
-                  {/* /> */}
-                  {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
-                    {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
-                      {/* <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
-                    {/* </svg> */}
-                  {/* </button> */}
                   {NavigationRight()}
                 </div>
               </div>
@@ -349,19 +345,9 @@ export default function Nav({ theme, page, initialData }) {
             <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-              {Navigations(headerColor, language)}
-  </ul>
+                {Navigations(headerColor, language)}
+              </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`}>CART ({currentCartCOunt})</Link> */}
-                {/* <SearchBox */}
-                  {/* theme={theme} */}
-                  {/* page={'home'} */}
-                {/* /> */}
-                {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
-                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
-                    {/* <path stroke={`${headerColor}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
-                  {/* </svg> */}
-                {/* </button> */}
                 {NavigationRight()}
               </div>
             </div>
@@ -375,12 +361,12 @@ export default function Nav({ theme, page, initialData }) {
         <div className="container">
           <div className='flex items-center justify-between'>
             <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme="#c89a3f" />
-         <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
+            <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
- {Navigations(headerColor, language)}
-  </ul>
+                {Navigations(headerColor, language)}
+              </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-              {NavigationRight()}
+                {NavigationRight()}
               </div>
             </div>
           </div>
@@ -401,22 +387,9 @@ export default function Nav({ theme, page, initialData }) {
             <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={color} />
             <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
               <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-              {Navigations(headerColor, language)}
-               </ul>
+                {Navigations(headerColor, language)}
+              </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                {/* <Link href={"/cart"} className={`mr-2 mr-sm-0`} */}
-                  {/* style={{ */}
-                    {/* color: headerColor */}
-                  {/* }} */}
-                {/* >CART ({currentCartCOunt})</Link> */}
-                {/* <SearchBox */}
-                  {/* theme={headerColor} */}
-                {/* /> */}
-                {/* <button aria-label='Navigation Menu' title='Navigation Menu' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden" onClick={openNavigationModal}> */}
-                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" fill="none" viewBox="0 0 21 14"> */}
-                    {/* <path stroke={`${color}`} strokeLinecap="round" strokeWidth="1.5" d="M.75 1.573h19.5m-19.5 5.5h19.5m-19.5 5.5h19.5" /> */}
-                  {/* </svg> */}
-                {/* </button> */}
                 {NavigationRight()}
               </div>
             </div>

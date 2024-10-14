@@ -12,33 +12,26 @@ export const ContactData = (initialData) => {
     const router = useRouter();
     const { query } = router;
 
- 
-
     const lang = query.slug; // Assuming you have a dynamic route like /about/[slug]
-    const slug = `contactInfo-${lang}`; 
-
-
+    const slug = `contactInfo-${lang}`;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-              
                 const resContact = await axios.get(`${frontendUrl}/api/contactInfo`, {
                     params: { slug },
-                  });
+                });
 
-                
-                // Assuming the API response structure is similar to your GraphQL response
                 setDataContact(resContact.data);
             } catch (error) {
                 setErrorDataContact(error.message);
             }
         };
 
-        if (!initialData) {
+        if (lang) { // Only fetch data if lang is defined
             fetchData();
         }
-    }, [initialData]);
+    }, [lang]); // Run effect when lang changes
 
     return { dataContact, errorDataContact };
 };

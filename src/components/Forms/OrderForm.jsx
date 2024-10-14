@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { wordpressGraphQlApiUrl, frontendUrl, siteEmail, siteFromEmail } from '@/utils/variables'
 import { useRouter } from 'next/navigation'
-import { orderFormTranslations } from '@/utils/transalations'
+import { generalTranslations, orderFormTranslations } from '@/utils/transalations'
 import { useLanguageContext } from '@/context/LanguageContext'
 
 
@@ -14,7 +14,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
 
     const router = useRouter()
 
-    console.log(orderFormTranslations.action.ar)
+
     const { language } = useLanguageContext();
 
     const [fullname, setFullname] = useState('');
@@ -188,7 +188,7 @@ export default function OrderForm({ totalAmountOrder, items }) {
         if (!email) {
             errors.email = `${orderFormTranslations.email[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
         } else if (!/\S+@\S+\.\S+/.test(email)) {
-            errors.email = `${orderFormTranslations.email[language]} ${language === 'en' ? 'is required.' : 'غير صالح'}`;
+            errors.email = `${orderFormTranslations.email[language]} ${language === 'en' ? 'is invalid.' : 'غير صالح'}`;
         }
 
         if (!phone) {

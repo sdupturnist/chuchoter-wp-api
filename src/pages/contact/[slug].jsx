@@ -5,7 +5,6 @@ import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/Forms/ContactUs";
 import { ContactData } from "@/hooks/contactData";
 import { useEffect, useState } from "react";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 
@@ -13,20 +12,28 @@ import axios from "axios";
 export default function Contact({ initialData, pageData }) {
 
 
+
   const { dataContact } = ContactData(initialData);
 
-  const contactData = dataContact && dataContact[0]?.acf
 
-
-  console.log(pageData)
 
   const [isLoading, setIsLoading] = useState(true);
+  const [contactData, setContactData] = useState('');
 
   useEffect(() => {
+    setContactData(dataContact && dataContact[0])
+
     if (dataContact) {
       setIsLoading(false);
     }
+
+
   }, [dataContact]);
+
+
+
+
+
 
   return (
     <>
@@ -36,14 +43,6 @@ export default function Contact({ initialData, pageData }) {
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%]">
 
-
-            {/* <PageHeader
-            type="cat"
-            catcount={5}
-            title={query.category.replace(/-/g, ' ')}
-            mainCat={query.category}
-            data={allProducts}
-          /> */}
 
             <PageHeader title={pageData && pageData?.acf?.page_title} />
 
@@ -59,40 +58,32 @@ export default function Contact({ initialData, pageData }) {
                   ) : (
                     <div>
                       <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
-                     
-                        {pageData && pageData?.acf?.contact_heading }
-                      
-                       </h2>
+
+                        {pageData && pageData?.acf?.contact_heading}
+
+                      </h2>
                       <p className="mb-[8px]">
                         <div dangerouslySetInnerHTML={{ __html: dataContact && dataContact[0].content?.rendered }} />
                       </p>
                       <p className="mb-[8px]">
-                        {dataContact && contactData?.phone}
+                        {dataContact && dataContact[0].acf?.phone}
                       </p>
                       <p>
-                        {dataContact && contactData?.email}
+                        {dataContact && dataContact[0].acf?.email}
                       </p>
                     </div>
                   )}
 
                   <div>
                     <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
-                    {pageData && pageData?.acf?.enquiry_heading }
+                      {pageData && pageData?.acf?.enquiry_heading}
                     </h2>
                     <div dangerouslySetInnerHTML={{ __html: pageData && pageData.content?.rendered }} />
                   </div>
                 </div>
               </div>
               <div className="w-full block" data-aos="fade-up" data-aos-delay="500">
-                <ContactForm 
-                content={[
-                  pageData && pageData?.acf?.field_name, 
-                  pageData && pageData?.acf?.field_phone,
-                  pageData && pageData?.acf?.field_email,
-                  pageData && pageData?.acf?.field_message, 
-                  pageData && pageData?.acf?.button_submit, 
-                  
-                   ]}
+                <ContactForm
                 />
               </div>
             </div>

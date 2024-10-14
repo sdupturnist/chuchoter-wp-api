@@ -3,13 +3,16 @@
 import React, { useState, useEffect } from 'react'
 import { wordpressGraphQlApiUrl, frontendUrl, siteEmail, siteFromEmail } from '@/utils/variables'
 import { useRouter } from 'next/navigation'
+import { useLanguageContext } from '@/context/LanguageContext'
+import { contactFormTranslations } from '@/utils/transalations'
 
 
 
-export default function ContactForm({content}) {
+export default function ContactForm() {
 
   const router = useRouter()
-
+  
+  const { language } = useLanguageContext();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -59,17 +62,17 @@ export default function ContactForm({content}) {
     let errors = {};
 
     if (!name) {
-      errors.name = 'Name is required.';
+      errors.name = `${contactFormTranslations.full_name[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
     }
 
     if (!email) {
-      errors.email = 'Email is required.';
+      errors.email = `${contactFormTranslations.email[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = 'Email is invalid.';
+      errors.email = `${contactFormTranslations.email[language]} ${language === 'en' ? 'is invalid.' : 'غير صالح'}`;
     }
 
     if (!phone) {
-      errors.phone = 'Phone is required.';
+      errors.phone = `${contactFormTranslations.phone[language]} ${language === 'en' ? 'is required.' : 'مطلوب'}`;
     }
 
 
@@ -113,7 +116,7 @@ export default function ContactForm({content}) {
 
         <input
           type="text"
-          placeholder={content[0]}
+          placeholder={contactFormTranslations.full_name[language]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -123,7 +126,7 @@ export default function ContactForm({content}) {
         {errors.name && <p className='text-red-500'>{errors.name}</p>}
         <input
           type="number"
-          placeholder={content[1]}
+          placeholder={contactFormTranslations.phone[language]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -133,7 +136,7 @@ export default function ContactForm({content}) {
         {errors.phone && <p className='text-red-500'>{errors.phone}</p>}
         <input
           type="email"
-          placeholder={content[2]}
+          placeholder={contactFormTranslations.email[language]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +146,7 @@ export default function ContactForm({content}) {
         {errors.email && <p className='text-red-500'>{errors.email}</p>}
         <textarea
           className="textarea  placeholder:text-black border-black textarea-bordered w-full text-black rounded-[6px]"
-          placeholder={content[3]}
+          placeholder={contactFormTranslations.message[language]}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           name="message"
@@ -155,7 +158,7 @@ export default function ContactForm({content}) {
 
           <button title="Submit" aria-label="Submit" type="submit" className="btn rounded-[6px] w-full" onClick={submitEmail}>
           <span className={buttonLabel == false ? "hidden" : ""}>
-          {content[4]}
+      {contactFormTranslations.action[language]}
                         </span>
                         <span className={successLabel == false ? "hidden" : ""}>
                             Done! Order finished

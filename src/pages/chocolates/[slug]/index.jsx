@@ -9,10 +9,11 @@ import { useEffect, useState } from 'react';
 import { useThemeContext } from '@/context/themeContext';
 import Metatags from '@/components/Seo';
 import axios from 'axios';
+import { useLanguageContext } from '@/context/LanguageContext';
 
 
 
-export default function AllProducts({ products, currentPage, totalCount }) {
+export default function AllProducts({ products, currentPage, totalCount , test}) {
 
   const router = useRouter();
   const { query } = router;
@@ -24,9 +25,10 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
 
+  const { language } = useLanguageContext();
 
 
-
+  console.log(products)
   //query.category
 
 
@@ -64,9 +66,11 @@ export default function AllProducts({ products, currentPage, totalCount }) {
 
 
   const handlePageChange = (page) => {
-    router.push(`/${query.category}?page=${page}`);
+    router.push(`/${query.category.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?page=${page}&category=${query.category}`);
   };
 
+
+  //http://localhost:3000/chocolates/en/?page=2&category=chocolates-en
 
 
   return (
@@ -79,13 +83,13 @@ export default function AllProducts({ products, currentPage, totalCount }) {
           )} */}
       <Layout page="category">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[30px] lg:pt-[30px] xl:pb-[70px] pb-[20px] overflow-hidden">
-          {/* <PageHeader */}
-            {/* type="cat" */}
-            {/* catcount={5} */}
-            {/* title={query.category.replace(/-/g, ' ')} */}
-            {/* mainCat={query.category} */}
-            {/* data={allProducts} */}
-          {/* /> */}
+          <PageHeader
+            type="cat"
+            catcount={5}
+            title={query.category.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}
+            mainCat={query.category}
+            data={allProducts}
+          />
 {/*  */}
           {allProducts.length > 0 ? (
             <>
@@ -132,10 +136,11 @@ export async function getServerSideProps(context) {
 
   const { page = 1 } = context.query; // Get the page number from query parameters
 
-  const minPrice = context.query.minPrice
+  const minPrice = context.query.minPrice 
   const reviewVal = context.query.minReviewCount
   const cat1 = context.query.category
   const cat2 = context.query.sub_categories
+
 
   try {
     const res = await axios.get(`${frontendUrl}/api/products`, {
@@ -165,6 +170,7 @@ export async function getServerSideProps(context) {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.totalCount,
+        test: cat1
 
       }
     };

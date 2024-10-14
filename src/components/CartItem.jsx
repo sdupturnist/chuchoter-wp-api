@@ -5,12 +5,18 @@ import { adminUrl } from "@/utils/variables";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { XMarkIcon } from '@heroicons/react/24/solid'
+import { generalTranslations } from "@/utils/transalations";
+import { useLanguageContext } from "@/context/LanguageContext";
+
 
 export default function CartItem({ item, color }) {
     const { cartItems, setCartItems } = useCartContext();
     const [quantity, setQuantity] = useState(1);
     const itemid = item.id;
 
+
+
+    const { language } = useLanguageContext();
 
 
   // Load items from localStorage on component mount
@@ -37,8 +43,10 @@ export default function CartItem({ item, color }) {
     return (
         <div className="sm:rounded-[6px] sm:border border-b border-solid border-gray-200 sm:p-[20px] py-[24px] sm:flex justify-between">
             <div className="flex md:items-center items-start gap-[20px] w-full">
-                <Link href={`/${item?.acf?.main_categories[0]?.post_name}/${item?.slug}`}>
-
+                {/* <Link href={`/${item?.acf?.main_categories[0]?.post_name}/${item?.slug}`}> */}
+{console.log(item)}
+                <Link className='block' href={`/${item?.acf?.main_categories && item?.acf?.main_categories[0]?.post_name.toString().toLowerCase()}/${item?.name?.toLowerCase().replace(/ /g, '-')}`}>
+link not updated
     <Images
                         width="170"
                         height="170"
@@ -60,6 +68,7 @@ export default function CartItem({ item, color }) {
                           <XMarkIcon className="text-black size-4"/>
                         </button>
                         <Link href={`/${item?.acf?.main_categories[0]?.post_name}/${item?.slug}`}>
+                        link not updated
                             <h4 className='text-[14px] text-black'>{item?.name}</h4>
                         </Link>
                         <span className='block text-[12px] text-black text-opacity-80 capitalize'>{item?.acf?.sub_categories[0]?.post_name?.replace(/_/g, ' ')}</span>
@@ -73,7 +82,7 @@ export default function CartItem({ item, color }) {
                        <span className='flex gap-[8px]'>
                           <span className='block font-semibold text-[16px] uppercase'>
                                 {item?.price !== null ? item?.price : item?.regular_price}
-                                QR
+                            {generalTranslations.qr[language]}
                             </span>
                         </span>
 
