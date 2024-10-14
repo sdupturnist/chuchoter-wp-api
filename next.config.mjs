@@ -11,6 +11,7 @@ const nextConfig = {
       'demo.chuchoterqatar.com',
       'chuchoterqatar.com',
       'greenenergyfarm.in',
+      'chuchoter-wp-api.vercel.app'
     ],
   },
   
