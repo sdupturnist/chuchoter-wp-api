@@ -9,10 +9,11 @@ import { useEffect, useState } from 'react';
 import { useThemeContext } from '@/context/themeContext';
 import Metatags from '@/components/Seo';
 import axios from 'axios';
+import { useLanguageContext } from '@/context/LanguageContext';
 
 
 
-export default function AllProducts({ products, currentPage, totalCount }) {
+export default function AllProducts({ products, currentPage, totalCount , test}) {
 
   const router = useRouter();
   const { query } = router;
@@ -24,10 +25,9 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   const totalPages = Math.ceil(totalProducts / productsPerPage);
 
 
+  const { language } = useLanguageContext();
 
 
-
-  //query.category
 
 
   const toCapitalize = (str) => {
@@ -64,9 +64,11 @@ export default function AllProducts({ products, currentPage, totalCount }) {
 
 
   const handlePageChange = (page) => {
-    router.push(`/${query.category}?page=${page}`);
+    router.push(`/${query.category.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?page=${page}&category=${query.category}`);
   };
 
+
+  //http://localhost:3000/chocolates/en/?page=2&category=chocolates-en
 
 
   return (
@@ -82,11 +84,11 @@ export default function AllProducts({ products, currentPage, totalCount }) {
           <PageHeader
             type="cat"
             catcount={5}
-            title={query.category.replace(/-/g, ' ')}
+            title={query.category}
             mainCat={query.category}
             data={allProducts}
           />
-
+{/*  */}
           {allProducts.length > 0 ? (
             <>
               <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
@@ -132,10 +134,11 @@ export async function getServerSideProps(context) {
 
   const { page = 1 } = context.query; // Get the page number from query parameters
 
-  const minPrice = context.query.minPrice
+  const minPrice = context.query.minPrice 
   const reviewVal = context.query.minReviewCount
   const cat1 = context.query.category
   const cat2 = context.query.sub_categories
+
 
   try {
     const res = await axios.get(`${frontendUrl}/api/products`, {
@@ -144,7 +147,7 @@ export async function getServerSideProps(context) {
         per_page: 29,
         min_price: minPrice,
         reviews_count: reviewVal,
-        main_categories: cat1,
+        main_categories: `${cat1}-${context.params.slug}`,
         sub_categories: cat2
       },
     });
@@ -165,6 +168,7 @@ export async function getServerSideProps(context) {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.totalCount,
+        test: context.params.slug
 
       }
     };

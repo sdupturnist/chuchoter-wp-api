@@ -25,7 +25,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home({ featuredProducts, pageData, homeSections }) {
 
-
+console.log(featuredProducts)
 
 
 
@@ -365,7 +365,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: false,
-    rtl: true
+ 
 
   };
 
@@ -497,13 +497,15 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                 <div dangerouslySetInnerHTML={{ __html: item?.content?.rendered }} />
                               </div>
                               <div>
+                                
                                 <Link
                                   aria-label={item?.acf?.main_cat[0]?.post_title}
                                   title={item?.acf?.main_cat[0]?.post_title}
                                   href={`/${item.acf.main_cat.toString().toLowerCase()}`}
                                   onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
-                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
+                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 !hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
                                 >
+                               
                                   {generalTranslations.shop_now[language]}
                                 </Link>
                               </div>

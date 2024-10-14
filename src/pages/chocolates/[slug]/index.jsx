@@ -28,8 +28,6 @@ export default function AllProducts({ products, currentPage, totalCount , test})
   const { language } = useLanguageContext();
 
 
-  console.log(products)
-  //query.category
 
 
   const toCapitalize = (str) => {
@@ -86,7 +84,7 @@ export default function AllProducts({ products, currentPage, totalCount , test})
           <PageHeader
             type="cat"
             catcount={5}
-            title={query.category.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}
+            title={query.category}
             mainCat={query.category}
             data={allProducts}
           />
@@ -149,7 +147,7 @@ export async function getServerSideProps(context) {
         per_page: 29,
         min_price: minPrice,
         reviews_count: reviewVal,
-        main_categories: cat1,
+        main_categories: `${cat1}-${context.params.slug}`,
         sub_categories: cat2
       },
     });
@@ -170,7 +168,7 @@ export async function getServerSideProps(context) {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.totalCount,
-        test: cat1
+        test: context.params.slug
 
       }
     };

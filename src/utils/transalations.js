@@ -89,6 +89,7 @@ export const contactFormTranslations = {
 
 
 
+
 export const generalTranslations = { 
     "shop_now": {
         "en": "Shop Now",
@@ -104,7 +105,7 @@ export const generalTranslations = {
     },
     "qr": {
         "en": "QR",
-        "ar": "﷼ "
+        "ar": "﷼"
     },
     "subtotal": {
         "en": "Subtotal",
@@ -137,6 +138,24 @@ export const generalTranslations = {
     "delivery_fee": {
         "en": "Delivery Fee",
         "ar": "رسوم التوصيل"
+    },
+    "review_heading": {
+        "en": "Ratings & Review",
+        "ar": "التقييمات والمراجعات"
+    },
+    "review_comment": {
+        "en": "Review This Product",
+        "ar": "قم بمراجعة هذا المنتج"
+    },
+    "submit": {
+        "en": "Submit",
+        "ar": "إرسال"
+    },
+    "review_success": {
+        "en": "Thanks for your review. We will publish it soon.",
+        "ar": "شكرًا على مراجعتك. سنقوم بنشرها قريبًا."
     }
 };
+
+
 

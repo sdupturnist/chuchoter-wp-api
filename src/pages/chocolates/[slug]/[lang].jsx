@@ -123,9 +123,8 @@ export default function ProductSingle({ product, reviews }) {
                   "name": `${product && product?.acf?.main_categories[0]?.post_title}`,
                   "link": `/${product && product?.acf?.main_categories[0]?.post_title.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories[0]?.post_title?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}`,
                 },
-
-                {
-                  "name": `${product?.acf?.sub_categories[0]?.post_name.toString().replace(/-/g, ' ').toLowerCase()}`,
+product?.acf?.sub_categories[0]?.post_name &&  {
+                  "name": `${product?.acf?.sub_categories[0]?.post_name.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}`,
                   "link": `/${product && product?.acf?.main_categories[0]?.post_title.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories[0]?.post_title?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}&sub_categories=${product?.acf?.sub_categories[0]?.post_name.toLowerCase()}`,
                 },
 
@@ -175,7 +174,7 @@ export default function ProductSingle({ product, reviews }) {
                     <div className="skeleton h-4 w-full"></div>
                     <div className="skeleton h-4 w-full"></div>
                   </div>}
-                  <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.sub_categories[0]?.post_name ?? null}</span>
+                  <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.sub_categories[0]?.post_name.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-') ?? null}</span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">{product?.name ?? null}</h1>
                 {filteredReviews.length > 0 ? <span className='flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" className='mb-[1px]' height="16" fill="none" viewBox="0 0 13 13">

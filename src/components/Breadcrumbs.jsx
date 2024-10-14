@@ -23,12 +23,13 @@ export default function Breadcrumbs({ pages }) {
         </li>
         {pages && pages.map((item, key) => {
          return (
-            <li className="capitalize" key={key}>
-              {item.link && <Link href={item.link}>
+           item && <li className="capitalize" key={key}>
+              {item && <Link href={item.link}>
                 {item.name}
               </Link>}
-              {!item.link && <span className="text-gray-400">{item.name}</span>}
+              {!item && <span className="text-gray-400">{item &&  item.name}</span>}
             </li>
+         
           )
         })}
       </ul>

@@ -1,15 +1,17 @@
 import { useLanguageContext } from "@/context/LanguageContext";
-import { useRouter } from "next/router"; // Import useRouter from Next.js
+import { useRouter } from "next/router";
 
-export default function LanguageSwitch() {
+export default function LangaugeSwitchSingleProduct() {
+    
     const { language, toggleLanguage } = useLanguageContext();
-    const router = useRouter(); // Get the router instance
+    const router = useRouter();
 
     // Define labels for Arabic and English
     const labels = {
         en: "Arabic",
         ar: "عربي"
     };
+
 
     const handleLanguageToggle = () => {
         // Determine the current language
@@ -19,25 +21,16 @@ export default function LanguageSwitch() {
 
         // Update the language context
         toggleLanguage();
-      
 
-        // Get the current pathname
-        const currentPath = router.pathname;
-        const newSlug = newLanguage; // Use the new language as the slug
-
-        // Create the new path with the updated slug
-        const newPath = currentPath.split('/').slice(0, -1).join('/') + `/${newSlug}`;
-
-        // Push the new path to the router
-        router.push(newPath);
-        
+        // Navigate to the home page
+        router.push('/'); // Redirect to the home page
     };
 
     return (
         <>
             <button 
                 onClick={handleLanguageToggle} 
-                className="uppercase"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
             >
                 {labels[language] || labels.en} {/* Default to English if language code is unknown */}
             </button>

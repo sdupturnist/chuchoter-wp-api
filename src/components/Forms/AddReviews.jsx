@@ -4,7 +4,8 @@
 import React, { useState, useEffect } from 'react';
 import { wordpressGraphQlApiUrl, wordpressRestApiUrl } from '@/utils/variables';
 import { useModalContext } from '@/context/modalContext';
-
+import { useLanguageContext } from '@/context/LanguageContext'
+import { generalTranslations, contactFormTranslations } from '@/utils/transalations';
 
 const ReviewForm = ({ productId, productName }) => {
 
@@ -19,7 +20,7 @@ const ReviewForm = ({ productId, productName }) => {
   const [buttonLabel, setButtonLabel] = useState(true);
   const [status, setStatus] = useState('');
   const [existingReviews, setExistingReviews] = useState([]);
-
+  const { language } = useLanguageContext();
   const { setShowModal } = useModalContext();
 
   const todayDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -139,7 +140,7 @@ const ReviewForm = ({ productId, productName }) => {
         </div>
         <input
           type="text"
-          placeholder="Full name"
+          placeholder={contactFormTranslations.full_name[language]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -149,7 +150,7 @@ const ReviewForm = ({ productId, productName }) => {
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={contactFormTranslations.email[language]}
           className="input  placeholder:text-black border-black w-full text-black rounded-[6px]"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -159,7 +160,7 @@ const ReviewForm = ({ productId, productName }) => {
 
         <textarea
           className="textarea  placeholder:text-black border-black textarea-bordered w-full text-black rounded-[6px]"
-          placeholder="Review this product"
+          placeholder={generalTranslations.review_comment[language]}
           value={comment}
           rows={5}
           onChange={(e) => setComment(e.target.value)}
@@ -174,7 +175,7 @@ const ReviewForm = ({ productId, productName }) => {
             className="btn btn-neutral bg-black rounded-[6px] w-full"
           >
             <span className={buttonLabel === false ? "hidden" : ""}>
-              Submit
+         {generalTranslations.submit[language]}
             </span>
             <span className={successLabel === false ? "hidden" : ""}>
               Done! Submitted
@@ -202,7 +203,7 @@ const ReviewForm = ({ productId, productName }) => {
                   d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span>Thanks for your review. We will publish it soon.</span>
+              <span>{generalTranslations.review_success[language]}</span>
             </div>
           )}
         </div>

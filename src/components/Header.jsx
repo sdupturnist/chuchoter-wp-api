@@ -13,12 +13,16 @@ import { NavigationData } from '@/hooks/navigationData';
 import { useLanguageContext } from '@/context/LanguageContext';
 import { generalTranslations } from '@/utils/transalations';
 import { frontendUrl } from '@/utils/variables';
-
-
+import { useRouter } from 'next/router';
+import LanguageSwitchCat from './LangaugeSwitchCat';
+import LangaugeSwitchSingleProduct from './LangaugeSwitchSingleProduct';
 
 
 export default function Nav({ theme, page, initialData }) {
 
+
+    const router = useRouter();
+  const { query } = router;
 
   const { setModalFor, setShowModal } = useModalContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
@@ -159,13 +163,21 @@ export default function Nav({ theme, page, initialData }) {
   }
 
 
-  function NavigationRight() {
-    return (
+  function NavigationRight(page) {
+   return (
       <>
         <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}>{generalTranslations.cart[language]} ({currentCartCOunt})</Link>
-        <LanguageSwitch
-          label="test language toggle"
-        />
+       
+        {page === 'page-cat' ? (
+  <LanguageSwitchCat label="test language toggle" />
+) : page === 'page-single' ? (
+  <LangaugeSwitchSingleProduct label="test language toggle"/>
+) : (
+  <LanguageSwitch label="test language toggle" />
+)}
+
+
+       
         <SearchBox
           theme={headerColor}
           page={page}
@@ -274,7 +286,7 @@ export default function Nav({ theme, page, initialData }) {
             <Link
               aria-label={item?.title?.rendered}
               title={item?.title?.rendered}
-              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}`}
+              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
               onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
               style={{ color: headerColor }}
             >
@@ -301,7 +313,7 @@ export default function Nav({ theme, page, initialData }) {
               />
               <div className='flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {NavigationRight()}
+                  {NavigationRight('page-cat')}
                 </div>
               </div>
             </div>
@@ -321,7 +333,7 @@ export default function Nav({ theme, page, initialData }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {NavigationRight()}
+                  {NavigationRight('page-cat')}
                 </div>
               </div>
             </div>
@@ -332,6 +344,28 @@ export default function Nav({ theme, page, initialData }) {
   }
 
 
+  function productSingleHeader() {
+    return (
+      <>
+
+<header className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b`} >
+        <div className="container">
+          <div className='flex items-center justify-between'>
+            <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
+            <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
+              <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
+                {Navigations(headerColor, language)}
+              </ul>
+              <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
+              {NavigationRight('page-single')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      </>
+    )
+  }
 
   let headerType;
   switch (page) {
@@ -367,6 +401,7 @@ export default function Nav({ theme, page, initialData }) {
               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 {NavigationRight()}
+              
               </div>
             </div>
           </div>
@@ -378,6 +413,12 @@ export default function Nav({ theme, page, initialData }) {
       headerType = catHeader()
 
       break
+
+      case "product-single":
+        headerType = productSingleHeader()
+  
+        break
+      
 
 
     default:
