@@ -1,14 +1,15 @@
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useRouter } from "next/router";
 
-export default function LanguageSwitch() {
+export default function LanguageSwitch({color}) {
     const { language, toggleLanguage } = useLanguageContext();
     const router = useRouter();
 
     const labels = {
         en: "Arabic",
-        ar: "عربي"
+        ar: "English"
     };
+
 
 
     const handleLanguageToggle = () => {
@@ -37,9 +38,12 @@ export default function LanguageSwitch() {
 
     return (
         <>
-            <button 
+           <button 
                 onClick={handleLanguageToggle} 
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="uppercase"
+                style={{
+                    color:color,
+                }}
             >
                 {labels[language] || labels.en}
             </button>

@@ -8,8 +8,9 @@ export default function LanguageSwitch() {
     // Define labels for Arabic and English
     const labels = {
         en: "Arabic",
-        ar: "عربي"
+        ar: "English"
     };
+
 
     const handleLanguageToggle = () => {
         // Determine the current language

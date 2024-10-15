@@ -16,7 +16,7 @@ export default function Images({imageurl, styles, quality, width, height, alt, c
     quality={quality}
     placeholder={placeholder == true ? 'blur' : 'empty'}
     blurDataURL={blurUrl_}
-    src={imageurl == null ? frontendUrl + 'images/plcaeholder-ni-image.webp' : imageurl}
+    src={imageurl == null ? frontendUrl + '/images/plcaeholder-ni-image.webp' : imageurl}
     className={classes}
     alt={alt}
     title={alt}

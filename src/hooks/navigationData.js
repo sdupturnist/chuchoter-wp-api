@@ -28,7 +28,7 @@ export const NavigationData = (initialData) => {
         if (!initialData) {
             fetchData();
         }
-    }, [initialData]);
+    }, [initialData, dataNavigation]);
 
     return { dataNavigation, errorDataNavigation };
 };

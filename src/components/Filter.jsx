@@ -2,11 +2,16 @@ import { useThemeContext } from "@/context/themeContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { StarIcon } from '@heroicons/react/24/solid'
+import { generalTranslations } from "@/utils/transalations";
+import { useLanguageContext } from "@/context/LanguageContext";
+
 
 export default function FilterProducts() {
   const router = useRouter();
   const { themeLayout } = useThemeContext();
   const currentTheme =   themeLayout.toString().toLowerCase()
+  const { language } = useLanguageContext();
+
 
   const [minPrice, setMinPrice] = useState(0);
   const [minReviewCount, setMinReviewCount] = useState(1); // Default to 1 review
@@ -70,7 +75,7 @@ export default function FilterProducts() {
   return (
     <>
       <div className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
-        <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>Price</span>
+        <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>{generalTranslations.price[language]}</span>
         <ul className="grid gap-[12px]">
           <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
@@ -81,7 +86,7 @@ export default function FilterProducts() {
               checked={minPrice === 0}
               onChange={handlePriceChange}
             />
-            All
+            {generalTranslations.all[language]}
           </li>
           <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
@@ -131,7 +136,7 @@ export default function FilterProducts() {
       </div>
 
       <div className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
-      <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>Rating</span>
+      <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>{generalTranslations.rating[language]}</span>
         <ul className="grid gap-[12px]">
           <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
@@ -142,7 +147,7 @@ export default function FilterProducts() {
               checked={minReviewCount === 0}
               onChange={handleReviewChange}
             />
-            All
+            {generalTranslations.all[language]}
           </li>
           <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input

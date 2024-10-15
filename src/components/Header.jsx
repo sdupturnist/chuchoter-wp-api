@@ -6,32 +6,30 @@ import { useModalContext } from '@/context/modalContext';
 import { useState, useEffect, useRef } from 'react';
 import { useThemeContext } from '@/context/themeContext';
 import { useCartContext } from '@/context/cartContext';
-import { CategoryData } from '@/hooks/categoryData';
 import SearchBox from './Search';
 import LanguageSwitch from './LangaugeSwitch';
-import { NavigationData } from '@/hooks/navigationData';
 import { useLanguageContext } from '@/context/LanguageContext';
 import { generalTranslations } from '@/utils/transalations';
 import { frontendUrl } from '@/utils/variables';
 import { useRouter } from 'next/router';
 import LanguageSwitchCat from './LangaugeSwitchCat';
 import LangaugeSwitchSingleProduct from './LangaugeSwitchSingleProduct';
+import { useSiteContext } from "@/context/siteContext";
+
+export default function Nav({ theme, page }) {
 
 
-export default function Nav({ theme, page, initialData }) {
 
-
-    const router = useRouter();
-  const { query } = router;
 
   const { setModalFor, setShowModal } = useModalContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
   const { language } = useLanguageContext();
+  const { catData, navigationData, subCategoryData, contactData } = useSiteContext()
 
 
-  const { dataCategory } = CategoryData(initialData);
-  const { dataNavigation } = NavigationData(initialData);
+
+  //console.log(navigationData)
 
   const currentTheme = themeLayout.toString().toLowerCase()
 
@@ -49,7 +47,7 @@ export default function Nav({ theme, page, initialData }) {
 
   const color = "#c89a3f"
 
-  // console.log(dataNavigation)
+  // console.log(navigationData)
 
 
   function update() {
@@ -105,22 +103,11 @@ export default function Nav({ theme, page, initialData }) {
 
 
 
-
-
-  const filterMainCatByLanguage = dataNavigation
-    ? dataNavigation.filter(item => item?.acf?.language === language)
-    : [];
-
-
-
-
-
-  function Navigations(color, language) {
+    const Navigations = (color, language) => {  
     return (
       <>
 
-
-        <Link
+<Link
           aria-label="Home"
           title="Home"
           href={`${frontendUrl}/${language}`}
@@ -133,7 +120,7 @@ export default function Nav({ theme, page, initialData }) {
         </Link>
         {FilteredCategories(headerColor, language)}
 
-        {dataNavigation && dataNavigation
+        {navigationData && navigationData
           .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language) // Filter based on visible_in_menu
           .sort((a, b) => {
             const titleA = a?.title?.rendered?.toLowerCase() || '';
@@ -163,17 +150,21 @@ export default function Nav({ theme, page, initialData }) {
   }
 
 
-  function NavigationRight(page) {
+  function NavigationRight(page, color) {
    return (
       <>
-        <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}>{generalTranslations.cart[language]} ({currentCartCOunt})</Link>
+        <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}
+         style={{
+          color
+        }}
+        >{generalTranslations.cart[language]} ({currentCartCOunt})</Link>
        
         {page === 'page-cat' ? (
-  <LanguageSwitchCat label="test language toggle" />
+ <LanguageSwitchCat color={color} label="test language toggle" />
 ) : page === 'page-single' ? (
-  <LangaugeSwitchSingleProduct label="test language toggle"/>
+  <LangaugeSwitchSingleProduct color label="test language toggle"/>
 ) : (
-  <LanguageSwitch label="test language toggle" />
+  <LanguageSwitch color label="test language toggle" />
 )}
 
 
@@ -264,7 +255,7 @@ export default function Nav({ theme, page, initialData }) {
       break;
   }
 
-  //console.log(dataCategory)
+  //console.log(catData)
 
 
   const FilteredCategories = (headerColor, language) => {
@@ -272,8 +263,8 @@ export default function Nav({ theme, page, initialData }) {
 
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
-    const sortedCategories = dataCategory
-      ? dataCategory
+    const sortedCategories = catData
+      ? catData
         .filter(item => item?.acf?.show_in_menu === true && item?.acf?.language === language) // Filter by show_in_menu and language
         .sort((a, b) => customOrder.indexOf(a.title.rendered) - customOrder.indexOf(b.title.rendered)) // Optional: sort based on customOrder
       : [];
@@ -286,7 +277,7 @@ export default function Nav({ theme, page, initialData }) {
             <Link
               aria-label={item?.title?.rendered}
               title={item?.title?.rendered}
-              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
+              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
               onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
               style={{ color: headerColor }}
             >
@@ -308,12 +299,12 @@ export default function Nav({ theme, page, initialData }) {
         <header className={`w-full ${themeLayout == 'black' ? 'bg-black' : `theme-${currentTheme}-header-mobile`} sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
           <div className="container">
             <div className='flex items-center justify-between'>
-              <Logo url={`/${language}`} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
+              <Logo url={`${language}`} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
 
               />
               <div className='flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {NavigationRight('page-cat')}
+                  {NavigationRight('page-cat', headerColor)}
                 </div>
               </div>
             </div>
@@ -333,7 +324,7 @@ export default function Nav({ theme, page, initialData }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-                  {NavigationRight('page-cat')}
+                  {NavigationRight('page-cat', headerColor)}
                 </div>
               </div>
             </div>

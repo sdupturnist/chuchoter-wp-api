@@ -56,7 +56,13 @@ export const orderFormTranslations = {
     "receiver_city": {
         "en": "Receiver City",
         "ar": "مدينة المستلم"
+    },
+    "add_to_cart": {
+        "en": "Add to cart",
+        "ar": "أضف إلى السلة" 
     }
+
+   
 };
 
 
@@ -89,8 +95,7 @@ export const contactFormTranslations = {
 
 
 
-
-export const generalTranslations = { 
+export const generalTranslations = {
     "shop_now": {
         "en": "Shop Now",
         "ar": "تسوق الآن"
@@ -154,6 +159,62 @@ export const generalTranslations = {
     "review_success": {
         "en": "Thanks for your review. We will publish it soon.",
         "ar": "شكرًا على مراجعتك. سنقوم بنشرها قريبًا."
+    },
+    "product_code": {
+        "en": "Product Code",
+        "ar": "رمز المنتج"
+    },
+    "write_review": {
+        "en": "Write a Review",
+        "ar": "اكتب مراجعة"
+    },
+    "add_to_cart": {
+        "en": "Add to cart",
+        "ar": "أضف إلى السلة"
+    },
+    "filter": {
+        "en": "Filter",
+        "ar": "تصفية"
+    },
+    "price": {
+        "en": "Price",
+        "ar": "السعر"
+    },
+    "rating": {
+        "en": "Rating",
+        "ar": "تقييم"
+    },
+    "all": {
+        "en": "All",
+        "ar": "الكل"
+    },
+    "apply": {
+        "en": "Apply",
+        "ar": "تطبيق"
+    }
+};
+
+
+export const catTranslations = {
+   "chocolates": {
+        "en": "Chocolates",
+        "ar": "شوكولاتة"
+    },
+    "flowers": {
+        "en": "Flowers",
+        "ar": "زهور"
+    },
+    "cakes": {
+        "en": "Cakes",
+        "ar": "كعك"
+    },
+    "events": {
+        "en": "Events",
+        "ar": "فعاليات"
+    },
+    "explore_collection": {
+        "en": "Explore our Exquisite Collection",
+        "ar": "استكشف مجموعتنا الرائعة"
     }
 };
 

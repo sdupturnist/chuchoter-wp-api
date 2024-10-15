@@ -18,7 +18,7 @@ import { generalTranslations } from "@/utils/transalations";
 export default function Cart({ pageData, allProducts_ }) {
 
 
- 
+
   const { themeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
   const { language } = useLanguageContext();
@@ -40,7 +40,7 @@ export default function Cart({ pageData, allProducts_ }) {
 
   // Calculate the total amount
   const totalAmount = cartItems?.reduce((total, item) => {
-   return total + (item?.quantity * item?.price);
+    return total + (item?.quantity * item?.price);
   }, 0);
 
   // State for order
@@ -53,42 +53,42 @@ export default function Cart({ pageData, allProducts_ }) {
   }, [totalAmount]);
 
 
-  
-    // Determine button color based on theme
-    let color;
-    switch (themeLayout.toLowerCase()) {
-        case "white":
-            color = "white";
-            break;
-        case 'chocolates':
-            color = "#c89a3f";
-            break;
-        case 'flowers':
-            color = "#E62263";
-            break;
-        case 'cakes':
-            color = "#E79F02";
-            break;
-        case 'events':
-            color = "#258F89";
-            break;
-        default:
-            color = "#c89a3f";
-            break;
-    }
+
+  // Determine button color based on theme
+  let color;
+  switch (themeLayout.toLowerCase()) {
+    case "white":
+      color = "white";
+      break;
+    case 'chocolates':
+      color = "#c89a3f";
+      break;
+    case 'flowers':
+      color = "#E62263";
+      break;
+    case 'cakes':
+      color = "#E79F02";
+      break;
+    case 'events':
+      color = "#258F89";
+      break;
+    default:
+      color = "#c89a3f";
+      break;
+  }
 
 
   return (
     <>
-     <Metatags seo={pageData && pageData[0]?.yoast_head_json} />
+      <Metatags seo={pageData && pageData[0]?.yoast_head_json} />
       <Layout page="cart">
-        <AOSInit/>
+        <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid">
             <div className="flex justify-between items-center border-b border-black">
               <h1 className="uppercase text-[20px] font-semibold tracking-[1%] sm:my-[20px] my-[10px]">
                 {pageData && pageData[0]?.title?.rendered}
-                </h1>
+              </h1>
               <Breadcrumbs
                 pages={[
                   {
@@ -98,7 +98,7 @@ export default function Cart({ pageData, allProducts_ }) {
                 ]}
               />
             </div>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-[10px] lg:gap-[50px] lg:mb-0 mb-[30px]">
               <div className={`${cartItems && cartItems.length !== 0 ? 'lg:col-span-3' : 'lg:col-span-12'} sm:py-[50px]`}>
                 {cartItems && cartItems.length !== 0 ? (
@@ -107,7 +107,7 @@ export default function Cart({ pageData, allProducts_ }) {
                       // Find the corresponding added item to get quantity
                       const addedItem = cartItems.find(item => item.id === product.id);
                       const quantity = addedItem ? addedItem.quantity : 0;
-  return (
+                      return (
                         <CartItem
                           key={key}
                           item={product}
@@ -120,13 +120,14 @@ export default function Cart({ pageData, allProducts_ }) {
                 ) : (
                   <NoData title={`Your cart is empty`} />
                 )}
+         
 
-                {cartItems && cartItems.length !== 0 &&
+                {totalAmount > 0 && cartItems && cartItems.length !== 0 ?
                   <div className="lg:border lg:rounded-[6px] rounded-none border-solid lg:border-gray-200 border-black lg:p-[20px] py-[16px] lg:mt-[20px] lg:border-t ">
                     <p className="flex justify-between w-full border-b border-solid border-gray-200 pb-[16px]">
                       <span className="block text-black text-opacity-50"> {generalTranslations.subtotal[language]}</span>
                       <span className="block text-black text-opacity-50">{totalAmount}  {generalTranslations.qr[language]}</span>
-                   
+
                     </p>
                     <p className="flex justify-between w-full border-b border-solid border-black py-[16px]">
                       <span className="block text-black text-opacity-50"> {generalTranslations.delivery_fee[language]}</span>
@@ -134,18 +135,20 @@ export default function Cart({ pageData, allProducts_ }) {
                     </p>
                     <p className="flex justify-between w-full lg:pt-[16px] pt-[16px] pb-[4px]">
                       <span className="block font-semibold text-[16px] uppercase">
-                      {generalTranslations.total[language]}
+                        {generalTranslations.total[language]}
                       </span>
                       <span className="block font-semibold text-[16px] uppercase">
                         {parseFloat(totalAmount) + parseFloat(deliveryFee)}  {generalTranslations.qr[language]}
                       </span>
                     </p>
                   </div>
+                  :
+                  null
                 }
               </div>
               {cartItems && cartItems.length !== 0 &&
                 <div className={`${language === 'ar' ? 'lg:border-r' : 'lg:border-l'} lg:col-span-2  border-black border-solid lg:p-[50px]`} >
-                <OrderForm
+                  <OrderForm
                     totalAmountOrder={parseFloat(totalAmount) + parseFloat(deliveryFee)}
                     items={cartItems}
                   />
@@ -172,27 +175,27 @@ export async function getServerSideProps(context) {
 
   try {
 
-   
+
 
     const cartRes = await axios.get(`${frontendUrl}/api/cart`, {
       params: { slug },
     });
 
 
-    
+
     const productsRes = await axios.get(`${frontendUrl}/api/products`, {
-      params: { 
+      params: {
         per_page: 100,
-       }, 
+      },
     });
 
-    
-   
+
+
     return {
       props: {
         pageData: cartRes.data,
-        allProducts_:productsRes.data,
-       }
+        allProducts_: productsRes.data,
+      }
     };
 
   } catch (error) {

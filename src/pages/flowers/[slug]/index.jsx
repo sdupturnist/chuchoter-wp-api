@@ -28,7 +28,7 @@ export default function AllProducts({ products, currentPage, totalCount , test})
   const { language } = useLanguageContext();
 
 
-
+console.log(test)
 
   const toCapitalize = (str) => {
     if (!str) return '';
@@ -64,7 +64,7 @@ export default function AllProducts({ products, currentPage, totalCount , test})
 
 
   const handlePageChange = (page) => {
-    router.push(`/${query.category.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?page=${page}&category=${query.category}`);
+    router.push(`/${query.main_categories.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?page=${page}&main_categories=${query.main_categories}`);
   };
 
 
@@ -84,8 +84,8 @@ export default function AllProducts({ products, currentPage, totalCount , test})
           <PageHeader
             type="cat"
             catcount={5}
-            title={query.category}
-            mainCat={query.category}
+            title={query.main_categories}
+            mainCat={query.main_categories}
             data={allProducts}
           />
 {/*  */}
@@ -138,17 +138,19 @@ export async function getServerSideProps(context) {
   const reviewVal = context.query.minReviewCount
   const cat1 = context.query.category
   const cat2 = context.query.sub_categories
+  const currentLanguage = context.params.slug
 
 
   try {
     const res = await axios.get(`${frontendUrl}/api/products`, {
       params: {
         page,
-        per_page: 29,
+        per_page: 30,
         min_price: minPrice,
         reviews_count: reviewVal,
-        main_categories: `${cat1}-${context.params.slug}`,
-        sub_categories: cat2
+        main_categories: cat1,
+        sub_categories: cat2,
+        language: currentLanguage
       },
     });
 

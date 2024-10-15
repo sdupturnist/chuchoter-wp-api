@@ -6,38 +6,33 @@ import Link from "next/link";
 import { useThemeContext } from "@/context/themeContext";
 import AddReview from "@/components/Forms/AddReviews";
 import { useEffect, useMemo, useState } from "react";
-import { CategoryData } from "@/hooks/categoryData";
 import { useProductContext } from "@/context/productContext";
 import FilterProducts from "./Filter";
-import { ContactData } from "@/hooks/contactData";
-import { SubCategoryData } from "@/hooks/subCategoryData";
+import { generalTranslations } from "@/utils/transalations";
+import { useLanguageContext } from "@/context/LanguageContext";
+import { frontendUrl } from "@/utils/variables";
+import { useSiteContext } from "@/context/siteContext";
 
 
 
-export default function Layout({ children, type, page, header, initialData }) {
+export default function Layout({ children, type, page, header }) {
 
-  const { showModal, setShowModal, setModalData, modalData, modalFor, setIsClassAdded } = useModalContext()
+  const { showModal, setShowModal, setModalData, modalFor, setIsClassAdded } = useModalContext()
   const { productId, productName } = useProductContext()
-  const { dataContact } = ContactData(initialData);
-
-  
-  const contactData = dataContact && dataContact?.data?.allContactInfo?.nodes[0]?.contactInfoAcf
+  const { language } = useLanguageContext();
+  const { catData, navigationData, subCategoryData, contactData } = useSiteContext()
 
   const { themeLayout, setThemeLayout } = useThemeContext()
-  const currentTheme =   themeLayout.toString().toLowerCase()
-
-  const { dataCategory } = CategoryData(initialData);
-  const { dataSubCategory } = SubCategoryData(initialData);
+  const currentTheme = themeLayout.toString().toLowerCase()
 
 
 
-
-  const FilteredCategoriesAccordin = () => {
+  const FilteredCategoriesAccordin = (language) => {
     const customOrder = ['Chocolates', 'Flowers', 'Cakes', 'Events'];
 
-    const sortedCategories = dataCategory
-      ? dataCategory
-        .filter(item => item?.acf?.show_in_menu === true) // Ensure show_in_menu is true
+    const sortedCategories = catData
+      ? catData
+        .filter(item => item?.acf?.show_in_menu === true && item?.acf?.language === language) // Filter by show_in_menu and language
         .sort((a, b) => {
           const indexA = customOrder.indexOf(a?.title?.rendered);
           const indexB = customOrder.indexOf(b?.title?.rendered);
@@ -48,10 +43,6 @@ export default function Layout({ children, type, page, header, initialData }) {
     return (
       sortedCategories.map((item, index) => (
         <>
-
-
-
-
           <div key={index} className="collapse collapse-plus rounded-none">
             <input
               type="radio"
@@ -59,7 +50,7 @@ export default function Layout({ children, type, page, header, initialData }) {
               name="my-accordion-3"
               id={index}
             />
-           <div
+            <div
               className="collapse-title p-0 min-h-0"
               style={{ color: style?.color || 'defaultColor' }} // Use default color if style.color is undefined
             >
@@ -69,17 +60,17 @@ export default function Layout({ children, type, page, header, initialData }) {
               <ul className="mt-[24px] grid gap-[24px] m-0 p-0">
 
 
-                {dataSubCategory && dataSubCategory
-                  .filter(item => item?.acf?.show_in_menu === true) // Filter for items with show_in_menu true
+                {subCategoryData && subCategoryData
+                  .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language) // Filter for items with show_in_menu true
                   .map((item, index) => (
                     <li key={index}>
 
                       <Link
-                       onClick={() => {
-                        setThemeLayout(mainCategory || 'Default Category');
-                        setShowModal(prev => !prev);
-                      }}
-                      style={{ color: style?.color || 'defaultColor' }}
+                        onClick={() => {
+                          setThemeLayout(mainCategory || 'Default Category');
+                          setShowModal(prev => !prev);
+                        }}
+                        style={{ color: style?.color || 'defaultColor' }}
                         aria-label={item?.title?.rendered}
                         title={item?.title?.rendered}
                         href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
@@ -97,12 +88,6 @@ export default function Layout({ children, type, page, header, initialData }) {
       ))
     );
   };
-  
-
-
-
-
-
 
 
 
@@ -204,11 +189,58 @@ export default function Layout({ children, type, page, header, initialData }) {
   };
 
 
+  const Navigations = (language) => {
+    return (
+      <>
 
+        <Link
+          aria-label="Home"
+          title="Home"
+          href={`${frontendUrl}/${language}`}
+          onClick={() => setThemeLayout('gray')}
+          style={{ color: style.color }}
+        >
+          {generalTranslations.home[language]}
+        </Link>
+
+        {FilteredCategoriesAccordin(language)}
+
+
+
+        {navigationData && navigationData
+          .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language)
+          .sort((a, b) => {
+            const titleA = a?.title?.rendered?.toLowerCase() || '';
+            const titleB = b?.title?.rendered?.toLowerCase() || '';
+            return titleA.localeCompare(titleB);
+          })
+          .map((item, key) => {
+
+
+
+
+            return (
+              <Link
+                key={key}
+                aria-label={item?.title?.rendered}
+                title={item?.title?.rendered}
+                href={`/${item?.slug?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}`}
+                onClick={() => setThemeLayout('gray')}
+                style={{ color: style.color }}
+              >
+                {item?.title?.rendered}
+              </Link>
+
+            );
+          })}
+
+      </>
+    )
+  }
 
   return (
     <>
-    
+
       {header !== 'color' && <Header
         page={page}
       />}
@@ -218,15 +250,15 @@ export default function Layout({ children, type, page, header, initialData }) {
         page={page}
       />
 
-<a href={`https://api.whatsapp.com/send?phone=${contactData && contactData?.Whatsapp}&text=Need Help? Chat with Us Anytime!`} class="float" target="_blank">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
-  <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
-</svg>
-</a>
+      <a href={`https://api.whatsapp.com/send?phone=${contactData && contactData?.Whatsapp}&text=Need Help? Chat with Us Anytime!`} class="float" target="_blank">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+          <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+        </svg>
+      </a>
 
       {/* ALL POPUP MODALS START HERE */}
       {showModal &&
-        <div className="fixed top-0 left-0 right-0  z-[99] after:content-['']  after:fixed after:bg-white after:bg-opacity-60 after:left-0 after:right-0 after:top-0 after:bottom-0 after:z-[-1]">
+        <div className="fixed top-0 left-0 right-0  z-[99] after:content-['']  after:fixed after:bg-[#33333399] after:bg-opacity-60 after:left-0 after:right-0 after:top-0 after:bottom-0 after:z-[-1]">
 
 
 
@@ -245,54 +277,7 @@ export default function Layout({ children, type, page, header, initialData }) {
                 </svg>
               </button>
               <div className="grid lg:gap-[50px] gap-[24px] pt-[70px] px-[24px]">
-                <Link
-                  onClick={() => {
-                    setShowModal(prev => !prev);
-                  }}
-                  aria-label='Home' title='Home' href={"/"}
-                  className='hover:bg-transparent' style={{ color: style.color }}
-                >
-                  Home
-                </Link>
-        
-             {dataCategory?.data?.shops?.data?.length !== 0 ?  <div className="accordion grid gap-[24px]">
-                  {FilteredCategoriesAccordin()}
-                </div>
-                :
-                null
-}
-                <Link
-                  aria-label='About'
-                  title='About'
-                  href={"/about"}
-                  onClick={(e) => setShowModal(!showModal)}
-                  className='hover:bg-transparent'
-                  style={{ color: style.color }}
-                >About</Link>
-                  <Link
-                  aria-label='Careers'
-                  title='Careers'
-                  href={"/careers"}
-                  onClick={(e) => setShowModal(!showModal)}
-                  className='hover:bg-transparent'
-                  style={{ color: style.color }}
-                >Careers</Link>
-                {/* <Link */}
-                  {/* aria-label='Blog' */}
-                  {/* title='Blog' */}
-                  {/* href={"/blogs"} */}
-                  {/* onClick={(e) => setShowModal(!showModal)} */}
-                  {/* className='hover:bg-transparent' */}
-                  {/* style={{ color: style.color }} */}
-                {/* >Blog</Link> */}
-                <Link
-                  aria-label='Contact'
-                  title='Contact'
-                  href={"/contact"}
-                  onClick={(e) => setShowModal(!showModal)}
-                  className='hover:bg-transparent'
-                  style={{ color: style.color }}
-                >Contact</Link>
+                {Navigations(language)}
               </div>
             </div>
 
@@ -307,7 +292,7 @@ export default function Layout({ children, type, page, header, initialData }) {
           {modalFor == 'filter' ? <div className="container px-0">
             <div className="bg-white w-[280px] h-screen">
               <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
-                <span className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>FILTER</span>
+                <span className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>{generalTranslations.filter[language]}</span>
                 <button aria-label='Home' title='Home' className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none p-0 h-auto min-h-0" onClick={closeModal}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" viewBox="0 0 14 14">
                     <path stroke={color} strokeLinecap="round" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
@@ -321,7 +306,7 @@ export default function Layout({ children, type, page, header, initialData }) {
                 <FilterProducts />
               </div>
               <div className="px-[16px] pt-[20px] pb-[24px]  border-t border-gray-200 border-solid">
-                <button style={{ background: color }} className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`} onClick={closeModal}>Apply</button>
+                <button style={{ background: color }} className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`} onClick={closeModal}>{generalTranslations.apply[language]}</button>
               </div>
             </div>
           </div>

@@ -8,13 +8,14 @@ const WooCommerce = axios.create({
 // Handler function
 export default async function handler(req, res) {
   const { 
-    page = 1,
-    per_page = 29,
-    min_price = 0 ,
-      reviews_count = 0,
+    page,
+    per_page ,
+    min_price  ,
+      reviews_count,
       main_categories,
       sub_categories,
-      search
+      search,
+      language
     } = req.query; // Default to page 1 and 100 items per page
 
     
@@ -30,7 +31,8 @@ export default async function handler(req, res) {
       page,
       main_categories,
       sub_categories,
-      search
+      search,
+      language
       },
     });
 

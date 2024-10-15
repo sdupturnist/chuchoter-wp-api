@@ -1,9 +1,8 @@
+import { useLanguageContext } from "@/context/LanguageContext";
 import { useModalContext } from "@/context/modalContext";
 import { useThemeContext } from "@/context/themeContext";
-import { CategoryData } from "@/hooks/categoryData";
-import { SubCategoryData } from "@/hooks/subCategoryData";
+import { catTranslations } from "@/utils/transalations";
 import Link from "next/link";
-
 
 
 
@@ -17,7 +16,7 @@ export default function PageHeader({ title, type, data, initialData, mainCat }) 
 
     const { themeLayout } = useThemeContext();
     const { setModalFor, setShowModal } = useModalContext();
-
+    const { language } = useLanguageContext();
 
 
     const currentTheme = themeLayout.toString().toLowerCase()
@@ -26,6 +25,26 @@ export default function PageHeader({ title, type, data, initialData, mainCat }) 
 
 
 
+let titleLanguage;
+switch (title) {
+    case "chocolates":
+        titleLanguage = catTranslations.chocolates[language]
+        break;
+    case 'flowers':
+        titleLanguage = catTranslations.flowers[language]
+        break;
+        break;
+    case 'cakes':
+        titleLanguage = catTranslations.cakes[language]
+        break;
+        break;
+    case 'events':
+        titleLanguage = catTranslations.events[language]
+        break;
+        break;
+
+}
+
 
 
 
@@ -33,6 +52,8 @@ export default function PageHeader({ title, type, data, initialData, mainCat }) 
         setShowModal(true);
         setModalFor('filter');
     };
+
+
 
 
 
@@ -131,6 +152,7 @@ export default function PageHeader({ title, type, data, initialData, mainCat }) 
     };
 
 
+    
 
     
             pageHeaderType = (
@@ -140,8 +162,8 @@ export default function PageHeader({ title, type, data, initialData, mainCat }) 
 
                 <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
                     <div className="xl:w-[50%] hidden lg:block">
-                        <h1 className={`font-primary first-letter:uppercase text-[40px] text-${currentTheme}-100`}>{title}</h1>
-                        <p className={`text-${currentTheme}-100`}>Explore our Exquisite Collection</p>
+                        <h1 className={`font-primary first-letter:uppercase text-[40px] text-${currentTheme}-100`}>{titleLanguage}</h1>
+                        <p className={`text-${currentTheme}-100`}>{catTranslations.explore_collection[language]}</p>
                     </div>
                     <div className="flex xl:w-[50%] gap-[6px] w-full mt-[20px] xl:mt-[0]">
                         <div className="flex gap-[6px] w-full xl:justify-end">

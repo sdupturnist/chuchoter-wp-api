@@ -1,38 +1,36 @@
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useRouter } from "next/router";
 
-export default function LangaugeSwitchSingleProduct() {
-    
+export default function LanguageSwitch() {
     const { language, toggleLanguage } = useLanguageContext();
     const router = useRouter();
 
-    // Define labels for Arabic and English
     const labels = {
         en: "Arabic",
-        ar: "عربي"
+        ar: "English"
     };
 
-
     const handleLanguageToggle = () => {
-        // Determine the current language
         const currentLanguage = localStorage.getItem('language') || 'en';
-        const newLanguage = currentLanguage === 'en' ? 'ar' : 'en'; // Toggle language
-        localStorage.setItem('language', newLanguage); // Update localStorage
+        const newLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+        localStorage.setItem('language', newLanguage);
 
-        // Update the language context
         toggleLanguage();
+        router.back();
 
-        // Navigate to the home page
-        router.push('/'); // Redirect to the home page
+        // Set a delay before reloading the page
+        setTimeout(() => {
+            location.reload();
+        }, 1000); // 1000 milliseconds = 1 second
     };
 
     return (
         <>
             <button 
                 onClick={handleLanguageToggle} 
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                className="uppercase"
             >
-                {labels[language] || labels.en} {/* Default to English if language code is unknown */}
+                {labels[language] || labels.en}
             </button>
         </>
     );

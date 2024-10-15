@@ -14,6 +14,7 @@ import Images from '@/components/Images';
 import { AOSInit } from '@/components/Aos';
 import axios from 'axios';
 import { useLanguageContext } from "@/context/LanguageContext";
+import { generalTranslations } from "@/utils/transalations";
 
 
 
@@ -22,7 +23,7 @@ export default function ProductSingle({ product, reviews }) {
   const router = useRouter();
   const { query } = router;
 
- // console.log(product?.acf?.main_categories[0]?.post_title)
+ // console.log(product?.acf?.main_categories?.post_title)
 
   const { setModalFor, setShowModal } = useModalContext();
   const { setProductId, setProductName } = useProductContext();
@@ -120,12 +121,12 @@ export default function ProductSingle({ product, reviews }) {
             <Breadcrumbs
               pages={[
                 {
-                  "name": `${product && product?.acf?.main_categories[0]?.post_title}`,
-                  "link": `/${product && product?.acf?.main_categories[0]?.post_title.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories[0]?.post_title?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}`,
+                  "name": `${product && product?.acf?.main_categories}`,
+                  "link": `/${product && product?.acf?.main_categories?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}`,
                 },
 product?.acf?.sub_categories[0]?.post_name &&  {
-                  "name": `${product?.acf?.sub_categories[0]?.post_name.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}`,
-                  "link": `/${product && product?.acf?.main_categories[0]?.post_title.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories[0]?.post_title?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}&sub_categories=${product?.acf?.sub_categories[0]?.post_name.toLowerCase()}`,
+                  "name": `${product?.acf?.sub_categories[0]?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}`,
+                  "link": `/${product && product?.acf?.main_categories?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?category=${product?.acf?.main_categories?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}-${language}&sub_categories=${product?.acf?.sub_categories[0]?.toLowerCase()}`,
                 },
 
                 {
@@ -174,7 +175,7 @@ product?.acf?.sub_categories[0]?.post_name &&  {
                     <div className="skeleton h-4 w-full"></div>
                     <div className="skeleton h-4 w-full"></div>
                   </div>}
-                  <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.sub_categories[0]?.post_name.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-') ?? null}</span>
+                <span className='block text-[16px] text-black text-opacity-50 mb-[10px] capitalize'>{product?.acf?.sub_categories[0] && product?.acf?.sub_categories[0]?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-')}</span> 
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">{product?.name ?? null}</h1>
                 {filteredReviews.length > 0 ? <span className='flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" className='mb-[1px]' height="16" fill="none" viewBox="0 0 13 13">
@@ -185,16 +186,17 @@ product?.acf?.sub_categories[0]?.post_name &&  {
                     :
                     null
                   }
-                  <span className='flex gap-[14px] mt-[32px]'>
+
+  {product?.regular_price  &&  <span className='flex gap-[14px] mt-[32px]'>
                     {product?.sale_price && <del className='text-[24px] font-normal opacity-60'>
-                      {product?.regular_price ?? null} QR
+                      {product?.regular_price ?? null} {generalTranslations.qr[language]}
                     </del>
                     }
                     <span className='text-[24px] font-bold'>
                       {product?.sale_price ?? null}
-                      {!product?.sale_price && <span>{product?.regular_price ?? null}</span>} QR {product?.attributes[0]?.options[0] && <span className='text-[11px] font-light uppercase '>/ {product?.attributes[0]?.options[0]}</span>}
+                      {!product?.sale_price && <span>{product?.regular_price ?? null}</span>} {generalTranslations.qr[language]} {product?.attributes[0]?.options[0] && <span className='text-[11px] font-light uppercase '>/ {product?.attributes[0]?.options[0]}</span>}
                     </span>
-                  </span>
+                  </span>}
 
                   {product?.short_description &&
                     <>
@@ -214,11 +216,11 @@ product?.acf?.sub_categories[0]?.post_name &&  {
                       product?.regular_price ?? null,
                       product?.sale_price ?? null,
                       product?.name ?? null)}
-                      className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">Add to cart</button>
+                      className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">{generalTranslations.add_to_cart[language]}</button>
                   </div>
-                  {product?.id && <span className="block text-[12px] uppercase text-gray-400 sm:my-[40px] mb-[30px] mt-[40px]">Product code:
+                  {product?.id && <span className="block text-[12px] uppercase text-gray-400 sm:my-[40px] mb-[30px] mt-[40px]"> {generalTranslations.product_code[language]} :
                     <span className="text-black pl-2">
-                      #{product?.id}
+                       #{product?.id}
                     </span>
                   </span>}
 
@@ -228,7 +230,7 @@ product?.acf?.sub_categories[0]?.post_name &&  {
                       className="btn border border-black text-black border-solid bg-white sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                       onClick={openAddReviewModal}
                     >
-                      Write a review
+                     {generalTranslations.write_review[language]}
                     </button>
                   }
 

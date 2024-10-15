@@ -17,15 +17,18 @@ import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
 import translations from "@/hooks/translations";
-import { generalTranslations } from "@/utils/transalations";
+import { catTranslations, generalTranslations } from "@/utils/transalations";
 
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 
+
+
+
 export default function Home({ featuredProducts, pageData, homeSections }) {
 
-console.log(featuredProducts)
+
 
 
 
@@ -353,6 +356,7 @@ console.log(featuredProducts)
 
 
 
+  
 
   const featuredProductsSlider = {
     dots: false,
@@ -368,11 +372,14 @@ console.log(featuredProducts)
  
 
   };
+  
+ 
 
 
   const filteredSectionsByLanguage = homeSections
     ? homeSections.filter(item => item?.acf?.language === language)
     : [];
+
     
 
   // Define the desired order
@@ -406,10 +413,12 @@ console.log(featuredProducts)
           {sortedSections.map((item, index) => {
             const isOdd = index % 2 !== 0;
 
+            const category = item?.acf?.cateogary;
+          
+          
             // Determine which ref to use based on the category
             let currentRef;
-            const category = item?.acf?.cateogary;
-            if (category === 'flowers') {
+          if (category === 'flowers') {
               currentRef = flowers;
             } else if (category === 'chocolates') {
               currentRef = chocolate;
@@ -418,6 +427,34 @@ console.log(featuredProducts)
             } else if (category === 'events') {
               currentRef = events;
             }
+
+
+
+            let color_bg;
+           
+      if (category === 'flowers') {
+        color_bg = "#fdd9d9";
+            } else if (category === 'chocolates') {
+              color_bg = "#FCF9F4";
+            } else if (category === 'cakes') {
+              color_bg = "#fffbe8";
+            } else if (category === 'events') {
+              color_bg = "#eaf4f3";
+            }
+
+
+            let color_text;
+           
+            if (category === 'flowers') {
+              color_text = "#E62263";
+                  } else if (category === 'chocolates') {
+                    color_text = "#c89a3f";
+                  } else if (category === 'cakes') {
+                    color_text = "#E79F02";
+                  } else if (category === 'events') {
+                    color_text = "#258F89";
+                  }
+
 
             return (
               <>
@@ -428,7 +465,6 @@ console.log(featuredProducts)
                     className={`
               section-${item?.acf?.cateogary}
               lg:min-h-screen
-              bg-${item?.acf?.cateogary}-900
               ${index === 0 ?
                         `
               xl:pb-[150px]
@@ -442,12 +478,17 @@ console.log(featuredProducts)
                       }
               items-center
               grid
-              text-${item?.acf?.cateogary}-100
               lg:text-start 
               text-center 
               relative
               overflow-hidden`}
-                  >
+              style={{
+                background:color_bg,
+                color:color_text
+              }}
+              >
+
+                    
 
                     {index === 0 ? <Header
                       page="home2"
@@ -472,15 +513,15 @@ console.log(featuredProducts)
                       <div className="container relative z-[1] content">
                         <div className="mx-auto 2xl:w-[80%] xl:w-[90%] grid gap-[20px] px-[20px]">
                           <div className="w-[100%]">
-                            <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" data-aos="fade-up">
+                            <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" >
                               <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0] xl:text-end' : 'text-[3vw] pb-[70px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                {item?.acf?.main_cat[0]?.post_title}
+                                 {catTranslations[item?.acf?.cateogary][language]}
                               </span>
                               <span className="mt-[-50px] block">
                                 {item?.title.rendered}
                               </span>
                             </h1>
-                            <div data-aos="fade-up" data-aos-delay="500">
+                            <div  >
                               <Images
                                 width={300}
                                 height={300}
@@ -492,7 +533,7 @@ console.log(featuredProducts)
                                 title={item?.acf?.banner1?.alt || 'Default title text'}
                               />
                             </div>
-                            <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]" data-aos="fade-up" data-aos-delay="500">
+                            <div className="grid gap-[30px] sm:mt-[50px] mt-[20px]"  >
                               <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[65%] tracking-[3%] sm:leading-[1.6] leading-[1.8] uppercase">
                                 <div dangerouslySetInnerHTML={{ __html: item?.content?.rendered }} />
                               </div>
@@ -503,8 +544,11 @@ console.log(featuredProducts)
                                   title={item?.acf?.main_cat[0]?.post_title}
                                   href={`/${item.acf.main_cat.toString().toLowerCase()}`}
                                   onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
-                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 !hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
-                                >
+                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
+                                  style={{
+                                    background:color_text
+                                  }}
+                              >
                                
                                   {generalTranslations.shop_now[language]}
                                 </Link>
@@ -529,18 +573,23 @@ console.log(featuredProducts)
                   <section
                     key={index}
                     ref={currentRef}
-                    className={`section-${item?.acf?.cateogary} lg:min-h-screen bg-${item?.acf?.cateogary}-900 items-start grid text-${item?.acf?.cateogary}-100 relative overflow-hidden sm:py-[150px] py-[50px]  xl:text-start`}
-                  >
+                    className={`section-${item?.acf?.cateogary} lg:min-h-screen  items-start grid relative overflow-hidden sm:py-[150px] py-[50px]  xl:text-start`}
+                    style={{
+                      background:color_bg,
+                      color:color_text
+                    }}
+                 >
+
                     <div className="wrpr text-center">
                       <div className="container z-[1] relative">
                         <div className="mx-auto 2xl:w-[60%] xl:w-[70%] grid gap-[20px] px-[20px]">
                           <div>
-                            <div className="content z-20 relative" data-aos="fade-up">
+                            <div className="content z-20 relative" >
                               <h2 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] xl:mt-[-50px] sm:pt-[100px] pt-[50px] xl:pt-[0]">
 
 
                                 <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0]' : 'text-[3vw] pb-[50px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                  {item?.acf?.main_cat[0]?.post_title}
+                                {catTranslations[item?.acf?.cateogary][language]}
                                 </span>
                                 <span className="mt-[-50px] block">
                                   {item?.title.rendered}
@@ -548,16 +597,16 @@ console.log(featuredProducts)
                               </h2>
                             </div>
                             <Images
-                              width={707}
-                              height={829}
+                              width={500}
+                              height={500}
                               quality={100}
                               placeholder={true}
-                              classes={`image-1 max-width-[100%] block mx-auto bottom-[5%] right-0 left-0 z-[-1] hidden xl:block`}
+                              classes={`image-1 max-width-[400px] block mx-auto bottom-[5%] right-0 left-0 z-[-1] hidden xl:block`}
                               imageurl={item?.acf?.banner1?.url || ''}
                               alt={item?.acf?.banner1?.alt || 'Default title text'}
                               title={item?.acf?.banner1?.alt || 'Default title text'}
                             />
-                            <div className="content2" data-aos="fade-up">
+                            <div className="content2" >
                               <div className="grid gap-[30px] xl:mt-[50px] mt-[30px]">
                                 <div className="xl:[&>*]:text-[20px] sm:text-[20px] text-[15px] xl:w-[85%] tracking-[3%] sm:leading-[1.6] leading-[1.7] uppercase mx-auto">
                                   <p>
@@ -570,7 +619,10 @@ console.log(featuredProducts)
                                     title={item?.acf?.main_cat[0]?.post_title}
                                     href={`/${item.acf.main_cat.toString().toLowerCase()}`}
                                     onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
-                                    className={`btn btn-lg px-[40px] bg-transparent border border-solid border-${item?.acf?.cateogary}-100 hover:bg-${item?.acf?.cateogary}-100 text-${item?.acf?.cateogary}-100 hover:border-${item?.acf?.cateogary}-100 hover:text-white rounded-full`}
+                                    className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
+                                    style={{
+                                      background:color_text
+                                    }}
                                   >
                                     {generalTranslations.shop_now[language]}
                                   </Link>
@@ -601,29 +653,17 @@ console.log(featuredProducts)
 
 
 
-
-
-
-
-
-
-
-
-
-
           {featuredProducts.length !== 0 && windowWidth > 999 ? <section>
 
-            <div className="container" data-aos="fade-in">
+            <div className="container" >
               <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
                 <h2 className="text-[16px] uppercase font-semibold mb-[30px]">{generalTranslations.featured_products[language]}</h2>
                 <div className="slider-container slider-featured-items mt-[30px]">
-
-
-
-                  <Slider {...featuredProductsSlider}>
+            
+                <Slider {...featuredProductsSlider}>
 
                     {featuredProducts && featuredProducts?.data
-                      .filter(item => item?.acf?.featured === true) // Filter for items with show_in_menu true
+                      .filter(item => item?.acf?.featured === true && item?.acf?.language === language) // Filter for items with show_in_menu true
                       .map((item, index) => (
                         <>
                           <Card
@@ -635,13 +675,16 @@ console.log(featuredProducts)
                         </>
                       ))}
                   </Slider>
+
+                      
+              
                 </div>
               </div>
             </div>
           </section>
             : null
           }
-          <section data-aos="fade-in">
+          <section >
             <div className="container">
               <div className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${featuredProducts.length !== 0 && windowWidth > 999 ? 'border-t border-solid border-black ' : null}`}>
                 <div className="md:pl-[15%]">
