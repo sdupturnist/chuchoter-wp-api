@@ -136,7 +136,7 @@ export async function getServerSideProps(context) {
 
   const minPrice = context.query.minPrice 
   const reviewVal = context.query.minReviewCount
-  const cat1 = context.query.category
+  const cat1 = context.query.main_categories
   const cat2 = context.query.sub_categories
   const currentLanguage = context.params.slug
 
@@ -170,7 +170,7 @@ export async function getServerSideProps(context) {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.totalCount,
-        test: context.params.slug
+        test: context.query.main_categories
 
       }
     };

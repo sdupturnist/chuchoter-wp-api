@@ -41,7 +41,7 @@ switch (title) {
     case 'events':
         titleLanguage = catTranslations.events[language]
         break;
-        break;
+      
 
 }
 
@@ -162,8 +162,12 @@ switch (title) {
 
                 <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
                     <div className="xl:w-[50%] hidden lg:block">
-                        <h1 className={`font-primary first-letter:uppercase text-[40px] text-${currentTheme}-100`}>{titleLanguage}</h1>
-                        <p className={`text-${currentTheme}-100`}>{catTranslations.explore_collection[language]}</p>
+                        <h1 className={`font-primary first-letter:uppercase text-[40px]`} style={{
+                            color:color,
+                        }}>{titleLanguage}</h1>
+                        <p style={{
+                            color:color,
+                        }}>{catTranslations.explore_collection[language]}</p>
                     </div>
                     <div className="flex xl:w-[50%] gap-[6px] w-full mt-[20px] xl:mt-[0]">
                         <div className="flex gap-[6px] w-full xl:justify-end">

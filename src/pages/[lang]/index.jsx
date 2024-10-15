@@ -356,7 +356,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
 
-  
+
 
   const featuredProductsSlider = {
     dots: false,
@@ -369,18 +369,18 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
     slidesToShow: 5,
     slidesToScroll: 1,
     pauseOnHover: false,
- 
+
 
   };
-  
- 
+
+
 
 
   const filteredSectionsByLanguage = homeSections
     ? homeSections.filter(item => item?.acf?.language === language)
     : [];
 
-    
+
 
   // Define the desired order
   const categoryOrder = ['chocolates', 'flowers', 'cakes', 'events'];
@@ -414,11 +414,11 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
             const isOdd = index % 2 !== 0;
 
             const category = item?.acf?.cateogary;
-          
-          
+
+
             // Determine which ref to use based on the category
             let currentRef;
-          if (category === 'flowers') {
+            if (category === 'flowers') {
               currentRef = flowers;
             } else if (category === 'chocolates') {
               currentRef = chocolate;
@@ -431,9 +431,9 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
             let color_bg;
-           
-      if (category === 'flowers') {
-        color_bg = "#fdd9d9";
+
+            if (category === 'flowers') {
+              color_bg = "#fdd9d9";
             } else if (category === 'chocolates') {
               color_bg = "#FCF9F4";
             } else if (category === 'cakes') {
@@ -444,16 +444,16 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
             let color_text;
-           
+
             if (category === 'flowers') {
               color_text = "#E62263";
-                  } else if (category === 'chocolates') {
-                    color_text = "#c89a3f";
-                  } else if (category === 'cakes') {
-                    color_text = "#E79F02";
-                  } else if (category === 'events') {
-                    color_text = "#258F89";
-                  }
+            } else if (category === 'chocolates') {
+              color_text = "#c89a3f";
+            } else if (category === 'cakes') {
+              color_text = "#E79F02";
+            } else if (category === 'events') {
+              color_text = "#258F89";
+            }
 
 
             return (
@@ -482,13 +482,13 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               text-center 
               relative
               overflow-hidden`}
-              style={{
-                background:color_bg,
-                color:color_text
-              }}
-              >
+                    style={{
+                      background: color_bg,
+                      color: color_text
+                    }}
+                  >
 
-                    
+
 
                     {index === 0 ? <Header
                       page="home2"
@@ -515,7 +515,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                           <div className="w-[100%]">
                             <h1 className="xl:text-[5.5vw] sm:text-[60px] text-[32px] font-primary leading-[1] mt-[-50px] xl:pl-[20%]" >
                               <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0] xl:text-end' : 'text-[3vw] pb-[70px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                 {catTranslations[item?.acf?.cateogary][language]}
+                                {catTranslations[item?.acf?.cateogary][language]}
                               </span>
                               <span className="mt-[-50px] block">
                                 {item?.title.rendered}
@@ -538,18 +538,18 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                 <div dangerouslySetInnerHTML={{ __html: item?.content?.rendered }} />
                               </div>
                               <div>
-                                
+
                                 <Link
-                                  aria-label={item?.acf?.main_cat[0]?.post_title}
-                                  title={item?.acf?.main_cat[0]?.post_title}
-                                  href={`/${item.acf.main_cat.toString().toLowerCase()}`}
-                                  onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
+                                  aria-label={item?.acf?.cateogary}
+                                  title={item?.acf?.cateogary}
+                                  href={`/${item?.acf?.cateogary?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.acf?.cateogary?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
+                                  onClick={(e) => setThemeLayout(item?.acf?.cateogary)}
                                   className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
                                   style={{
-                                    background:color_text
+                                    background: color_text
                                   }}
-                              >
-                               
+                                >
+
                                   {generalTranslations.shop_now[language]}
                                 </Link>
                               </div>
@@ -575,10 +575,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                     ref={currentRef}
                     className={`section-${item?.acf?.cateogary} lg:min-h-screen  items-start grid relative overflow-hidden sm:py-[150px] py-[50px]  xl:text-start`}
                     style={{
-                      background:color_bg,
-                      color:color_text
+                      background: color_bg,
+                      color: color_text
                     }}
-                 >
+                  >
 
                     <div className="wrpr text-center">
                       <div className="container z-[1] relative">
@@ -589,7 +589,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
 
                                 <span className={`${language === 'en' ? 'text-[6vw] pb-[40px] xl:pb-[0]' : 'text-[3vw] pb-[50px]'} font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                {catTranslations[item?.acf?.cateogary][language]}
+                                  {catTranslations[item?.acf?.cateogary][language]}
                                 </span>
                                 <span className="mt-[-50px] block">
                                   {item?.title.rendered}
@@ -617,11 +617,11 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                   <Link
                                     aria-label={item?.acf?.main_cat[0]?.post_title}
                                     title={item?.acf?.main_cat[0]?.post_title}
-                                    href={`/${item.acf.main_cat.toString().toLowerCase()}`}
-                                    onClick={(e) => setThemeLayout(item?.acf?.main_cat[0]?.post_title)}
+                                    href={`/${item?.acf?.cateogary?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.acf?.cateogary?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
+                                    onClick={(e) => setThemeLayout(item?.acf?.cateogary)}
                                     className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
                                     style={{
-                                      background:color_text
+                                      background: color_text
                                     }}
                                   >
                                     {generalTranslations.shop_now[language]}
@@ -659,8 +659,8 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
                 <h2 className="text-[16px] uppercase font-semibold mb-[30px]">{generalTranslations.featured_products[language]}</h2>
                 <div className="slider-container slider-featured-items mt-[30px]">
-            
-                <Slider {...featuredProductsSlider}>
+
+                  <Slider {...featuredProductsSlider}>
 
                     {featuredProducts && featuredProducts?.data
                       .filter(item => item?.acf?.featured === true && item?.acf?.language === language) // Filter for items with show_in_menu true
@@ -676,8 +676,8 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                       ))}
                   </Slider>
 
-                      
-              
+
+
                 </div>
               </div>
             </div>
@@ -712,24 +712,11 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 }
 
 
-export async function getStaticPaths() {
-  const paths = [
-    { params: { lang: 'en' } },
-    { params: { lang: 'es' } },
-    // Add more languages as needed
-  ];
-
-  return {
-    paths,
-    fallback: 'blocking',
-  };
-}
 
 
-
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
   const { params } = context;
-  const lang = params.lang; // Change 'slug' to 'lang'
+  const lang = params.lang; // Get the language from the URL
   const slug = `home-${lang}`;
 
   try {
@@ -745,9 +732,7 @@ export async function getStaticProps(context) {
         pageData: homeRes.data,
         homeSections: homeSectionsRes.data,
         featuredProducts: featuredProductsRes.data,
-
       },
-      revalidate: 60,
     };
   } catch (error) {
     console.error('Error fetching data:', error.message);
@@ -757,7 +742,67 @@ export async function getStaticProps(context) {
         homeSections: [],
         featuredProducts: [],
       },
-      revalidate: 60,
     };
   }
 }
+
+export async function getServerSidePaths() {
+  const paths = [
+    { params: { lang: 'en' } },
+    { params: { lang: 'es' } },
+    // Add more languages as needed
+  ];
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+}
+
+
+// export async function getStaticPaths() {
+//   const paths = [
+//     { params: { lang: 'en' } },
+//     { params: { lang: 'es' } },
+//     // Add more languages as needed
+//   ];
+
+//   return {
+//     paths,
+//     fallback: 'blocking',
+//   };
+// }
+// export async function getStaticProps(context) {
+//   const { params } = context;
+//   const lang = params.lang; // Change 'slug' to 'lang'
+//   const slug = `home-${lang}`;
+
+//   try {
+//     const homeRes = await axios.get(`${frontendUrl}/api/home`, {
+//       params: { slug },
+//     });
+
+//     const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
+//     const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
+
+//     return {
+//       props: {
+//         pageData: homeRes.data,
+//         homeSections: homeSectionsRes.data,
+//         featuredProducts: featuredProductsRes.data,
+
+//       },
+//       revalidate: 60,
+//     };
+//   } catch (error) {
+//     console.error('Error fetching data:', error.message);
+//     return {
+//       props: {
+//         pageData: [],
+//         homeSections: [],
+//         featuredProducts: [],
+//       },
+//       revalidate: 60,
+//     };
+//   }
+// }

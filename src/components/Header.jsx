@@ -103,11 +103,11 @@ export default function Nav({ theme, page }) {
 
 
 
-    const Navigations = (color, language) => {  
+  const Navigations = (color, language) => {
     return (
       <>
 
-<Link
+        <Link
           aria-label="Home"
           title="Home"
           href={`${frontendUrl}/${language}`}
@@ -128,7 +128,7 @@ export default function Nav({ theme, page }) {
             return titleA.localeCompare(titleB); // Sort titles in ascending order
           })
           .map((item, key) => {
-  return (
+            return (
               <li key={key}>
                 <Link
                   aria-label={item?.title?.rendered}
@@ -151,24 +151,24 @@ export default function Nav({ theme, page }) {
 
 
   function NavigationRight(page, color) {
-   return (
+    return (
       <>
         <Link href={`/cart/${language}`} className={`mr-2 mr-sm-0`}
-         style={{
-          color
-        }}
+          style={{
+            color
+          }}
         >{generalTranslations.cart[language]} ({currentCartCOunt})</Link>
-       
+
         {page === 'page-cat' ? (
- <LanguageSwitchCat color={color} label="test language toggle" />
-) : page === 'page-single' ? (
-  <LangaugeSwitchSingleProduct color label="test language toggle"/>
-) : (
-  <LanguageSwitch color label="test language toggle" />
-)}
+          <LanguageSwitchCat color={color} label="test language toggle" />
+        ) : page === 'page-single' ? (
+          <LangaugeSwitchSingleProduct color label="test language toggle" />
+        ) : (
+          <LanguageSwitch color label="test language toggle" />
+        )}
 
 
-       
+
         <SearchBox
           theme={headerColor}
           page={page}
@@ -265,7 +265,7 @@ export default function Nav({ theme, page }) {
 
     const sortedCategories = catData
       ? catData
-        .filter(item => item?.acf?.show_in_menu === true && item?.acf?.language === language) // Filter by show_in_menu and language
+        .filter(item => item?.acf?.show_in_menu === true) // Filter by show_in_menu and language
         .sort((a, b) => customOrder.indexOf(a.title.rendered) - customOrder.indexOf(b.title.rendered)) // Optional: sort based on customOrder
       : [];
 
@@ -277,11 +277,14 @@ export default function Nav({ theme, page }) {
             <Link
               aria-label={item?.title?.rendered}
               title={item?.title?.rendered}
-              href={`/${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.acf?.title_english?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
+              href={`/${item?.title?.rendered?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.title?.rendered?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
               onClick={(e) => setThemeLayout(item?.title?.rendered.toLowerCase())}
               style={{ color: headerColor }}
             >
-              {item?.title?.rendered}
+
+              {language === 'en' ? item?.title?.rendered : item?.acf?.title_english}
+
+
             </Link>
           </li>
         ))}
@@ -299,7 +302,7 @@ export default function Nav({ theme, page }) {
         <header className={`w-full ${themeLayout == 'black' ? 'bg-black' : `theme-${currentTheme}-header-mobile`} sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
           <div className="container">
             <div className='flex items-center justify-between'>
-              <Logo url={`${language}`} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
+              <Logo url={`/${language}`} alt={'Chuchoter Logo'} logoTitle={'Chuchoter Logo'} theme="white"
 
               />
               <div className='flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
@@ -339,21 +342,21 @@ export default function Nav({ theme, page }) {
     return (
       <>
 
-<header className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b`} >
-        <div className="container">
-          <div className='flex items-center justify-between'>
-            <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
-            <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
-              <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                {Navigations(headerColor, language)}
-              </ul>
-              <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
-              {NavigationRight('page-single')}
+        <header className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b`} >
+          <div className="container">
+            <div className='flex items-center justify-between'>
+              <Logo url={`/${language}`} alt={'#'} logoTitle={'#'} theme={headerColorLogoHome} />
+              <div className='flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]'>
+                <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
+                  {Navigations(headerColor, language)}
+                </ul>
+                <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
+                  {NavigationRight('page-single')}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
       </>
     )
   }
@@ -392,7 +395,7 @@ export default function Nav({ theme, page }) {
               </ul>
               <div className='flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]'>
                 {NavigationRight()}
-              
+
               </div>
             </div>
           </div>
@@ -405,11 +408,11 @@ export default function Nav({ theme, page }) {
 
       break
 
-      case "product-single":
-        headerType = productSingleHeader()
-  
-        break
-      
+    case "product-single":
+      headerType = productSingleHeader()
+
+      break
+
 
 
     default:

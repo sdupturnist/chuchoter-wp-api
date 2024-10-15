@@ -32,7 +32,7 @@ export default function Layout({ children, type, page, header }) {
 
     const sortedCategories = catData
       ? catData
-        .filter(item => item?.acf?.show_in_menu === true && item?.acf?.language === language) // Filter by show_in_menu and language
+        .filter(item => item?.acf?.show_in_menu === true ) // Filter by show_in_menu and language
         .sort((a, b) => {
           const indexA = customOrder.indexOf(a?.title?.rendered);
           const indexB = customOrder.indexOf(b?.title?.rendered);
@@ -43,47 +43,61 @@ export default function Layout({ children, type, page, header }) {
     return (
       sortedCategories.map((item, index) => (
         <>
-          <div key={index} className="collapse collapse-plus rounded-none">
-            <input
-              type="radio"
-              className="min-h-[10px] after:top-0"
-              name="my-accordion-3"
-              id={index}
-            />
-            <div
-              className="collapse-title p-0 min-h-0"
-              style={{ color: style?.color || 'defaultColor' }} // Use default color if style.color is undefined
-            >
-              {item?.title?.rendered}
-            </div>
-            <div className="collapse-content !pb-0 px-0 mb-0">
-              <ul className="mt-[24px] grid gap-[24px] m-0 p-0">
+         <Link
+  aria-label={item?.title?.rendered}
+  title={item?.title?.rendered}
+  href={`/${item?.title?.rendered?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}/${language}?main_categories=${item?.title?.rendered?.replace(/-ar/g, '').replace(/-en/g, '').replace(/-/g, '-').toLowerCase()}`}
+  onClick={(e) => {
+    setThemeLayout(item?.title?.rendered.toLowerCase());
+    setShowModal(prev => !prev);
+  }}
+  style={{ color: '#fff' }}
+>
+  {language === 'en' ? item?.title?.rendered : item?.acf?.title_english}
+</Link>
 
-
-                {subCategoryData && subCategoryData
-                  .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language) // Filter for items with show_in_menu true
-                  .map((item, index) => (
-                    <li key={index}>
-
-                      <Link
-                        onClick={() => {
-                          setThemeLayout(mainCategory || 'Default Category');
-                          setShowModal(prev => !prev);
-                        }}
-                        style={{ color: style?.color || 'defaultColor' }}
-                        aria-label={item?.title?.rendered}
-                        title={item?.title?.rendered}
-                        href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`}
-                        className="hover:opacity-50"
-                      >
-                        {item?.title?.rendered?.replace(/-/g, ' ')}
-                      </Link>
-
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
+          {/* <div key={index} className="collapse collapse-plus rounded-none"> */}
+            {/* <input */}
+              {/* type="radio" */}
+              {/* className="min-h-[10px] after:top-0" */}
+              {/* name="my-accordion-3" */}
+              {/* id={index} */}
+            {/* /> */}
+            {/* <div */}
+              {/* className="collapse-title p-0 min-h-0" */}
+              {/* style={{ color: style?.color || 'defaultColor' }} // Use default color if style.color is undefined */}
+            {/* > */}
+              {/* {language === 'en' ?  item?.title?.rendered :  item?.acf?.title_english} */}
+{/*  */}
+            {/* </div> */}
+            {/* <div className="collapse-content !pb-0 px-0 mb-0"> */}
+              {/* <ul className="mt-[24px] grid gap-[24px] m-0 p-0"> */}
+{/*  */}
+{/*  */}
+                {/* {subCategoryData && subCategoryData */}
+                  {/* .filter(item => item?.acf?.visible_in_menu && item?.acf?.language === language) // Filter for items with show_in_menu true */}
+                  {/* .map((item, index) => ( */}
+                    {/* <li key={index}> */}
+{/*  */}
+                      {/* <Link */}
+                        {/* onClick={() => { */}
+                          {/* setThemeLayout(mainCategory || 'Default Category'); */}
+                          {/* setShowModal(prev => !prev); */}
+                        {/* }} */}
+                        {/* style={{ color: style?.color || 'defaultColor' }} */}
+                        {/* aria-label={item?.title?.rendered} */}
+                        {/* title={item?.title?.rendered} */}
+                        {/* href={`/${item?.title?.rendered?.replace(/-/g, '-').toLowerCase()}`} */}
+                        {/* className="hover:opacity-50" */}
+                      {/* > */}
+                        {/* {item?.title?.rendered?.replace(/-/g, ' ')} */}
+                      {/* </Link> */}
+{/*  */}
+                    {/* </li> */}
+                  {/* ))} */}
+              {/* </ul> */}
+            {/* </div> */}
+          {/* </div> */}
         </>
       ))
     );
