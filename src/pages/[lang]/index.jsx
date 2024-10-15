@@ -523,12 +523,12 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                             </h1>
                             <div  >
                               <Images
-                                width={300}
-                                height={300}
+                                width={500}
+                                height={500}
                                 quality={100}
                                 placeholder={false}
                                 imageurl={`/images/${item?.acf?.cateogary}-hero.webp`}
-                                classes={'mx-auto w-full block xl:hidden my-[30px] max-w-[330px]'}
+                                classes={'mx-auto w-full block xl:hidden my-[30px] max-w-[500px]'}
                                 alt={item?.acf?.banner1?.alt || 'Default title text'}
                                 title={item?.acf?.banner1?.alt || 'Default title text'}
                               />
@@ -573,7 +573,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                   <section
                     key={index}
                     ref={currentRef}
-                    className={`section-${item?.acf?.cateogary} lg:min-h-screen  items-start grid relative overflow-hidden sm:py-[150px] py-[50px]  xl:text-start`}
+                    className={`section-${item?.acf?.cateogary} lg:min-h-screen  items-start grid relative overflow-hidden sm:py-[150px] pt-[50px]  xl:text-start`}
                     style={{
                       background: color_bg,
                       color: color_text
@@ -626,22 +626,23 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                   >
                                     {generalTranslations.shop_now[language]}
                                   </Link>
-                                  <Images
-                                    width={300}
-                                    height={300}
-                                    quality={100}
-                                    placeholder={false}
-                                    imageurl={`/images/flowers-hero-bg.webp`}
-                                    classes={'mx-auto w-full block xl:hidden'}
-                                    alt={item?.acf?.banner1?.alt || 'Default title text'}
-                                    title={item?.acf?.banner1?.alt || 'Default title text'}
-                                  />
+                                 
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
+                      <Images
+                                    width={300}
+                                    height={300}
+                                    quality={100}
+                                    placeholder={false}
+                                    imageurl={`/images/${item?.acf?.cateogary}-hero.webp`}
+                                    classes={'mx-auto w-full block xl:hidden'}
+                                    alt={item?.acf?.banner1?.alt || 'Default title text'}
+                                    title={item?.acf?.banner1?.alt || 'Default title text'}
+                                  />
                     </div>
                   </section>
                 )}
