@@ -21,7 +21,7 @@ export default function Nav({ theme, page }) {
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
   const { language } = useLanguageContext();
-  const { catData, navigationData, subCategoryData, contactData } =
+  const { catData, navigationData, headerMenus, subCategoryData, contactData } =
     useSiteContext();
 
   //console.log(navigationData)
@@ -99,65 +99,99 @@ export default function Nav({ theme, page }) {
           aria-label="Home"
           title="Home"
           href={`${frontendUrl}/${language}`}
-          onClick={() => setThemeLayout("gray")}
-          style={{
-            color,
-          }}>
+          onClick={() => {
+            setThemeLayout("gray");
+            closeModal();
+          }}
+          style={{ color: color }}>
           {generalTranslations.home[language]}
         </Link>
-        {FilteredCategories(headerColor, language)}
 
-        {navigationData &&
-          navigationData
-            .filter(
-              (item) =>
-                item?.acf?.visible_in_menu && item?.acf?.language === language
-            ) // Filter based on visible_in_menu
-            .sort((a, b) => {
-              const titleA = a?.title?.rendered?.toLowerCase() || "";
-              const titleB = b?.title?.rendered?.toLowerCase() || "";
-              return titleA.localeCompare(titleB); // Sort titles in ascending order
-            })
-            .map((item, key) => {
-              return (
-                <li key={key}>
-                  <Link
-                    aria-label={item?.title?.rendered}
-                    title={item?.title?.rendered}
-                    href={`/${item?.slug
-                      ?.replace(/-ar/g, "")
-                      .replace(/-en/g, "")
-                      .replace(/-/g, "-")
-                      .toLowerCase()}/${language}`}
-                    onClick={() => setThemeLayout("gray")}
-                    style={{
-                      color,
-                    }}>
-                    {item?.title?.rendered}
-                  </Link>
-                </li>
-              );
-            })}
+        {FilteredCategories(color, language)}
+
+        {headerMenus &&
+          headerMenus.map((item, key) => (
+            <Link
+              key={key}
+              aria-label={item?.title}
+              title={item?.title}
+              href={`/${item?.title
+                ?.replace(/-ar/g, "")
+                .replace(/-en/g, "")
+                .replace(/-/g, "-")
+                .toLowerCase()}/${language}`}
+              onClick={() => setThemeLayout("gray")}
+              style={{
+                color,
+              }}>
+              {language === "en" ? item?.title : item?.acf?.arabic}
+            </Link>
+          ))}
       </>
     );
+    // return (
+    //   <>
+    //     <Link
+    //       aria-label="Home"
+    //       title="Home"
+    //       href={`${frontendUrl}/${language}`}
+    //       onClick={() => setThemeLayout("gray")}
+    //       style={{
+    //         color,
+    //       }}>
+    //       {generalTranslations.home[language]}
+    //     </Link>
+    //     {FilteredCategories(headerColor, language)}
+
+    //     {navigationData &&
+    //       navigationData
+    //         .filter(
+    //           (item) =>
+    //             item?.acf?.visible_in_menu && item?.acf?.language === language
+    //         ) // Filter based on visible_in_menu
+    //         .sort((a, b) => {
+    //           const titleA = a?.title?.rendered?.toLowerCase() || "";
+    //           const titleB = b?.title?.rendered?.toLowerCase() || "";
+    //           return titleA.localeCompare(titleB); // Sort titles in ascending order
+    //         })
+    //         .map((item, key) => {
+    //           return (
+    //             <li key={key}>
+    //               <Link
+    //                 aria-label={item?.title?.rendered}
+    //                 title={item?.title?.rendered}
+    //                 href={`/${item?.slug
+    //                   ?.replace(/-ar/g, "")
+    //                   .replace(/-en/g, "")
+    //                   .replace(/-/g, "-")
+    //                   .toLowerCase()}/${language}`}
+    //                 onClick={() => setThemeLayout("gray")}
+    //                 style={{
+    //                   color,
+    //                 }}>
+    //                 {item?.title?.rendered}
+    //               </Link>
+    //             </li>
+    //           );
+    //         })}
+    //   </>
+    // );
   };
 
   function NavigationRight(page, color) {
     return (
       <>
-        <Link
-          href={`/cart/${language}`}
-          className={`mr-2 mr-sm-0`}
-         >
+        <Link href={`/cart/${language}`} style={{
+          color: color
+        }} className={`mr-2 mr-sm-0`}>
           {generalTranslations.cart[language]} ({currentCartCOunt})
         </Link>
-
         {page === "page-cat" ? (
-          <LanguageSwitchCat  label="test language toggle" />
+          <LanguageSwitchCat color={color} label="test language toggle" />
         ) : page === "page-single" ? (
-          <LangaugeSwitchSingleProduct  label="test language toggle" />
+          <LangaugeSwitchSingleProduct label="test language toggle" />
         ) : (
-          <LanguageSwitch  label="test language toggle" />
+          <LanguageSwitch label="test language toggle" />
         )}
         <SearchBox theme={color} page={page} />
         <button
@@ -165,7 +199,6 @@ export default function Nav({ theme, page }) {
           title="Navigation Menu"
           className="btn btn-link hover:bg-gray-100 !bg-transparent !border-none xl:hidden p-0"
           onClick={openNavigationModal}>
-           
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="21"
@@ -315,7 +348,7 @@ export default function Nav({ theme, page }) {
               <div className="flex gap-[10px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[4px]">
                   {NavigationRight("page-cat", "#fff")}
-                 </div>
+                </div>
               </div>
             </div>
           </div>
@@ -347,8 +380,8 @@ export default function Nav({ theme, page }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight("page-cat", headerColor)}
-                   </div>
+                  {NavigationRight( "page-cat", headerColor)}
+                </div>
               </div>
             </div>
           </div>
@@ -372,10 +405,10 @@ export default function Nav({ theme, page }) {
               />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                  {Navigations(headerColor, language)}
+                  {Navigations('', language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight("page-single")}
+                  {NavigationRight("page-single", '#c89a3f')}
                 </div>
               </div>
             </div>
@@ -405,7 +438,6 @@ export default function Nav({ theme, page }) {
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
                   {NavigationRight()}
-               
                 </div>
               </div>
             </div>
@@ -431,8 +463,8 @@ export default function Nav({ theme, page }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight('home2', color)}
-                  </div>
+                  {NavigationRight("home2", color)}
+                </div>
               </div>
             </div>
           </div>

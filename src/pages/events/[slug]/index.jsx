@@ -11,6 +11,7 @@ import Metatags from "@/components/Seo";
 import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useSiteContext } from "@/context/siteContext";
+import { generalTranslations } from "@/utils/transalations";
 
 export default function AllProducts({ products, currentPage, totalCount }) {
   const router = useRouter();
@@ -89,7 +90,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
               ) : null}
             </>
           ) : (
-            <NoData title={`Sorry, no any ${query.category} available.`} />
+            <NoData title={generalTranslations.noProducts[language]} />
           )}
         </div>
       </Layout>
@@ -119,7 +120,6 @@ export async function getServerSideProps(context) {
       },
     });
 
-   
     // Fetch total product count
     const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
 

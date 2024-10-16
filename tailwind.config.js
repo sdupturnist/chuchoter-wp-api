@@ -71,7 +71,9 @@ module.exports = {
         },
         black: '#c89a3f',
         gray: {
-          100: '#FF0000', // Change gray.100 to red
+          100: '#c89a3f', // Change gray.100 to red
+          400: '#c89a3f', // Change gray.500 to red
+          500: '#c89a3f', // Change gray.500 to red
           DEFAULT: '#c89a3f',
         },
         red: {
@@ -84,7 +86,6 @@ module.exports = {
         tertiary: ['Inter', 'sans-serif'],
         ar: ['Cairo', 'sans-serif'],
       },
-      // Adding the direction configuration
       direction: {
         'rtl': 'rtl',
         'ltr': 'ltr',

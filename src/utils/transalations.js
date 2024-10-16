@@ -186,6 +186,10 @@ export const generalTranslations = {
     en: "Categories",
     ar: "الفئات",
   },
+  noProducts: {
+    en: "Products are coming soon, visit again",
+    ar: "المنتجات قادمة قريبًا، قم بزيارتنا مرة أخرى",
+  },
 };
 
 export const catTranslations = {
