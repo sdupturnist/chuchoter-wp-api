@@ -1377,6 +1377,10 @@
   font-weight: normal;
   font-style: normal;
 }
+.slick-track {
+  width: auto !important;
+}
+
 [dir=rtl] {
   @apply font-ar;
 }
@@ -1514,6 +1518,38 @@ footer .collapse-title:after {
   background-size: cover; /* Ensure the image covers the element */
   opacity: 0.8;
   z-index: -1; /* Make sure it’s behind the content */
+}
+
+.btn-flowers {
+  @apply bg-flowers-100 text-white hover:bg-flowers-300;
+}
+
+.btn-chocolates {
+  @apply bg-chocolates-100 text-white hover:bg-chocolates-300;
+}
+
+.btn-cakes {
+  @apply bg-cakes-100 text-white hover:bg-cakes-300;
+}
+
+.btn-events {
+  @apply bg-events-100 text-white hover:bg-events-300;
+}
+
+.btn-flowers-border {
+  @apply border border-flowers-100 text-flowers-100 hover:bg-flowers-800 hover:text-flowers-100 bg-transparent;
+}
+
+.btn-chocolates-border {
+  @apply border border-chocolates-100 text-chocolates-100 hover:bg-chocolates-800 hover:text-chocolates-100 bg-transparent;
+}
+
+.btn-cakes-border {
+  @apply border border-cakes-100 text-cakes-100 hover:bg-cakes-800 hover:text-cakes-100 bg-transparent;
+}
+
+.btn-events-border {
+  @apply border border-events-100 text-events-100 hover:bg-events-800 hover:text-events-100 bg-transparent;
 }
 
 .card-cat:hover .btn-cart {

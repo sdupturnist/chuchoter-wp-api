@@ -1,3 +1,43 @@
+<?php
+/**
+ * Theme functions and definitions.
+ *
+ * For additional information on potential customization options,
+ * read the developers' documentation:
+ *
+ * https://developers.elementor.com/docs/hello-elementor-theme/
+ *
+ * @package HelloElementorChild
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+define( 'HELLO_ELEMENTOR_CHILD_VERSION', '2.0.0' );
+
+/**
+ * Load child theme scripts & styles.
+ *
+ * @return void
+ */
+function hello_elementor_child_scripts_styles() {
+
+	wp_enqueue_style(
+		'hello-elementor-child-style',
+		get_stylesheet_directory_uri() . '/style.css',
+		[
+			'hello-elementor-theme-style',
+		],
+		HELLO_ELEMENTOR_CHILD_VERSION
+	);
+
+}
+add_action( 'wp_enqueue_scripts', 'hello_elementor_child_scripts_styles', 20 );
+
+
+
+
 
 
 
@@ -64,6 +104,19 @@ function include_acf_fields_in_sub_categories_response($response, $post, $reques
 
 
 
+
+
+
+add_filter('acf/rest_api/menu_item/get_fields', function($fields, $post) {
+    // Replace 'your_field_name' with the actual name of your ACF field
+    $fields['arabic'] = get_field('arabic', $post->ID);
+    return $fields;
+});
+
+
+
+
+
 //FEATURED IMAGES FOR POSTS AND PAGES TO DSIPLAY IN REST API
 
 add_action('rest_api_init', 'register_rest_images');
@@ -103,6 +156,56 @@ function get_rest_featured_image_data($object, $field_name, $request) {
 
 
 
+add_action('rest_api_init', function () {
+    error_log('REST API Initialized for main-category');
+    
+    register_rest_field('main-category', 'sub_cat', [
+        'get_callback' => function ($data) {
+            $post_id = $data['id'];
+            error_log('Getting sub_cat for post ID: ' . $post_id);
+            return get_field('sub_cat', $post_id);
+        },
+        'schema' => null,
+    ]);
+});
+
+
+////////MENU
+
+function register_site_menu_endpoint() {
+    register_rest_route('sitemenu/v1', '/menus/(?P<slug>[\w-]+)', array(
+        'methods' => 'GET',
+        'callback' => 'get_menu_by_slug',
+    ));
+}
+
+function get_menu_by_slug($data) {
+    $slug = $data['slug'];
+    $menu = wp_get_nav_menu_object($slug);
+
+    if (!$menu) {
+        return new WP_Error('no_menu', 'Menu not found', array('status' => 404));
+    }
+
+    $menu_items = wp_get_nav_menu_items($menu->term_id);
+
+    // Loop through menu items and add ACF fields
+    foreach ($menu_items as $item) {
+        // Get ACF fields for this menu item
+        $item->acf = get_fields($item->ID); // Replace with the specific field retrieval if needed
+    }
+
+    return new WP_REST_Response($menu_items, 200);
+}
+
+add_action('rest_api_init', 'register_site_menu_endpoint');
+
+
+
+
+
+
+//https://demo.chuchoterqatar.com/wp-json/sitemenu/v1/menus/footer-menu
 
 
 ////////REST API PRODUCTS////////
@@ -338,3 +441,4 @@ function format_image_data($image_id) {
 
 
 // https://demo.chuchoterqatar.com/wp-json/wc-custom/v1/products?search=&reviews_count=0&min_price=0&page=0&per_page=0&sub_categories=&main_categories=
+

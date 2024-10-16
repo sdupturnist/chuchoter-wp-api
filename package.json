@@ -27,9 +27,12 @@
         "node-fetch": "^3.3.2",
         "nodemailer": "^6.9.14",
         "nookies": "^2.5.2",
+        "owl.carousel": "^2.3.4",
         "react": "^18",
+        "react-alice-carousel": "^2.9.1",
         "react-dom": "^18",
         "react-image-gallery": "^1.3.0",
+        "react-owl-carousel": "^2.3.3",
         "react-slick": "^0.30.2",
         "react-spring-carousel": "^2.0.19"
     },

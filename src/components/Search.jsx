@@ -55,7 +55,7 @@ export default function SearchBox({ theme, page }) {
     };
 
     let color;
-    switch (theme.toLowerCase()) {
+    switch (currentTheme) {
         case "white":
             color = "white";
             break;

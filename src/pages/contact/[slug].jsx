@@ -7,6 +7,7 @@ import { ContactData } from "@/hooks/contactData";
 import { useEffect, useState } from "react";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
+import { Link } from "react-alice-carousel";
 
 
 export default function Contact({ initialData, pageData }) {
@@ -65,12 +66,18 @@ export default function Contact({ initialData, pageData }) {
                       <p className="mb-[8px]">
                         <div dangerouslySetInnerHTML={{ __html: dataContact && dataContact[0].content?.rendered }} />
                       </p>
-                      <p className="mb-[8px]">
-                        {dataContact && dataContact[0].acf?.phone}
-                      </p>
-                      <p>
-                        {dataContact && dataContact[0].acf?.email}
-                      </p>
+                      <Link
+                      href={`tel:${dataContact && dataContact[0].acf?.phone}`}
+                      className="mb-[8px] block pb-[5px]">
+                      {dataContact && dataContact[0].acf?.phone}
+                    </Link>
+                    <Link
+                      href={`mailto:${
+                        dataContact && dataContact[0].acf?.email
+                      }`}
+                      className="mb-[8px] block">
+                      {dataContact && dataContact[0].acf?.email}
+                    </Link>
                     </div>
                   )}
 
