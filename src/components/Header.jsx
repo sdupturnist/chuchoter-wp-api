@@ -499,7 +499,8 @@ export default function Nav({ theme, page }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight()}
+                  {NavigationRight("", "#c89a3f")}
+                  
                 </div>
               </div>
             </div>

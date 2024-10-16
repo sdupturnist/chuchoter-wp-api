@@ -121,11 +121,11 @@ export default function ProductSingle({ product, reviews }) {
                       .replace(/-en/g, "")
                       .replace(/-/g, "-")
                       .toLowerCase()
-                  }/${language}?category=${product?.acf?.main_categories
+                  }/${language}?main_categories=${product?.acf?.main_categories
                     ?.replace(/-ar/g, "")
                     .replace(/-en/g, "")
                     .replace(/-/g, "-")
-                    .toLowerCase()}-${language}`,
+                    .toLowerCase()}`,
                 },
                 product?.acf?.sub_categories[0]?.post_name && {
                   name: `${product?.acf?.sub_categories[0]
@@ -146,10 +146,10 @@ export default function ProductSingle({ product, reviews }) {
                     .toLowerCase()}-${language}&sub_categories=${product?.acf?.sub_categories[0]?.toLowerCase()}`,
                 },
 
-                {
-                  name: `${product?.name ?? null}`,
-                  link: "",
-                },
+                // {
+                //   "name": `${product?.name ?? null}`,
+                //   "link": "",
+                // },
               ]}
             />
 

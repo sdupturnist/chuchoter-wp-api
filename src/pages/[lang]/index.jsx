@@ -529,10 +529,8 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                   onClick={(e) =>
                                     setThemeLayout(item?.acf?.cateogary)
                                   }
-                                  className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
-                                  style={{
-                                    background: color_text,
-                                  }}>
+                                  className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}
+                                 >
                                   {generalTranslations.shop_now[language]}
                                 </Link>
                               </div>
@@ -629,10 +627,8 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                     onClick={(e) =>
                                       setThemeLayout(item?.acf?.cateogary)
                                     }
-                                    className={`btn btn-lg px-[40px] bg-transparent border border-solid text-white rounded-full`}
-                                    style={{
-                                      background: color_text,
-                                    }}>
+                                    className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}
+                                  >
                                     {generalTranslations.shop_now[language]}
                                   </Link>
                                 </div>

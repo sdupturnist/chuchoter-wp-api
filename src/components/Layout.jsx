@@ -60,17 +60,21 @@ export default function Layout({ children, type, page, header }) {
                   <li key={item.ID}>
                     <Link
                       onClick={() => {
-                        setThemeLayout("gray");
+                        setThemeLayout(
+                          `${item?.title?.replace(/-/g, "-").toLowerCase()}`
+                        );
                         closeModal();
                       }}
                       aria-label={childItem?.post_title}
                       title={childItem?.post_title}
                       style={{ color: "#fff" }}
-                      href={`/${childItem?.post_title
+                      href={`/${item?.title
                         ?.replace(/-ar/g, "")
                         .replace(/-en/g, "")
                         .replace(/-/g, "-")
-                        .toLowerCase()}/${language}?sub_categories=${childItem?.post_title
+                        .toLowerCase()}/${language}?main_categories=${item?.title
+                        ?.replace(/-/g, "-")
+                        .toLowerCase()}&sub_categories=${childItem?.post_title
                         ?.replace(/-/g, "-")
                         .toLowerCase()}`}
                       className="hover:opacity-50">
@@ -192,7 +196,7 @@ export default function Layout({ children, type, page, header }) {
             setThemeLayout("gray");
             closeModal();
           }}
-          style={{ color: color }}>
+          style={{ color: "#fff" }}>
           {generalTranslations.home[language]}
         </Link>
 
@@ -217,7 +221,6 @@ export default function Layout({ children, type, page, header }) {
               {language === "en" ? item?.title : item?.acf?.arabic}
             </Link>
           ))}
-       
       </>
     );
   };
