@@ -1,7 +1,16 @@
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useModalContext } from "@/context/modalContext";
+import { useSiteContext } from "@/context/siteContext";
 import { useThemeContext } from "@/context/themeContext";
-import { catTranslations, generalTranslations } from "@/utils/transalations";
+import { catTranslations } from "@/utils/transalations";
+
+import {
+  catUrl,
+  catUrlWithSubCat,
+  colorTheme,
+  titleLanguages,
+  transalateText,
+} from "@/utils/variables";
 import Link from "next/link";
 
 export default function PageHeader({
@@ -15,66 +24,22 @@ export default function PageHeader({
   const { themeLayout } = useThemeContext();
   const { setModalFor, setShowModal } = useModalContext();
   const { language } = useLanguageContext();
+  const { siteTransalations } = useSiteContext();
 
   const currentTheme = themeLayout.toString().toLowerCase();
-
-  let titleLanguage;
-  switch (title) {
-    case "chocolates":
-      titleLanguage = catTranslations.chocolates[language];
-      break;
-    case "flowers":
-      titleLanguage = catTranslations.flowers[language];
-      break;
-      break;
-    case "cakes":
-      titleLanguage = catTranslations.cakes[language];
-      break;
-      break;
-    case "events":
-      titleLanguage = catTranslations.events[language];
-      break;
-  }
+  const color = colorTheme(currentTheme);
+  const titleLanguage = titleLanguages(title, catTranslations, language);
 
   const openFilterModal = () => {
     setShowModal(true);
     setModalFor("filter");
   };
 
-  let color;
-  switch (currentTheme) {
-    case "white":
-      color = "white";
-      break;
-    case "chocolates":
-      color = "#c89a3f";
-      break;
-    case "flowers":
-      color = "#E62263";
-      break;
-    case "cakes":
-      color = "#E79F02";
-      break;
-    case "events":
-      color = "#258F89";
-      break;
-    default:
-      color = "#c89a3f";
-      break;
-  }
-
   let pageHeaderType;
 
   switch (type) {
     case "cat":
       const FilteredCategories = (color) => {
-        // const allSubCategories = data
-        //   .flatMap((item) => item.acf.sub_categories)
-        //   .filter(
-        //     (subCategory, index, self) =>
-        //       index === self.findIndex((s) => s.ID === subCategory.ID)
-        //   );
-
         const allSubCategories =
           data &&
           data.map((item, index) => (
@@ -85,15 +50,7 @@ export default function PageHeader({
                   aria-label={item?.title?.rendered}
                   title={item?.title?.rendered}
                   className={`btn btn-${mainCat}-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                  href={`/${mainCat.toLowerCase()}/${language}/?main_categories=${mainCat
-                    ?.replace(/-ar/g, "")
-                    .replace(/-en/g, "")
-                    .replace(/ /g, "-")
-                    .toLowerCase()}&sub_categories=${item?.title?.rendered
-                    ?.replace(/-ar/g, "")
-                    .replace(/-en/g, "")
-                    .replace(/ /g, "-")
-                    .toLowerCase()}`}>
+                  href={catUrlWithSubCat(mainCat, item?.slug, language)}>
                   {language === "en"
                     ? item?.title?.rendered
                     : item?.acf?.title_arabic}
@@ -116,15 +73,7 @@ export default function PageHeader({
                     aria-label={item?.title?.rendered}
                     title={item?.title?.rendered}
                     className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
-                    href={`/${mainCat.toLowerCase()}/${language}/?main_categories=${mainCat
-                      ?.replace(/-ar/g, "")
-                      .replace(/-en/g, "")
-                      .replace(/ /g, "-")
-                      .toLowerCase()}&sub_categories=${item?.title?.rendered
-                      ?.replace(/-ar/g, "")
-                      .replace(/-en/g, "")
-                      .replace(/ /g, "-")
-                      .toLowerCase()}`}>
+                    href={catUrlWithSubCat(mainCat, item?.slug, language)}>
                     {language === "en"
                       ? item?.title?.rendered
                       : item?.acf?.title_arabic}
@@ -151,7 +100,10 @@ export default function PageHeader({
               style={{
                 color: color,
               }}>
-              {catTranslations.explore_collection[language]}
+              {transalateText(
+                siteTransalations?.catTranslations?.explore_collection,
+                language
+              )}
             </p>
           </div>
           <div className="flex xl:w-[50%] gap-[6px] w-full mt-[20px] xl:mt-[0]">
@@ -162,12 +114,11 @@ export default function PageHeader({
                     aria-label={title.replace(/-/g, " ")}
                     className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
                     title={title.replace(/-/g, " ")}
-                    href={`/${
-                      mainCat && mainCat.replace(/ /g, "-").toLowerCase()
-                    }/${language}?main_categories=${
-                      mainCat && mainCat.replace(/ /g, "-").toLowerCase()
-                    }`}>
-                    {generalTranslations.all[language]}
+                    href={catUrl(mainCat, language)}>
+                    {transalateText(
+                      siteTransalations?.generalTranslations?.all,
+                      language
+                    )}
                   </Link>
                   <div className="sm:flex hidden gap-2">
                     {FilteredCategories(color)}
@@ -179,7 +130,10 @@ export default function PageHeader({
                       className={`btn btn-${mainCat}-border px-[20px] border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}>
                       <span className={`text-[${color}]`}>
                         {" "}
-                        {generalTranslations.categories[language]}
+                        {transalateText(
+                          siteTransalations?.generalTranslations?.categories,
+                          language
+                        )}
                       </span>
                     </div>
                     <ul

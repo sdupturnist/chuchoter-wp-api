@@ -1,7 +1,8 @@
 import { useLanguageContext } from "@/context/LanguageContext"
-import { generalTranslations } from "@/utils/transalations"
-import { frontendUrl } from "@/utils/variables";
+import { useSiteContext } from "@/context/siteContext";
+import { frontendUrl, transalateText } from "@/utils/variables";
 import Link from "next/link"
+
 
 
 
@@ -9,7 +10,7 @@ import Link from "next/link"
 export default function Breadcrumbs({ pages }) {
 
   const { language } = useLanguageContext();
-
+  const { siteTransalations } = useSiteContext();
 
   return (
     <div className="breadcrumbs text-sm">
@@ -18,7 +19,10 @@ export default function Breadcrumbs({ pages }) {
           <Link 
        href={`${frontendUrl}/${language}`}
           >
-          {generalTranslations.home[language]}
+         {transalateText(
+                        siteTransalations?.generalTranslations?.home,
+                        language
+                      )}
           </Link>
         </li>
         {pages && pages.map((item, key) => {

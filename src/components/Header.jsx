@@ -9,9 +9,12 @@ import { useCartContext } from "@/context/cartContext";
 import SearchBox from "./Search";
 import LanguageSwitch from "./LangaugeSwitch";
 import { useLanguageContext } from "@/context/LanguageContext";
-import { generalTranslations } from "@/utils/transalations";
-import { frontendUrl } from "@/utils/variables";
-import { useRouter } from "next/router";
+import {
+  catUrl,
+  colorTheme,
+  frontendUrl,
+  transalateText,
+} from "@/utils/variables";
 import LanguageSwitchCat from "./LangaugeSwitchCat";
 import LangaugeSwitchSingleProduct from "./LangaugeSwitchSingleProduct";
 import { useSiteContext } from "@/context/siteContext";
@@ -21,6 +24,7 @@ export default function Nav({ theme, page }) {
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
   const { language } = useLanguageContext();
+  const { siteTransalations } = useSiteContext();
   const { catData, navigationData, headerMenus, subCategoryData, contactData } =
     useSiteContext();
 
@@ -33,11 +37,15 @@ export default function Nav({ theme, page }) {
   const [screenWidth, setScreenWidth] = useState(0);
   const { scrollY } = useViewportScroll();
 
+  const color = colorTheme(currentTheme);
+  const headerColorLogoHome = colorTheme(currentTheme);
+  const headerColor = colorTheme(currentTheme);
+
   const cartCount = cartItems && cartItems.length;
 
   const currentCartCOunt = cartCount == null ? 0 : cartCount;
 
-  const color = "#c89a3f";
+  //const color = "#c89a3f";
 
   // console.log(navigationData)
 
@@ -104,7 +112,10 @@ export default function Nav({ theme, page }) {
             closeModal();
           }}
           style={{ color: color }}>
-          {generalTranslations.home[language]}
+          {transalateText(
+            siteTransalations?.generalTranslations?.home,
+            language
+          )}
         </Link>
 
         {FilteredCategories(color, language)}
@@ -129,62 +140,22 @@ export default function Nav({ theme, page }) {
           ))}
       </>
     );
-    // return (
-    //   <>
-    //     <Link
-    //       aria-label="Home"
-    //       title="Home"
-    //       href={`${frontendUrl}/${language}`}
-    //       onClick={() => setThemeLayout("gray")}
-    //       style={{
-    //         color,
-    //       }}>
-    //       {generalTranslations.home[language]}
-    //     </Link>
-    //     {FilteredCategories(headerColor, language)}
-
-    //     {navigationData &&
-    //       navigationData
-    //         .filter(
-    //           (item) =>
-    //             item?.acf?.visible_in_menu && item?.acf?.language === language
-    //         ) // Filter based on visible_in_menu
-    //         .sort((a, b) => {
-    //           const titleA = a?.title?.rendered?.toLowerCase() || "";
-    //           const titleB = b?.title?.rendered?.toLowerCase() || "";
-    //           return titleA.localeCompare(titleB); // Sort titles in ascending order
-    //         })
-    //         .map((item, key) => {
-    //           return (
-    //             <li key={key}>
-    //               <Link
-    //                 aria-label={item?.title?.rendered}
-    //                 title={item?.title?.rendered}
-    //                 href={`/${item?.slug
-    //                   ?.replace(/-ar/g, "")
-    //                   .replace(/-en/g, "")
-    //                   .replace(/-/g, "-")
-    //                   .toLowerCase()}/${language}`}
-    //                 onClick={() => setThemeLayout("gray")}
-    //                 style={{
-    //                   color,
-    //                 }}>
-    //                 {item?.title?.rendered}
-    //               </Link>
-    //             </li>
-    //           );
-    //         })}
-    //   </>
-    // );
   };
 
   function NavigationRight(page, color) {
     return (
       <>
-        <Link href={`/cart/${language}`} style={{
-          color: color
-        }} className={`mr-2 mr-sm-0`}>
-          {generalTranslations.cart[language]} ({currentCartCOunt})
+        <Link
+          href={`/cart/${language}`}
+          style={{
+            color: color,
+          }}
+          className={`mx-3`}>
+          {transalateText(
+            siteTransalations?.generalTranslations?.cart,
+            language
+          )}{" "}
+          ({currentCartCOunt})
         </Link>
         {page === "page-cat" ? (
           <LanguageSwitchCat color={color} label="test language toggle" />
@@ -217,72 +188,6 @@ export default function Nav({ theme, page }) {
     );
   }
 
-  let headerColor;
-  switch (currentTheme) {
-    case "white":
-      headerColor = "white";
-      break;
-    case "chocolates":
-      headerColor = "#c89a3f";
-      break;
-    case "flowers":
-      headerColor = "#E62263";
-      break;
-    case "cakes":
-      headerColor = "#E79F02";
-      break;
-    case "events":
-      headerColor = "#258F89";
-      break;
-    default:
-      headerColor = "#c89a3f";
-      break;
-  }
-
-  let headerColorLogo;
-  switch (currentTheme) {
-    case "white":
-      headerColorLogo = "white";
-      break;
-    case "chocolates":
-      headerColorLogo = "#c89a3f";
-      break;
-    case "flowers":
-      headerColorLogo = "#E62263";
-      break;
-    case "cakes":
-      headerColorLogo = "#E79F02";
-      break;
-    case "events":
-      headerColorLogo = "#258F89";
-      break;
-    default:
-      headerColorLogo = "#c89a3f";
-      break;
-  }
-
-  let headerColorLogoHome;
-  switch (theme?.toLowerCase()) {
-    case "white":
-      headerColorLogoHome = "white";
-      break;
-    case "chocolates":
-      headerColorLogoHome = "#c89a3f";
-      break;
-    case "flowers":
-      headerColorLogoHome = "#E62263";
-      break;
-    case "cakes":
-      headerColorLogoHome = "#E79F02";
-      break;
-    case "events":
-      headerColorLogoHome = "#258F89";
-      break;
-    default:
-      headerColorLogoHome = "#c89a3f";
-      break;
-  }
-
   //console.log(catData)
 
   const FilteredCategories = (headerColor, language) => {
@@ -305,15 +210,7 @@ export default function Nav({ theme, page }) {
             <Link
               aria-label={item?.title?.rendered}
               title={item?.title?.rendered}
-              href={`/${item?.title?.rendered
-                ?.replace(/-ar/g, "")
-                .replace(/-en/g, "")
-                .replace(/-/g, "-")
-                .toLowerCase()}/${language}?main_categories=${item?.title?.rendered
-                ?.replace(/-ar/g, "")
-                .replace(/-en/g, "")
-                .replace(/-/g, "-")
-                .toLowerCase()}`}
+              href={catUrl(item?.title?.rendered, language)}
               onClick={(e) =>
                 setThemeLayout(item?.title?.rendered.toLowerCase())
               }
@@ -355,10 +252,16 @@ export default function Nav({ theme, page }) {
           {themeLayout !== "black" && (
             <div className="container grid sm:gap-[10px] gap-[0]">
               <h1 className="font-primary sm:text-[10vw] text-[28px] capitalize">
-                {themeLayout}
+                {transalateText(
+                  siteTransalations?.catTranslations?.[themeLayout],
+                  language
+                )}
               </h1>
               <p className="sm:text-[17px] text-[14px] font-light">
-                Explore our {themeLayout}
+                {transalateText(
+                  siteTransalations?.catTranslations?.explore_collection,
+                  language
+                )}
               </p>
             </div>
           )}
@@ -380,7 +283,7 @@ export default function Nav({ theme, page }) {
                   {Navigations(headerColor, language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight( "page-cat", headerColor)}
+                  {NavigationRight("page-cat", headerColor)}
                 </div>
               </div>
             </div>
@@ -405,10 +308,10 @@ export default function Nav({ theme, page }) {
               />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                  {Navigations('', language)}
+                  {Navigations("", language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
-                  {NavigationRight("page-single", '#c89a3f')}
+                  {NavigationRight("page-single", "#c89a3f")}
                 </div>
               </div>
             </div>
@@ -496,11 +399,10 @@ export default function Nav({ theme, page }) {
               />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
-                  {Navigations(headerColor, language)}
+                  {Navigations("", language)}
                 </ul>
                 <div className="flex items-center xl:gap-[50px] sm:gap-[20px] gap-[8px]">
                   {NavigationRight("", "#c89a3f")}
-                  
                 </div>
               </div>
             </div>

@@ -190,6 +190,10 @@ export const generalTranslations = {
     en: "Products are coming soon, visit again",
     ar: "المنتجات قادمة قريبًا، قم بزيارتنا مرة أخرى",
   },
+  cartEmpty: {
+    en: "Your cart is empty",
+    ar: "سلة التسوق الخاصة بك فارغة",
+  },
 };
 
 export const catTranslations = {
@@ -214,3 +218,19 @@ export const catTranslations = {
     ar: "استكشف مجموعتنا الرائعة",
   },
 };
+
+
+
+export const subCatTranslations = {
+  flavours: {
+    en: "Chocolates",
+    ar: "Chocolates",
+  },
+  chocolateTray: {
+    en: "Chocolate Tray",
+    ar: "صينية الشوكولاتة",
+  },
+ 
+};
+
+

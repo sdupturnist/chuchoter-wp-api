@@ -1,6 +1,8 @@
 import {
   adminUrl,
+  catUrl,
   frontendUrl,
+  transalateText,
   wordpressGraphQlApiUrl,
 } from "@/utils/variables";
 import Layout from "@/components/Layout";
@@ -18,7 +20,7 @@ import Images from "@/components/Images";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
-import { generalTranslations } from "@/utils/transalations";
+import { useSiteContext } from "@/context/siteContext";
 
 export default function ProductSingle({ product, reviews }) {
   const router = useRouter();
@@ -30,6 +32,7 @@ export default function ProductSingle({ product, reviews }) {
   const { setProductId, setProductName } = useProductContext();
   const { cartItems, setCartItems } = useCartContext();
   const { language } = useLanguageContext();
+  const { siteTransalations } = useSiteContext();
 
   const [filteredReviews, setFilteredReviews] = useState([]);
 
@@ -106,7 +109,7 @@ export default function ProductSingle({ product, reviews }) {
         <Metatags seo={product&& product?.data?.shops?.data[0]?.attributes} />
 
            */}
-      <Layout page="product-single">
+  <Layout page="product-single">
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid sm:gap-[10px] gap-[10px] sm:mb-[50px] mb-[30px] mt-[10px] ">
@@ -114,45 +117,14 @@ export default function ProductSingle({ product, reviews }) {
               pages={[
                 {
                   name: `${product && product?.acf?.main_categories}`,
-                  link: `/${
-                    product &&
-                    product?.acf?.main_categories
-                      ?.replace(/-ar/g, "")
-                      .replace(/-en/g, "")
-                      .replace(/-/g, "-")
-                      .toLowerCase()
-                  }/${language}?main_categories=${product?.acf?.main_categories
-                    ?.replace(/-ar/g, "")
-                    .replace(/-en/g, "")
-                    .replace(/-/g, "-")
-                    .toLowerCase()}`,
+                  link: catUrl(
+                    product?.acf?.main_categories,
+                    product?.acf?.main_categories,
+                    language
+                  ),
                 },
-                product?.acf?.sub_categories[0]?.post_name && {
-                  name: `${product?.acf?.sub_categories[0]
-                    ?.replace(/-ar/g, "")
-                    .replace(/-en/g, "")
-                    .replace(/-/g, "-")}`,
-                  link: `/${
-                    product &&
-                    product?.acf?.main_categories
-                      ?.replace(/-ar/g, "")
-                      .replace(/-en/g, "")
-                      .replace(/-/g, "-")
-                      .toLowerCase()
-                  }/${language}?category=${product?.acf?.main_categories
-                    ?.replace(/-ar/g, "")
-                    .replace(/-en/g, "")
-                    .replace(/-/g, "-")
-                    .toLowerCase()}-${language}&sub_categories=${product?.acf?.sub_categories[0]?.toLowerCase()}`,
-                },
-
-                // {
-                //   "name": `${product?.name ?? null}`,
-                //   "link": "",
-                // },
               ]}
             />
-
             <div className="grid grid-cols-1 lg:grid-cols-2 sm:gap-[50px] gap-[30px]">
               <div data-aos="fade-up">
                 {!product && (
@@ -229,7 +201,10 @@ export default function ProductSingle({ product, reviews }) {
                       {product?.sale_price && (
                         <del className="text-[24px] font-normal opacity-60">
                           {product?.regular_price ?? null}{" "}
-                          {generalTranslations.qr[language]}
+                          {transalateText(
+                            siteTransalations?.generalTranslations?.qr,
+                            language
+                          )}
                         </del>
                       )}
                       <span className="text-[24px] font-bold">
@@ -279,13 +254,19 @@ export default function ProductSingle({ product, reviews }) {
                         )
                       }
                       className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">
-                      {generalTranslations.add_to_cart[language]}
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.add_to_cart,
+                        language
+                      )}
                     </button>
                   </div>
                   {product?.id && (
                     <span className="block text-[12px] uppercase text-gray-400 sm:my-[40px] mb-[30px] mt-[40px]">
                       {" "}
-                      {generalTranslations.product_code[language]} :
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.product_code,
+                        language
+                      )}
                       <span className="text-black pl-2">#{product?.id}</span>
                     </span>
                   )}
@@ -294,7 +275,10 @@ export default function ProductSingle({ product, reviews }) {
                     <button
                       className="btn border border-black text-black border-solid bg-white sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
                       onClick={openAddReviewModal}>
-                      {generalTranslations.write_review[language]}
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.write_review,
+                        language
+                      )}
                     </button>
                   )}
                 </div>

@@ -1,15 +1,20 @@
 import Link from "next/link";
 import BottomNav from "./BottomNav";
 import { useThemeContext } from "@/context/themeContext";
-import { generalTranslations } from "@/utils/transalations";
 import { useLanguageContext } from "@/context/LanguageContext";
-import { frontendUrl } from "@/utils/variables";
+import {
+  catUrl,
+  catUrlWithSubCat,
+  frontendUrl,
+  transalateText,
+} from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
 
 export default function Footer({ page, initialData }) {
   const { language } = useLanguageContext();
   const { footerMenus, sitemapMenus, contactData } = useSiteContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
+  const { siteTransalations } = useSiteContext();
 
   const currentTheme = themeLayout.toString().toLowerCase();
 
@@ -33,15 +38,7 @@ export default function Footer({ page, initialData }) {
           groupedItems["0"]?.map((item) => (
             <div key={item.ID}>
               <Link
-                href={`/${item.post_title
-                  .replace(/-ar/g, "")
-                  .replace(/-en/g, "")
-                  .replace(/-/g, "-")
-                  .toLowerCase()}/${language}?main_categories=${item.post_title
-                  .replace(/-ar/g, "")
-                  .replace(/-en/g, "")
-                  .replace(/-/g, "-")
-                  .toLowerCase()}`}
+                href={catUrl(item.post_title, language)}
                 className={`text-${currentTheme}-100 text-[15px] font-semibold uppercase mb-[24px] block`}>
                 {language === "en" ? item?.title : item?.acf?.arabic}
               </Link>
@@ -61,19 +58,11 @@ export default function Footer({ page, initialData }) {
                         }}
                         aria-label={childItem.post_title}
                         title={childItem.post_title}
-                        href={`/${item.post_title
-                          ?.replace(/-ar/g, "")
-                          .replace(/-en/g, "")
-                          .replace(/-/g, "-")
-                          .toLowerCase()}/${language}/?main_categories=${item?.title
-                          ?.replace(/-ar/g, "")
-                          .replace(/-en/g, "")
-                          .replace(/ /g, "-")
-                          .toLowerCase()}&sub_categories=${childItem.post_title
-                          ?.replace(/-ar/g, "")
-                          .replace(/-en/g, "")
-                          .replace(/ /g, "-")
-                          .toLowerCase()}`}
+                        href={catUrlWithSubCat(
+                          item.post_title,
+                          childItem.post_title,
+                          language
+                        )}
                         className={`text-${currentTheme}-100 hover:opacity-50`}>
                         {language === "en"
                           ? childItem?.title
@@ -120,13 +109,7 @@ export default function Footer({ page, initialData }) {
                     <Link
                       aria-label={childItem?.post_title}
                       title={childItem?.post_title}
-                      href={`/${childItem?.post_title
-                        ?.replace(/-ar/g, "")
-                        .replace(/-en/g, "")
-                        .replace(/-/g, "-")
-                        .toLowerCase()}/${language}?sub_categories=${childItem?.post_title
-                        ?.replace(/-/g, "-")
-                        .toLowerCase()}`}
+                      href={catUrl(childItem?.post_title, language)}
                       className="hover:opacity-50">
                       {language === "en"
                         ? childItem?.title
@@ -147,12 +130,20 @@ export default function Footer({ page, initialData }) {
       <>
         {theme && (
           <p className={`text-${theme}-100`}>
-            {generalTranslations.all_rights_reserved[language]} {year}
+            {transalateText(
+              siteTransalations?.generalTranslations?.all_rights_reserved,
+              language
+            )}
+            {year}
           </p>
         )}
         {!theme && (
           <p>
-            {generalTranslations.all_rights_reserved[language]} {year}
+            {transalateText(
+              siteTransalations?.generalTranslations?.all_rights_reserved,
+              language
+            )}
+            {year}
           </p>
         )}
       </>
@@ -163,7 +154,10 @@ export default function Footer({ page, initialData }) {
     return (
       <>
         <h4 className="text-[15px] font-semibold uppercase mb-[24px]">
-          {generalTranslations.sitemap[language]}
+          {transalateText(
+            siteTransalations?.generalTranslations?.sitemap,
+            language
+          )}
         </h4>
         <ul className="[&>*]:text-[14px] grid gap-[12px] [&>*]:transition-all capitalize">
           <Link
@@ -171,7 +165,10 @@ export default function Footer({ page, initialData }) {
             title="Home"
             href={`${frontendUrl}/${language}`}
             className="hover:opacity-50">
-            {generalTranslations.home[language]}
+            {transalateText(
+              siteTransalations?.generalTranslations?.home,
+              language
+            )}
           </Link>
           {footerMenus &&
             footerMenus.map((item, key) => {
@@ -204,7 +201,7 @@ export default function Footer({ page, initialData }) {
           title="Home"
           href={`${frontendUrl}/${language}`}
           className="hover:bg-transparent">
-          {generalTranslations.home[language]}
+          {transalateText(siteTransalations?.generalTranslations?.home, language)}
         </Link>
 
         <div className="accordion grid gap-[24px]">
@@ -241,10 +238,14 @@ export default function Footer({ page, initialData }) {
               <Link
                 aria-label="facebook"
                 title="facebook"
-                href={contactData[0]?.acf?.facebook == null ? "#" : contactData[0]?.acf?.facebook}
+                href={
+                  contactData[0]?.acf?.facebook == null
+                    ? "#"
+                    : contactData[0]?.acf?.facebook
+                }
                 className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
                 target="_blank">
-                facebook
+                {transalateText(siteTransalations?.generalTranslations?.facebook, language)}
               </Link>
             )}
           </li>
@@ -255,11 +256,13 @@ export default function Footer({ page, initialData }) {
                 aria-label="instagram"
                 title="instagram"
                 href={
-                  contactData[0]?.acf?.instagram == null ? "#" : contactData[0]?.acf?.instagram
+                  contactData[0]?.acf?.instagram == null
+                    ? "#"
+                    : contactData[0]?.acf?.instagram
                 }
                 className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
                 target="_blank">
-                instagram
+                {transalateText(siteTransalations?.generalTranslations?.instagram, language)}
               </Link>
             )}
           </li>
@@ -268,10 +271,14 @@ export default function Footer({ page, initialData }) {
               <Link
                 aria-label="snapchat"
                 title="snapchat"
-                href={contactData[0]?.acf?.snapchat == null ? "#" : contactData[0]?.acf?.snapchat}
+                href={
+                  contactData[0]?.acf?.snapchat == null
+                    ? "#"
+                    : contactData[0]?.acf?.snapchat
+                }
                 className={`hover:opacity-50 text-${currentTheme}-100 capitalize`}
                 target="_blank">
-                snapchat
+                {transalateText(siteTransalations?.generalTranslations?.snapchat, language)}
               </Link>
             )}
           </li>

@@ -13,6 +13,7 @@ export const SiteProvider = ({ children }) => {
   const [footerMenus, setFooterMenus] = useState(null); 
   const [headerMenus, setHeaderMenus] = useState(null); 
   const [sitemapMenus, setSitemapMenus] = useState(null); 
+  const [siteTransalations, setSiteTransalations] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -84,6 +85,21 @@ export const SiteProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+
+
+   // Fetch additional menus data
+   const fetchDataTransalation = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${frontendUrl}/api/transalations`);
+      setSiteTransalations(JSON.parse(response.data[0]?.acf?.transalations));
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   
 
   useEffect(() => {
@@ -91,7 +107,8 @@ export const SiteProvider = ({ children }) => {
     fetchDataNavigation();
     fetchDataSubCategories();
     fetchDataContactInfo();
-    fetchDataAdditionalMenus(); // Fetch additional menus data
+    fetchDataAdditionalMenus(); 
+    fetchDataTransalation()
   }, []);
 
   return (
@@ -103,6 +120,7 @@ export const SiteProvider = ({ children }) => {
       headerMenus,
       footerMenus, 
       sitemapMenus,
+      siteTransalations,
       loading, 
       error, 
       fetchDataCat, 

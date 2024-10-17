@@ -6,10 +6,9 @@ export default function LanguageSwitch({color}) {
     const router = useRouter();
 
     const labels = {
-        en: "Arabic",
+        en: "عربي",
         ar: "English"
     };
-
 
 
     const handleLanguageToggle = () => {
@@ -40,7 +39,7 @@ export default function LanguageSwitch({color}) {
         <>
            <button 
                 onClick={handleLanguageToggle} 
-                className="uppercase"
+               className="uppercase font-ar"
                 style={{
                     color:color,
                 }}

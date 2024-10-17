@@ -7,7 +7,7 @@ export default function LanguageSwitch() {
 
     // Define labels for Arabic and English
     const labels = {
-        en: "Arabic",
+        en: "عربي",
         ar: "English"
     };
 
@@ -38,7 +38,7 @@ export default function LanguageSwitch() {
         <>
             <button 
                 onClick={handleLanguageToggle} 
-                className="uppercase"
+                className="uppercase font-ar"
             >
                 {labels[language] || labels.en} {/* Default to English if language code is unknown */}
             </button>

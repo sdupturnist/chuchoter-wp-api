@@ -2,6 +2,8 @@ import {
   adminUrl,
   wordpressGraphQlApiUrl,
   frontendUrl,
+  catUrl,
+  transalateText,
 } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from "@/components/Seo";
@@ -21,14 +23,14 @@ import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
 import translations from "@/hooks/translations";
-import { catTranslations, generalTranslations } from "@/utils/transalations";
-
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
+import { useSiteContext } from "@/context/siteContext";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home({ featuredProducts, pageData, homeSections }) {
+  const { siteTransalations } = useSiteContext();
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
 
@@ -366,7 +368,13 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
     ) // Filter for featured items
     .map((item, index) => (
       <div className="item" key={index} data-value={index}>
-        <Card theme="chocolates" item={item} />
+        <Card
+          theme="chocolates"
+          item={item}
+          subCat={item?.acf?.sub_categories[0]
+            ?.toLowerCase()
+            .replace(/\s+/g, "")}
+        />
       </div>
     ));
 
@@ -475,11 +483,12 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                     ? "text-[6vw] pb-[40px] xl:pb-[0] xl:text-end"
                                     : "text-[3vw] pb-[70px]"
                                 } font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                {
-                                  catTranslations[item?.acf?.cateogary][
-                                    language
-                                  ]
-                                }
+                                {transalateText(
+                                  siteTransalations?.catTranslations?.[
+                                    item?.acf?.cateogary
+                                  ],
+                                  language
+                                )}
                               </span>
                               <span className="mt-[-50px] block">
                                 {item?.title.rendered}
@@ -517,21 +526,16 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                 <Link
                                   aria-label={item?.acf?.cateogary}
                                   title={item?.acf?.cateogary}
-                                  href={`/${item?.acf?.cateogary
-                                    ?.replace(/-ar/g, "")
-                                    .replace(/-en/g, "")
-                                    .replace(/-/g, "-")
-                                    .toLowerCase()}/${language}?main_categories=${item?.acf?.cateogary
-                                    ?.replace(/-ar/g, "")
-                                    .replace(/-en/g, "")
-                                    .replace(/-/g, "-")
-                                    .toLowerCase()}`}
+                                  href={catUrl(item?.acf?.cateogary, language)}
                                   onClick={(e) =>
                                     setThemeLayout(item?.acf?.cateogary)
                                   }
-                                  className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}
-                                 >
-                                  {generalTranslations.shop_now[language]}
+                                  className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}>
+                                  {transalateText(
+                                    siteTransalations?.generalTranslations
+                                      ?.shop_now,
+                                    language
+                                  )}
                                 </Link>
                               </div>
                             </div>
@@ -573,11 +577,12 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                       ? "text-[6vw] pb-[40px] xl:pb-[0]"
                                       : "text-[3vw] pb-[50px]"
                                   } font-secondary leading-[1.4] xl:ml-[5%] block`}>
-                                  {
-                                    catTranslations[item?.acf?.cateogary][
-                                      language
-                                    ]
-                                  }
+                                  {transalateText(
+                                    siteTransalations?.catTranslations?.[
+                                      item?.acf?.cateogary
+                                    ],
+                                    language
+                                  )}
                                 </span>
                                 <span className="mt-[-50px] block">
                                   {item?.title.rendered}
@@ -615,21 +620,19 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                                       item?.acf?.main_cat[0]?.post_title
                                     }
                                     title={item?.acf?.main_cat[0]?.post_title}
-                                    href={`/${item?.acf?.cateogary
-                                      ?.replace(/-ar/g, "")
-                                      .replace(/-en/g, "")
-                                      .replace(/-/g, "-")
-                                      .toLowerCase()}/${language}?main_categories=${item?.acf?.cateogary
-                                      ?.replace(/-ar/g, "")
-                                      .replace(/-en/g, "")
-                                      .replace(/-/g, "-")
-                                      .toLowerCase()}`}
+                                    href={catUrl(
+                                      item?.acf?.cateogary,
+                                      language
+                                    )}
                                     onClick={(e) =>
                                       setThemeLayout(item?.acf?.cateogary)
                                     }
-                                    className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}
-                                  >
-                                    {generalTranslations.shop_now[language]}
+                                    className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}>
+                                    {transalateText(
+                                      siteTransalations?.generalTranslations
+                                        ?.shop_now,
+                                      language
+                                    )}
                                   </Link>
                                 </div>
                               </div>
@@ -659,7 +662,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
               <div className="container">
                 <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
                   <h2 className="text-[16px] uppercase font-semibold mb-[30px]">
-                    {generalTranslations.featured_products[language]}
+                    {transalateText(
+                      siteTransalations?.generalTranslations?.featured_products,
+                      language
+                    )}
                   </h2>
                   <div className="slider-container slider-featured-items mt-[30px]">
                     {featuredProducts && (
@@ -706,7 +712,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                         : "text-[20px] mt-[20px]"
                     } font-secondary`}>
                     {" "}
-                    {generalTranslations.read_full[language]}
+                    {transalateText(
+                      siteTransalations?.generalTranslations?.read_full,
+                      language
+                    )}
                   </Link>
                 </div>
               </div>

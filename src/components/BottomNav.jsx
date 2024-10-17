@@ -1,35 +1,16 @@
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useThemeContext } from "@/context/themeContext";
-import { catTranslations } from "@/utils/transalations";
+import { catUrl, colorTheme, transalateText } from "@/utils/variables";
 import Link from "next/link";
+import { useSiteContext } from "@/context/siteContext";
 
 export default function BottomNav() {
   const { themeLayout, setThemeLayout } = useThemeContext();
+  const { siteTransalations } = useSiteContext();
 
   const currentTheme = themeLayout.toString().toLowerCase();
   const { language } = useLanguageContext();
-
-  let color;
-  switch (currentTheme) {
-    case "white":
-      color = "white";
-      break;
-    case "chocolates":
-      color = "#c89a3f";
-      break;
-    case "flowers":
-      color = "#E62263";
-      break;
-    case "cakes":
-      color = "#E79F02";
-      break;
-    case "events":
-      color = "#258F89";
-      break;
-    default:
-      color = "#c89a3f";
-      break;
-  }
+  const color = colorTheme(currentTheme);
 
   return (
     <>
@@ -39,7 +20,7 @@ export default function BottomNav() {
             <Link
               aria-label="Chocolates"
               title="Chocolates"
-              href={`/chocolates/${language}?main_categories=chocolates`}
+              href={catUrl("chocolates", language)}
               onClick={(e) => setThemeLayout("chocolates")}
               className="chocolate grid items-center justify-center gap-[6px] "
               style={{
@@ -65,12 +46,12 @@ export default function BottomNav() {
                   d="m1.848 8.783.117.05a21.585 21.585 0 0 0 8.335 1.674h.492c.291 0 .582-.026.868-.077 3.438-.609 5.196-4.477 3.393-7.467l-.473-.785"
                 />
               </svg>
-              {catTranslations.chocolates[language]}
+              {transalateText(siteTransalations?.catTranslations?.chocolates, language)}
             </Link>
             <Link
               aria-label="Flowers"
               title="Flowers"
-              href={`/flowers/${language}?main_categories=flowers`}
+              href={catUrl("flowers", language)}
               onClick={(e) => setThemeLayout("flowers")}
               className="flowers grid items-center justify-center gap-[6px] "
               style={{
@@ -90,13 +71,12 @@ export default function BottomNav() {
                   clipRule="evenodd"
                 />
               </svg>
-
-              {catTranslations.flowers[language]}
+              {transalateText(siteTransalations?.catTranslations?.flowers, language)}
             </Link>
             <Link
               aria-label="Cakes"
               title="Cakes"
-              href={`/cakes/${language}?main_categories=cakes`}
+              href={catUrl("cakes", language)}
               onClick={(e) => setThemeLayout("cakes")}
               className="cakes grid items-center justify-center gap-[6px] "
               style={{
@@ -115,12 +95,12 @@ export default function BottomNav() {
                 />
               </svg>
 
-              {catTranslations.cakes[language]}
+              {transalateText(siteTransalations?.catTranslations?.cakes, language)}
             </Link>
             <Link
               aria-label="Events"
               title="Events"
-              href={`/events/${language}?main_categories=events`}
+              href={catUrl("events", language)}
               onClick={(e) => setThemeLayout("events")}
               className="events grid items-center justify-center gap-[6px]"
               style={{
@@ -141,7 +121,7 @@ export default function BottomNav() {
                 />
               </svg>
 
-              {catTranslations.cakes[language]}
+              {transalateText(siteTransalations?.catTranslations?.cakes, language)}
             </Link>
           </div>
         </div>

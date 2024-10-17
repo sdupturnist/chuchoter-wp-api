@@ -8,16 +8,18 @@ import AddReview from "@/components/Forms/AddReviews";
 import { useEffect, useMemo, useState } from "react";
 import { useProductContext } from "@/context/productContext";
 import FilterProducts from "./Filter";
-import { generalTranslations } from "@/utils/transalations";
 import { useLanguageContext } from "@/context/LanguageContext";
-import { frontendUrl } from "@/utils/variables";
+import { catUrlWithSubCat, colorTheme, frontendUrl, transalateText } from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
+
+
 
 export default function Layout({ children, type, page, header }) {
   const { showModal, setShowModal, setModalData, modalFor, setIsClassAdded } =
     useModalContext();
   const { productId, productName } = useProductContext();
   const { language } = useLanguageContext();
+  const { siteTransalations } = useSiteContext();
   const {
     catData,
     navigationData,
@@ -29,6 +31,7 @@ export default function Layout({ children, type, page, header }) {
 
   const { themeLayout, setThemeLayout } = useThemeContext();
   const currentTheme = themeLayout.toString().toLowerCase();
+  const color = colorTheme(currentTheme);
 
   const FilteredCategoriesAccordin = (language) => {
     const groupedItems = sitemapMenus?.reduce((acc, item) => {
@@ -68,15 +71,7 @@ export default function Layout({ children, type, page, header }) {
                       aria-label={childItem?.post_title}
                       title={childItem?.post_title}
                       style={{ color: "#fff" }}
-                      href={`/${item?.title
-                        ?.replace(/-ar/g, "")
-                        .replace(/-en/g, "")
-                        .replace(/-/g, "-")
-                        .toLowerCase()}/${language}?main_categories=${item?.title
-                        ?.replace(/-/g, "-")
-                        .toLowerCase()}&sub_categories=${childItem?.post_title
-                        ?.replace(/-/g, "-")
-                        .toLowerCase()}`}
+                      href={catUrlWithSubCat(item?.title, childItem?.post_title, language)}
                       className="hover:opacity-50">
                       {language === "en"
                         ? childItem?.title
@@ -92,27 +87,7 @@ export default function Layout({ children, type, page, header }) {
     );
   };
 
-  let color;
-  switch (currentTheme) {
-    case "white":
-      color = "white";
-      break;
-    case "chocolates":
-      color = "#c89a3f";
-      break;
-    case "flowers":
-      color = "#E62263";
-      break;
-    case "cakes":
-      color = "#E79F02";
-      break;
-    case "events":
-      color = "#258F89";
-      break;
-    default:
-      color = "#c89a3f";
-      break;
-  }
+ 
 
   const colors = useMemo(
     () => [
@@ -197,7 +172,10 @@ export default function Layout({ children, type, page, header }) {
             closeModal();
           }}
           style={{ color: "#fff" }}>
-          {generalTranslations.home[language]}
+          {transalateText(
+              siteTransalations?.generalTranslations?.home,
+              language
+            )}
         </Link>
 
         {FilteredCategoriesAccordin(language)}
@@ -293,7 +271,11 @@ export default function Layout({ children, type, page, header }) {
                 <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
                   <span
                     className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>
-                    {generalTranslations.filter[language]}
+                
+                    {transalateText(
+              siteTransalations?.filter?.home,
+              language
+            )}
                   </span>
                   <button
                     aria-label="Home"
@@ -324,7 +306,10 @@ export default function Layout({ children, type, page, header }) {
                     style={{ background: color }}
                     className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`}
                     onClick={closeModal}>
-                    {generalTranslations.apply[language]}
+                    {transalateText(
+              siteTransalations?.apply?.home,
+              language
+            )}
                   </button>
                 </div>
               </div>

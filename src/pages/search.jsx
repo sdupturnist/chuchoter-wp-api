@@ -7,8 +7,11 @@ import PageHeader from "@/components/PageHeader";
 import Card from "@/components/Cards";
 import NoData from "@/components/Nodata";
 import Metatags from "@/components/Seo";
-import { frontendUrl } from "@/utils/variables";
+import { frontendUrl, transalateText } from "@/utils/variables";
 import { useThemeContext } from "@/context/themeContext";
+import { useSiteContext } from "@/context/siteContext";
+import { useLanguageContext } from "@/context/LanguageContext";
+
 
 export default function Search({ pageData, products }) {
   const router = useRouter();
@@ -17,7 +20,8 @@ export default function Search({ pageData, products }) {
   const [searchedProducts, setSearchedProducts] = useState([]);
 
   const { themeLayout } = useThemeContext();
-
+  const { siteTransalations } = useSiteContext();
+  const { language } = useLanguageContext();
 
 
   useEffect(() => {
@@ -59,15 +63,22 @@ export default function Search({ pageData, products }) {
       <Metatags seo={pageData && pageData?.yoast_head_json} />
       <Layout page="search">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[5px] lg:pt-[30px] xl:pb-[70px] pb-[20px]">
-          <PageHeader title={`Search ${searchTerm}`} />
+          <PageHeader title={`${transalateText(
+                  siteTransalations?.generalTranslations?.search,
+                  language
+                )} ${searchTerm}`} />
 
           {loading && <Loading />}
 
-          {!loading && searchedProducts?.data?.length === 0 && (
-            <NoData title={"Sorry, no products were found. Please try searching with different keywords."} />
+            {!loading && searchedProducts?.data?.length === 0 && (
+            <NoData title={transalateText(
+              siteTransalations?.generalTranslations?.no_search_results,
+              language
+            )}
+            
+            />
           )}
-
-          {searchedProducts?.data?.length > 0 && (
+ {searchedProducts?.data?.length > 0 && (
             <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
               {products && searchedProducts?.data?.map((item, key) => {
                 const publicReviews = item?.reviews?.filter(review => review.showPublic);

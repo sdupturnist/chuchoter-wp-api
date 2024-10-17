@@ -1,17 +1,19 @@
 import { useThemeContext } from "@/context/themeContext";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { StarIcon } from '@heroicons/react/24/solid'
-import { generalTranslations } from "@/utils/transalations";
+import { StarIcon } from "@heroicons/react/24/solid";
 import { useLanguageContext } from "@/context/LanguageContext";
-
+import { colorTheme, transalateText } from "@/utils/variables";
+import { useSiteContext } from "@/context/siteContext";
 
 export default function FilterProducts() {
   const router = useRouter();
   const { themeLayout } = useThemeContext();
-  const currentTheme =   themeLayout.toString().toLowerCase()
+  const currentTheme = themeLayout.toString().toLowerCase();
   const { language } = useLanguageContext();
+  const { siteTransalations } = useSiteContext();
 
+  const color = colorTheme(currentTheme);
 
   const [minPrice, setMinPrice] = useState(0);
   const [minReviewCount, setMinReviewCount] = useState(1); // Default to 1 review
@@ -32,10 +34,14 @@ export default function FilterProducts() {
     setMinPrice(newMinPrice);
 
     // Update URL with new minPrice
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, minPrice: newMinPrice },
-    }, undefined, { shallow: false });
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, minPrice: newMinPrice },
+      },
+      undefined,
+      { shallow: false }
+    );
   };
 
   // Handle review count change
@@ -44,40 +50,30 @@ export default function FilterProducts() {
     setMinReviewCount(newMinReviewCount);
 
     // Update URL with new minReviewCount
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, minReviewCount: newMinReviewCount },
-    }, undefined, { shallow: false });
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, minReviewCount: newMinReviewCount },
+      },
+      undefined,
+      { shallow: false }
+    );
   };
-
-  let color;
-  switch (currentTheme) {
-    case "white":
-      color = "white";
-      break;
-    case 'chocolates':
-      color = "#c89a3f";
-      break;
-    case 'flowers':
-      color = "#E62263";
-      break;
-    case 'cakes':
-      color = "#E79F02";
-      break;
-    case 'events':
-      color = "#258F89";
-      break;
-    default:
-      color = "#c89a3f";
-      break;
-  }
 
   return (
     <>
-      <div className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
-        <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>{generalTranslations.price[language]}</span>
+      <div
+        className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
+        <span
+          className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>
+          {transalateText(
+            siteTransalations?.generalTranslations?.price,
+            language
+          )}
+        </span>
         <ul className="grid gap-[12px]">
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -86,9 +82,14 @@ export default function FilterProducts() {
               checked={minPrice === 0}
               onChange={handlePriceChange}
             />
-            {generalTranslations.all[language]}
+
+            {transalateText(
+              siteTransalations?.generalTranslations?.all,
+              language
+            )}
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -99,7 +100,8 @@ export default function FilterProducts() {
             />
             100 +
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -110,7 +112,8 @@ export default function FilterProducts() {
             />
             500 +
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -121,7 +124,8 @@ export default function FilterProducts() {
             />
             1000 +
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -135,10 +139,18 @@ export default function FilterProducts() {
         </ul>
       </div>
 
-      <div className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
-      <span className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>{generalTranslations.rating[language]}</span>
+      <div
+        className={`px-[16px] pt-[20px] pb-[24px] grid gap-[24px] border-b border-gray-200 border-solid items-start justify-start [&>*]:text-[15px] [&>*]:text-${currentTheme}-100`}>
+        <span
+          className={`block uppercase font-semibold text-[13px] text-${currentTheme}-100`}>
+          {transalateText(
+            siteTransalations?.generalTranslations?.rating,
+            language
+          )}
+        </span>
         <ul className="grid gap-[12px]">
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -147,9 +159,13 @@ export default function FilterProducts() {
               checked={minReviewCount === 0}
               onChange={handleReviewChange}
             />
-            {generalTranslations.all[language]}
+            {transalateText(
+              siteTransalations?.generalTranslations?.all,
+              language
+            )}
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -158,15 +174,24 @@ export default function FilterProducts() {
               checked={minReviewCount === 1}
               onChange={handleReviewChange}
             />
-           <div className="flex gap-[3px]">
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px] opacity-30`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           </div>
-        </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+            <div className="flex gap-[3px]">
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px] opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+            </div>
+          </li>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -175,15 +200,22 @@ export default function FilterProducts() {
               checked={minReviewCount === 2}
               onChange={handleReviewChange}
             />
-           <div className="flex gap-[3px]">
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]  opacity-30`}/>
-           </div>
+            <div className="flex gap-[3px]">
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px]  opacity-30`}
+              />
+            </div>
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -193,14 +225,19 @@ export default function FilterProducts() {
               onChange={handleReviewChange}
             />
             <div className="flex gap-[3px]">
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px] opacity-30`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px] opacity-30`}/>
-           </div>
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px] opacity-30`}
+              />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px] opacity-30`}
+              />
+            </div>
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -210,14 +247,17 @@ export default function FilterProducts() {
               onChange={handleReviewChange}
             />
             <div className="flex gap-[3px]">
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-            <StarIcon className={`text-${currentTheme}-100 size-[20px] opacity-30`}/>
-           </div>
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon
+                className={`text-${currentTheme}-100 size-[20px] opacity-30`}
+              />
+            </div>
           </li>
-          <li className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
+          <li
+            className={`flex justify-start items-center gap-2 text-${currentTheme}-100`}>
             <input
               type="radio"
               className={`radio w-[18px] h-[18px] checked:bg-${currentTheme}-100`}
@@ -227,12 +267,12 @@ export default function FilterProducts() {
               onChange={handleReviewChange}
             />
             <div className="flex gap-[3px]">
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           <StarIcon className={`text-${currentTheme}-100 size-[20px]`}/>
-           </div>
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+              <StarIcon className={`text-${currentTheme}-100 size-[20px]`} />
+            </div>
           </li>
         </ul>
       </div>
