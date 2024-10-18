@@ -14,9 +14,9 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   const { query } = router;
 
   const allProducts = products?.data ?? [];
-  const totalProducts = totalCount;
+  const totalProducts = totalCount?.data?.length;
   const productsPerPage = 30;
-  const totalPages = Math.ceil(parseInt(totalProducts / productsPerPage));
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
 
   const { language } = useLanguageContext();
 
@@ -53,7 +53,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
             title={query.main_categories || ""}
             mainCat={query.main_categories}
             subCat={query.main_categories}
-            data={subCategoryData}
+            data={subCategoryData && subCategoryData?.products}
           />
           <ProductListing
             data={allProducts}
@@ -61,6 +61,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
             totalPages={totalPages}
             onPageChange={handlePageChange}
             productsPerPage={productsPerPage}
+            totalCount={totalCount?.data?.length}
           />
         </div>
       </Layout>
@@ -73,8 +74,8 @@ export async function getServerSideProps(context) {
 
   const minPrice = context.query.minPrice;
   const reviewVal = context.query.minReviewCount;
-  const cat1 = context.query.main_categories;
-  const cat2 = context.query.sub_categories;
+  const mainCat = context.query.main_categories;
+  const subCat = context.query.sub_categories;
   const currentLanguage = context.params.slug;
 
   try {
@@ -84,20 +85,27 @@ export async function getServerSideProps(context) {
         per_page: 30,
         min_price: minPrice,
         reviews_count: reviewVal,
-        main_categories: cat1,
-        sub_categories: cat2,
+        main_categories: mainCat,
+        sub_categories: subCat,
         language: currentLanguage,
       },
     });
 
     // Fetch total product count
-    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
+
+    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`, {
+      params: {
+        per_page: 5000,
+        main_categories: mainCat,
+        sub_categories: subCat,
+      },
+    });
 
     return {
       props: {
         products: res.data,
         currentPage: Number(page),
-        totalCount: resCount.data.totalCount,
+        totalCount: resCount.data,
       },
     };
   } catch (error) {

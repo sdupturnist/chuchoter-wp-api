@@ -37,10 +37,10 @@ export default function ProductSingle({ product, reviews }) {
   const [filteredReviews, setFilteredReviews] = useState([]);
 
   useEffect(() => {
-    // Filter reviews by product_id "234"
     const filtered = reviews.filter(
-      (review) => review.acf.product_id === `${String(product?.id)}`
+      (review) => review.meta.product_id === `${String(product?.id)}`
     );
+
     setFilteredReviews(filtered);
   }, [reviews]);
 
@@ -99,17 +99,13 @@ export default function ProductSingle({ product, reviews }) {
     router.push("/cart");
   };
 
-  // const publicReviews = product?.reviews?.filter(review => review.showPublic);
-
-  // const reviewCount = publicReviews?.length
-
   return (
     <>
       {/* 
         <Metatags seo={product&& product?.data?.shops?.data[0]?.attributes} />
 
            */}
-  <Layout page="product-single">
+      <Layout page="product-single">
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid sm:gap-[10px] gap-[10px] sm:mb-[50px] mb-[30px] mt-[10px] ">
@@ -169,6 +165,10 @@ export default function ProductSingle({ product, reviews }) {
                     </div>
                   )}
                   <span className="block text-[16px] text-black text-opacity-50 mb-[10px] capitalize">
+                    {/* {transalateText( */}
+                    {/* siteTransalations?.subCatTranslations?.[subCat], */}
+                    {/* language */}
+                    {/* )} */}
                     {product?.acf?.sub_categories[0] &&
                       product?.acf?.sub_categories[0]
                         ?.replace(/-ar/g, "")
@@ -211,8 +211,11 @@ export default function ProductSingle({ product, reviews }) {
                         {product?.sale_price ?? null}
                         {!product?.sale_price && (
                           <span>{product?.regular_price ?? null}</span>
-                        )}{" "}
-                        {generalTranslations.qr[language]}{" "}
+                        )}
+                        {transalateText(
+                          siteTransalations?.generalTranslations?.qr,
+                          language
+                        )}
                         {product?.attributes[0]?.options[0] && (
                           <span className="text-[11px] font-light uppercase ">
                             / {product?.attributes[0]?.options[0]}
@@ -367,7 +370,7 @@ export default function ProductSingle({ product, reviews }) {
               product?.acf?.includes ||
               filteredReviews.length > 0 ? (
                 <button
-                  className="btn border border-black border-solid bg-black sm:mt-[32px] mt-[24px] hover:bg-gray-900  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px] hover:text-white"
+                  className="btn border sm:mt-[32px] mt-[24px]  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px]"
                   onClick={openAddReviewModal}>
                   Write a review
                 </button>

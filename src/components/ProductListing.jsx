@@ -12,14 +12,12 @@ export default function ProductListing({
   totalPages,
   onPageChange,
   productsPerPage,
+  totalCount,
 }) {
-  
   const { language } = useLanguageContext();
 
   const { themeLayout } = useThemeContext();
   const { siteTransalations } = useSiteContext();
-
-
 
   return data.length > 0 ? (
     <>
@@ -28,27 +26,34 @@ export default function ProductListing({
           data.map((item, key) => {
             return (
               <div className="w-full" key={key}>
-                <Card type="cat"
-                 item={item} 
-                 subCat={item?.acf?.sub_categories[0]?.toLowerCase().replace(/\s+/g, '')}
-                 theme={themeLayout} />
+                <Card
+                  type="cat"
+                  item={item}
+                  subCat={item?.acf?.sub_categories[0]
+                    ?.toLowerCase()
+                    .replace(/\s+/g, "")}
+                  theme={themeLayout}
+                />
               </div>
             );
           })}
       </div>
-
-      {data.length > productsPerPage - 3 ? (
-        <div className="text-center pb-[100px] lg:pb-[0]">
+      <div className="text-center pb-[80px] lg:pb-[0]">
+        {totalCount > productsPerPage ? (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
           />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </>
   ) : (
-    <NoData title={transalateText(siteTransalations?.generalTranslations?.noProducts, language)} />
+    <NoData
+      title={transalateText(
+        siteTransalations?.generalTranslations?.noProducts,
+        language
+      )}
+    />
   );
 }
-

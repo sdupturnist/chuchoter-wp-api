@@ -297,7 +297,7 @@ export default function Nav({ theme, page }) {
     return (
       <>
         <header
-          className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b`}>
+          className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b bg-white`}>
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo

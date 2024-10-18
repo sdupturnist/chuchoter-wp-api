@@ -6,7 +6,7 @@
 
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
-@import "react-alice-carousel/lib/scss/alice-carousel.scss";
+@import "~react-alice-carousel/lib/scss/alice-carousel.scss";
 
 @import "aos";
 
@@ -534,3 +534,13 @@ z-index: -1; /* Make sure it’s behind the content */
 .whatsapp-float{
 	margin-top:16px;
 }
+
+.dropdown.dropdown-open .dropdown-content, 
+.dropdown.dropdown-hover:hover .dropdown-content, 
+.dropdown:not(.dropdown-hover):focus .dropdown-content, 
+.dropdown:not(.dropdown-hover):focus-within .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+

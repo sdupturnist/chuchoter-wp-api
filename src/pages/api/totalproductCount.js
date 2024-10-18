@@ -1,28 +1,34 @@
 import axios from 'axios';
-import { wordpressRestApiUrlWoocommerce, woocommerceConsumerKey, woocommerceConsumerSecret } from "@/utils/variables";
+import { wordpressRestApiUrlWoocommerce, wordpressRestApiUrlWoocommerceCustom, woocommerceConsumerKey, woocommerceConsumerSecret } from "@/utils/variables";
 
 const WooCommerce = axios.create({
-  baseURL: `${wordpressRestApiUrlWoocommerce}`,
+  baseURL: `${wordpressRestApiUrlWoocommerceCustom}`,
 });
 
-// Handler function for total product count
+// Handler function
 export default async function handler(req, res) {
+  const { 
+      main_categories,
+      sub_categories,
+    } = req.query; // Default to page 1 and 100 items per page
+
+    
   try {
+    // Fetch products
     const response = await WooCommerce.get('products', {
       params: {
-        consumer_key: woocommerceConsumerKey,
-        consumer_secret: woocommerceConsumerSecret,
-        per_page: 1, // Limiting to 1 item to get the total count
-        page: 1, // Fetch from the first page
+      per_page:5000,
+      main_categories:main_categories,
+      sub_categories:sub_categories,
       },
     });
 
-    // The total count can be found in the headers if using WooCommerce API
-    const totalCount = response.headers['x-wp-total'];
+  
 
-    res.status(200).json({ totalCount: Number(totalCount) }); // Return the total count as a number
+    res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error fetching total product count:', error.response ? error.response.data : error.message);
-    res.status(500).json({ error: 'Failed to fetch total product count', details: error.response ? error.response.data : error.message });
+    console.error('Error fetching products:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Failed to fetch products', details: error.response ? error.response.data : error.message });
   }
 }
+// products?reviews_count=1

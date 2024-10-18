@@ -32,66 +32,88 @@ const ReviewForm = ({ productId, productName }) => {
     year: "numeric",
   });
 
+
+ 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const response = await fetch(`${wordpressRestApiUrl}product-reviews`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlbW8uY2h1Y2hvdGVycWF0YXIuY29tIiwiaWF0IjoxNzI4NDcyNzE1LCJuYmYiOjE3Mjg0NzI3MTUsImV4cCI6MTcyOTA3NzUxNSwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMSJ9fX0.53wfSeR3-Bb5Sw9Id3rRlJXvnH2SjA2eTgvlPh_MWSI`, // Replace with JWT or Basic Auth
+  
+    // Prepare the data to be sent
+    const requestData = {
+      title: String(productName), // Title for the review
+      content: comment,           // Content of the review
+      meta: {
+        name: name,              // ACF field for name (ensure it's the correct field name/key)
+        email: email,            // ACF field for email
+        rating: rating,          // ACF field for rating
+        product_id: productId.toString(),   // ACF field for product ID
       },
-      body: JSON.stringify({
-        title: String(productName), // Assuming name corresponds to the title
-        content: comment, // Assuming comment corresponds to the content
-        acf: {
-          name: name, // ACF field for name
-          email: email, // ACF field for email
-          rating: rating, // ACF field for rating
-          product_id: String(productId), // ACF field for product ID
+    };
+  
+
+    try {
+      // Submit the review
+      const response = await fetch(`${wordpressRestApiUrl}product-reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlbW8uY2h1Y2hvdGVycWF0YXIuY29tIiwiaWF0IjoxNzI5MjQ1MTYwLCJuYmYiOjE3MjkyNDUxNjAsImV4cCI6MTcyOTg0OTk2MCwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMSJ9fX0.oExivofDCrpedvlhJeN3ItakYjccKIlqa-68OFnFwAc`, // Replace with JWT or Basic Auth
         },
-      }),
-    });
-
-    if (response.ok) {
-      // Handle successful submission
-      setSuccessLabel(true);
-      setSendProgress(false);
-      //console.log('Review submitted successfully');
-    } else {
-      // Handle error
-      console.error("Failed to submit review");
+        body: JSON.stringify(requestData),
+      });
+  
+      if (response.ok) {
+        setSuccessLabel(true);
+        setSendProgress(false);
+        console.log('Review submitted successfully');
+      } else {
+        const errorResponse = await response.json();
+        console.error("Failed to submit review", response.status, errorResponse);
+      }
+  
+      // Send email notification
+      const emailResponse = await fetch("/api/reviewSendMail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId, name, rating, comment, todayDate }),
+      });
+  
+      if (emailResponse.ok) {
+        setStatus("Email sent successfully!");
+      } else {
+        const emailErrorResponse = await emailResponse.json();
+        console.error("Failed to send email", emailErrorResponse);
+        setStatus("Failed to send email");
+      }
+  
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      setTimeout(() => {
+        setSuccessLabel(false);
+        setButtonLabel(true);
+        setName("");
+        setEmail("");
+        setComment("");
+        setShowModal(false);
+      }, 1000);
     }
-
-    const res = await fetch("/api/reviewSendMail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ productId, name, rating, comment, todayDate }),
-    });
-
-    if (res.ok) {
-      setStatus("Email sent successfully!");
-    } else {
-      setStatus("Failed to send email");
-    }
-
-    setTimeout(() => {
-      setSuccessLabel(false);
-      setButtonLabel(true);
-      setName("");
-      setEmail("");
-      setComment("");
-      setShowModal(false);
-    }, 1000);
   };
+
+  
+  
 
   return (
     <form onSubmit={handleSubmit}>
       <div className="w-full grid gap-[16px]">
         <h2 className="uppercase text-[18px] font-semibold tracking-[1%] mb-[10px]">
-          Ratings & Review
+         {transalateText(
+            siteTransalations?.generalTranslations?.ratings_review_popup_heading,
+            language
+          )}
         </h2>
 
         <div className="rating rating-lg mb-3 gap-[10px] flex">

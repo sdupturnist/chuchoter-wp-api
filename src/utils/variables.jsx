@@ -4,6 +4,10 @@ export const wordpressRestApiUrlWoocommerce =
   process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_URL;
 export const wordpressRestApiUrlWoocommerceCustom =
   process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_CUSTOM_URL;
+
+export const wordpressRestApiUrlWoocommerceProductsSubCatCustom =
+  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_SUBCAT_CUSTOM_URL;
+
 export const wordpressRestApiUrlWordpressMenus =
   process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_MENUS;
 export const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
@@ -18,7 +22,6 @@ export let woocommerceConsumerKey =
   process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY;
 export let woocommerceConsumerSecret =
   process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET;
-
 
 export const catUrl = (mainCat, lang) => {
   return `/${
@@ -35,32 +38,29 @@ export const catUrl = (mainCat, lang) => {
     .toLowerCase()}`;
 };
 
-
 export const catUrlWithSubCat = (mainCat, subCat, lang) => {
-    return `/${mainCat
-        .replace(/ /g, "-")
-        .toLowerCase()}/${lang}/?main_categories=${mainCat
-        .toLowerCase()}&sub_categories=${subCat
-        .replace(/-/g, " ")
-        .toLowerCase()}`;
+  return `/${mainCat
+    .replace(/ /g, "-")
+    .toLowerCase()}/${lang}/?main_categories=${mainCat.toLowerCase()}&sub_categories=${subCat
+    .replace(/-/g, " ")
+    .toLowerCase()}`;
 };
 
 //https://chuchoterqatar.com/chocolates/luxury-chocolate-gift-tray-acrylic-vox-small/en/
 
 export const itemUrl = (mainCat, url, lang) => {
-  return `/${mainCat.toString().replace(/ /g, '-').toLowerCase()}/${url.toLowerCase().replace(/ /g, '-')}/${lang}`;
+  return `/${mainCat.toString().replace(/ /g, "-").toLowerCase()}/${url
+    .toLowerCase()
+    .replace(/ /g, "-")}/${lang}`;
 };
-
 
 export const paginationUrl = (mainCat, subCat, page, lang) => {
   return `/${mainCat
-         .replace(/-/g, "-")
-        .toLowerCase()}/${lang}?page=${page}&main_categories=${
-          mainCat
-      }&sub_categories=${subCat || ''}`
+    .replace(/-/g, "-")
+    .toLowerCase()}/${lang}?page=${page}&main_categories=${mainCat}&sub_categories=${
+    subCat || ""
+  }`;
 };
-
-
 
 export const colorTheme = (theme) => {
   let color;
@@ -87,35 +87,55 @@ export const colorTheme = (theme) => {
   return color; // Return the color value
 };
 
-
-
 export const titleLanguages = (title, catTranslations, language) => {
+  let titleLanguage;
+  switch (title) {
+    case "chocolates":
+      titleLanguage = catTranslations.chocolates[language];
+      break;
+    case "flowers":
+      titleLanguage = catTranslations.flowers[language];
+      break;
+      break;
+    case "cakes":
+      titleLanguage = catTranslations.cakes[language];
+      break;
+      break;
+    case "events":
+      titleLanguage = catTranslations.events[language];
+      break;
+  }
 
-let titleLanguage;
-switch (title) {
-  case "chocolates":
-    titleLanguage = catTranslations.chocolates[language];
-    break;
-  case "flowers":
-    titleLanguage = catTranslations.flowers[language];
-    break;
-    break;
-  case "cakes":
-    titleLanguage = catTranslations.cakes[language];
-    break;
-    break;
-  case "events":
-    titleLanguage = catTranslations.events[language];
-    break;
-}
+  return titleLanguage;
+};
 
-return titleLanguage; 
-
+export const transalateText = (item, language) => {
+  const text = item?.[language];
+  return text;
 };
 
 
-export const transalateText  = (item, language) => {
 
-  const text = item?.[language]
-  return text
+export const autoCloseDropDown = () => {
+  const elem = document.activeElement;
+  if (elem) {
+    elem?.blur();
+  }
+}
+
+
+export const formatDate = (dateString) => {
+  
+  const options = {
+    year: 'numeric',
+    month: 'long', // 'short' for abbreviated month
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false, // Use true for 12-hour format
+  };
+
+  const date = new Date(dateString);
+  return date.toLocaleString('en-US', options);
 }

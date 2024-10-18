@@ -1,23 +1,35 @@
-import axios from 'axios';
-import { wordpressRestApiUrl } from "@/utils/variables";
+import axios from "axios";
+import { wordpressRestApiUrlWoocommerceProductsSubCatCustom } from "@/utils/variables";
 
-const Wordpress = axios.create({
-  baseURL: wordpressRestApiUrl,
+const WooCommerce = axios.create({
+  baseURL: `${wordpressRestApiUrlWoocommerceProductsSubCatCustom}`,
 });
 
 // Handler function
 export default async function handler(req, res) {
-  try {
-    // Fetch product reviews
-    const response = await Wordpress.get('sub-categories');
+  const { per_page, main_categories } = req.query; // Default to page 1 and 100 items per page
 
-    // Return only the data portion of the response
+  try {
+    // Fetch products
+    const response = await WooCommerce.get("products", {
+      params: {
+        per_page:1000,
+        main_categories: main_categories,
+      },
+    });
+
     res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error fetching products:', error.response ? error.response.data : error.message);
-    res.status(500).json({ 
-      error: 'Failed to fetch products', 
-      details: error.response ? error.response.data : error.message 
-    });
+    console.error(
+      "Error fetching products:",
+      error.response ? error.response.data : error.message
+    );
+    res
+      .status(500)
+      .json({
+        error: "Failed to fetch products",
+        details: error.response ? error.response.data : error.message,
+      });
   }
 }
+// products?reviews_count=1

@@ -5,6 +5,7 @@ import { useThemeContext } from "@/context/themeContext";
 import { catTranslations } from "@/utils/transalations";
 
 import {
+  autoCloseDropDown,
   catUrl,
   catUrlWithSubCat,
   colorTheme,
@@ -13,14 +14,7 @@ import {
 } from "@/utils/variables";
 import Link from "next/link";
 
-export default function PageHeader({
-  title,
-  type,
-  data,
-  initialData,
-  mainCat,
-  subCat,
-}) {
+export default function PageHeader({ title, type, data, mainCat }) {
   const { themeLayout } = useThemeContext();
   const { setModalFor, setShowModal } = useModalContext();
   const { language } = useLanguageContext();
@@ -39,24 +33,27 @@ export default function PageHeader({
 
   switch (type) {
     case "cat":
-      const FilteredCategories = (color) => {
+      const FilteredCategories = (color, mainCat) => {
         const allSubCategories =
           data &&
           data.map((item, index) => (
-            <>
-              {item && (
-                <Link
-                  key={index}
-                  aria-label={item?.title?.rendered}
-                  title={item?.title?.rendered}
-                  className={`btn btn-${mainCat}-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                  href={catUrlWithSubCat(mainCat, item?.slug, language)}>
-                  {language === "en"
-                    ? item?.title?.rendered
-                    : item?.acf?.title_arabic}
-                </Link>
-              )}
-            </>
+            <Link
+              key={index}
+              aria-label={item?.acf?.sub_categories[0]}
+              title={item?.acf?.sub_categories[0]}
+              className={`btn btn-${
+                data &&
+                item?.acf?.main_categories?.toLowerCase().replace(/ /g, "-")
+              }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
+              href={catUrlWithSubCat(
+                data && item?.acf?.main_categories,
+                data && item?.acf?.sub_categories[0],
+                language
+              )}>
+              {language === "en"
+                ? data && item?.acf?.sub_categories[0]
+                : item?.acf?.title_arabic}
+            </Link>
           ));
 
         return allSubCategories;
@@ -66,26 +63,28 @@ export default function PageHeader({
         const allSubCategories =
           data &&
           data.map((item, index) => (
-            <>
-              {item && (
-                <li key={index} className="!block">
-                  <Link
-                    aria-label={item?.title?.rendered}
-                    title={item?.title?.rendered}
-                    className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
-                    href={catUrlWithSubCat(mainCat, item?.slug, language)}>
-                    {language === "en"
-                      ? item?.title?.rendered
-                      : item?.acf?.title_arabic}
-                  </Link>
-                </li>
-              )}
-            </>
+            <li key={index} className="!block">
+              <Link
+                key={index}
+                aria-label={item?.acf?.sub_categories[0]}
+                title={item?.acf?.sub_categories[0]}
+                className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
+                href={catUrlWithSubCat(
+                  data && item?.acf?.main_categories,
+                  data && item?.acf?.sub_categories[0],
+                  language
+                )}>
+                {language === "en"
+                  ? data && item?.acf?.sub_categories[0]
+                  : item?.acf?.title_arabic}
+              </Link>
+            </li>
           ));
 
         return allSubCategories;
       };
 
+      // href={catUrlWithSubCat(mainCat, item?.slug, language)}>
       pageHeaderType = (
         <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
           <div className="xl:w-[50%] hidden lg:block">
@@ -123,7 +122,9 @@ export default function PageHeader({
                   <div className="sm:flex hidden gap-2">
                     {FilteredCategories(color)}
                   </div>
-                  <div className="dropdown dropdown-hover sm:dropdown-end dropdown-start  rounded-[6px] hover:bg-transparent sm:hidden">
+                  <div
+                    className="dropdown dropdown-hover sm:dropdown-end dropdown-start  rounded-[6px] hover:bg-transparent sm:hidden"
+                    onClick={autoCloseDropDown}>
                     <div
                       tabIndex={0}
                       role="button"

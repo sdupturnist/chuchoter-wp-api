@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { frontendUrl } from '@/utils/variables';
+import { useRouter } from 'next/router';
 
 const SiteContext = createContext();
 
@@ -16,6 +17,12 @@ export const SiteProvider = ({ children }) => {
   const [siteTransalations, setSiteTransalations] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+
+  const router = useRouter();
+  const { query } = router;
+
+
 
   // Fetch categories data
   const fetchDataCat = async () => {
@@ -47,7 +54,20 @@ export const SiteProvider = ({ children }) => {
   const fetchDataSubCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${frontendUrl}/api/subCategories`);
+     // const response = await axios.get(`${frontendUrl}/api/subCategories`);
+
+    const maincat = query.main_categories;
+
+
+      const response = await axios.get(`${frontendUrl}/api/subCategories`, {
+        params: {
+          per_page: 2000,
+          main_categories: maincat,
+        },
+      });
+
+
+
       setSubCategoryData(response.data);
     } catch (err) {
       setError(err);
@@ -55,6 +75,15 @@ export const SiteProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+
+  useEffect(() => {
+    if (query.main_categories) {
+      fetchDataSubCategories();
+    }
+  }, [query.main_categories]); // Re-fetch when main_categories changes
+
+  
 
   // Fetch contact data
   const fetchDataContactInfo = async () => {
