@@ -106,7 +106,7 @@ export default function Nav({ theme, page }) {
         <Link
           aria-label="Home"
           title="Home"
-          href={`${frontendUrl}/${language}`}
+          href={`${frontendUrl}/`}
           onClick={() => {
             setThemeLayout("gray");
             closeModal();
@@ -126,11 +126,7 @@ export default function Nav({ theme, page }) {
               key={key}
               aria-label={item?.title}
               title={item?.title}
-              href={`/${item?.title
-                ?.replace(/-ar/g, "")
-                .replace(/-en/g, "")
-                .replace(/-/g, "-")
-                .toLowerCase()}/${language}`}
+              href={`${frontendUrl}`}
               onClick={() => setThemeLayout("gray")}
               style={{
                 color,
@@ -142,11 +138,17 @@ export default function Nav({ theme, page }) {
     );
   };
 
+  // /${item?.title
+  //   ?.replace(/-ar/g, "")
+  //   .replace(/-en/g, "")
+  //   .replace(/-/g, "-")
+  //   .toLowerCase()}/
+
   function NavigationRight(page, color) {
     return (
       <>
         <Link
-          href={`/cart/${language}`}
+          href={`/cart/`}
           style={{
             color: color,
           }}
@@ -237,7 +239,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"Chuchoter Logo"}
                 logoTitle={"Chuchoter Logo"}
                 theme="white"
@@ -271,7 +273,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"#"}
                 logoTitle={"#"}
                 theme={headerColor}
@@ -301,7 +303,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"#"}
                 logoTitle={"#"}
                 theme={headerColorLogoHome}
@@ -330,7 +332,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"#"}
                 logoTitle={"#"}
                 theme={headerColorLogoHome}
@@ -356,7 +358,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"#"}
                 logoTitle={"#"}
                 theme="#c89a3f"
@@ -392,7 +394,7 @@ export default function Nav({ theme, page }) {
           <div className="container">
             <div className="flex items-center justify-between">
               <Logo
-                url={`/${language}`}
+                url={`/`}
                 alt={"#"}
                 logoTitle={"#"}
                 theme={color}

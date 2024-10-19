@@ -16,11 +16,11 @@ export default function LanguageSwitch() {
         localStorage.setItem('language', newLanguage);
 
         toggleLanguage();
-        router.back();
+       // router.back();
 
         // Set a delay before reloading the page
         setTimeout(() => {
-            location.reload();
+           // location.reload();
         }, 1000); // 1000 milliseconds = 1 second
     };
 

@@ -14,7 +14,7 @@ import { AOSInit } from "./Aos";
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useSiteContext } from "@/context/siteContext";
 
-export default function Card({ theme, desc, type, item, subCat }) {
+export default function Card({ theme, desc, type, item, subCat, mainCat }) {
   const review = item?.acf?.user_reviews;
 
   const { siteTransalations } = useSiteContext();
@@ -49,7 +49,7 @@ export default function Card({ theme, desc, type, item, subCat }) {
           ) : (
             <>
               <AOSInit />
-
+{/* {console.log(mainCat)} */}
               <div
                 data-aos="fade-up"
                 className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2`}
@@ -58,9 +58,7 @@ export default function Card({ theme, desc, type, item, subCat }) {
                 <div className="relative overflow-hidden">
                   <Link
                     className="block"
-                    href={itemUrl(
-                      item?.acf?.main_categories,
-                      item?.slug,
+                    href={itemUrl(mainCat,
                       language
                     )}>
                     <Images

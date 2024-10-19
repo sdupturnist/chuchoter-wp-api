@@ -13,6 +13,7 @@ export default function ProductListing({
   onPageChange,
   productsPerPage,
   totalCount,
+  mainCat
 }) {
   const { language } = useLanguageContext();
 
@@ -29,9 +30,8 @@ export default function ProductListing({
                 <Card
                   type="cat"
                   item={item}
-                  subCat={item?.acf?.sub_categories[0]
-                    ?.toLowerCase()
-                    .replace(/\s+/g, "")}
+                  mainCat={mainCat}
+                  subCat={item?.categories[0]?.name}
                   theme={themeLayout}
                 />
               </div>

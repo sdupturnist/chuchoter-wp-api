@@ -1,51 +1,132 @@
+// import { useLanguageContext } from "@/context/LanguageContext";
+// import { useRouter } from "next/router";
+
+// export default function LanguageSwitch({color}) {
+//     const { language, toggleLanguage } = useLanguageContext();
+//     const router = useRouter();
+
+//     const labels = {
+//         en: "عربي",
+//         ar: "English"
+//     };
+
+
+//     const handleLanguageToggle = () => {
+//         const currentLanguage = language; // Use the context language
+//         const newLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+//         localStorage.setItem('language', newLanguage);
+
+//         toggleLanguage();
+
+//         const { pathname, query } = router;
+
+//         // Construct the new path by replacing the last segment (current language)
+//         const pathSegments = pathname.split('/');
+//         pathSegments[pathSegments.length - 1] = newLanguage; // Update last segment to new language
+//         const newPath = pathSegments.join('/');
+
+//         // Exclude the slug parameter from the query
+//         const { slug, ...updatedQuery } = query;
+
+//         // Push the new path with existing query parameters, excluding slug
+//         router.push({
+//             pathname: newPath,
+//             query: updatedQuery,
+//         });
+//     };
+
+//     return (
+//         <>
+//            <button 
+//                 onClick={handleLanguageToggle} 
+//                className="uppercase font-ar"
+//                 style={{
+//                     color:color,
+//                 }}
+//             >
+//                 {labels[language] || labels.en}
+//             </button>
+//         </>
+//     );
+// }
+
+
+
+// import { useLanguageContext } from "@/context/LanguageContext";
+// import { useRouter } from "next/router";
+
+// export default function LanguageSwitch() {
+//     const { language, toggleLanguage } = useLanguageContext();
+//     const router = useRouter();
+
+//     // Define labels for Arabic and English
+//     const labels = {
+//         en: "عربي",
+//         ar: "English"
+//     };
+
+//     const handleLanguageToggle = () => {
+//         const currentLanguage = localStorage.getItem('language') || 'en';
+//         const newLanguage = currentLanguage === 'en' ? 'ar' : 'en'; // Toggle language
+//         localStorage.setItem('language', newLanguage); // Update localStorage
+
+//         // Update the language context
+//         toggleLanguage();
+
+//         // Update the router query
+//         router.push({
+//             pathname: router.pathname,
+//             query: { ...router.query, locale: newLanguage },
+//         });
+//     };
+
+//     return (
+//         <button 
+//             onClick={handleLanguageToggle} 
+//             className="uppercase font-ar"
+//         >
+//             {labels[language] || labels.en} {/* Default to English if language code is unknown */}
+//         </button>
+//     );
+// }
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useLanguageContext } from "@/context/LanguageContext";
-import { useRouter } from "next/router";
 
-export default function LanguageSwitch({color}) {
-    const { language, toggleLanguage } = useLanguageContext();
-    const router = useRouter();
+const LanguageSwitcher = () => {
+  const router = useRouter();
+  const { locale } = router;
 
-    const labels = {
-        en: "عربي",
-        ar: "English"
-    };
+  const { toggleLanguage } = useLanguageContext();
 
+  // Load the language from localStorage on mount
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      router.push(router.pathname, router.asPath, { locale: savedLanguage });
+    }
+  }, [router]);
 
-    const handleLanguageToggle = () => {
-        const currentLanguage = language; // Use the context language
-        const newLanguage = currentLanguage === 'en' ? 'ar' : 'en';
-        localStorage.setItem('language', newLanguage);
+  const changeLanguage = (lang) => {
+    router.push(router.pathname, router.asPath, { locale: lang });
+    localStorage.setItem('language', lang); // Store the selected language
+  };
 
-        toggleLanguage();
+  // Toggle between languages
+  const handleToggle = () => {
+    const newLang = locale === 'en' ? 'ar' : 'en';
+    changeLanguage(newLang);
+    toggleLanguage(); // Call toggleLanguage after changing the language
+  };
 
-        const { pathname, query } = router;
+  return (
+    <div>
+      <button onClick={handleToggle}>
+        {locale === 'en' ? 'العربية' : 'English'}
+      </button>
+      <p>Current Language: {locale}</p>
+    </div>
+  );
+};
 
-        // Construct the new path by replacing the last segment (current language)
-        const pathSegments = pathname.split('/');
-        pathSegments[pathSegments.length - 1] = newLanguage; // Update last segment to new language
-        const newPath = pathSegments.join('/');
-
-        // Exclude the slug parameter from the query
-        const { slug, ...updatedQuery } = query;
-
-        // Push the new path with existing query parameters, excluding slug
-        router.push({
-            pathname: newPath,
-            query: updatedQuery,
-        });
-    };
-
-    return (
-        <>
-           <button 
-                onClick={handleLanguageToggle} 
-               className="uppercase font-ar"
-                style={{
-                    color:color,
-                }}
-            >
-                {labels[language] || labels.en}
-            </button>
-        </>
-    );
-}
+export default LanguageSwitcher;

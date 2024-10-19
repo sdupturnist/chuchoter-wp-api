@@ -109,7 +109,11 @@ export default function Footer({ page, initialData }) {
                     <Link
                       aria-label={childItem?.post_title}
                       title={childItem?.post_title}
-                      href={catUrl(childItem?.post_title, language)}
+                      href={catUrlWithSubCat(
+                        item.post_title,
+                        childItem.post_title,
+                        language
+                      )}
                       className="hover:opacity-50">
                       {language === "en"
                         ? childItem?.title

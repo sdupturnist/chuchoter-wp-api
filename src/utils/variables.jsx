@@ -31,19 +31,13 @@ export const catUrl = (mainCat, lang) => {
       .replace(/-en/g, "")
       .replace(/-/g, "-")
       .toLowerCase()
-  }/${lang}?main_categories=${mainCat
-    ?.replace(/-ar/g, "")
-    .replace(/-en/g, "")
-    .replace(/-/g, "-")
-    .toLowerCase()}`;
+  }`;
 };
 
 export const catUrlWithSubCat = (mainCat, subCat, lang) => {
   return `/${mainCat
     .replace(/ /g, "-")
-    .toLowerCase()}/${lang}/?main_categories=${mainCat.toLowerCase()}&sub_categories=${subCat
-    .replace(/-/g, " ")
-    .toLowerCase()}`;
+    .toLowerCase()}/${lang}/?categories=${subCat.toLowerCase()}`;
 };
 
 //https://chuchoterqatar.com/chocolates/luxury-chocolate-gift-tray-acrylic-vox-small/en/
@@ -57,9 +51,7 @@ export const itemUrl = (mainCat, url, lang) => {
 export const paginationUrl = (mainCat, subCat, page, lang) => {
   return `/${mainCat
     .replace(/-/g, "-")
-    .toLowerCase()}/${lang}?page=${page}&main_categories=${mainCat}&sub_categories=${
-    subCat || ""
-  }`;
+    .toLowerCase()}/${lang}?page=${page}&categories=${mainCat}`;
 };
 
 export const colorTheme = (theme) => {

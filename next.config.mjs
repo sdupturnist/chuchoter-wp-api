@@ -5,7 +5,8 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     domains: [
-      //'admin.upturnist.com',
+      // Uncomment if needed
+      // 'admin.upturnist.com',
       'localhost',
       'admin.chuchoterqatar.com',
       'demo.chuchoterqatar.com',
@@ -14,15 +15,21 @@ const nextConfig = {
     ],
   },
   
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/en',
-        permanent: true,
-      },
-    ];
+  i18n: {
+    locales: ['en', 'ar'], // Supported locales
+    defaultLocale: 'en', // Default locale
   },
+
+  // Uncomment and customize if you need redirects
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;
