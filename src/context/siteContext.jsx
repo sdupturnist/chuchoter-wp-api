@@ -1,7 +1,7 @@
 // context/SiteContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { frontendUrl } from '@/utils/variables';
+import { frontendUrl, wordpressRestApiUrlWoocommerceProductsSubCatCustom } from '@/utils/variables';
 import { useRouter } from 'next/router';
 
 const SiteContext = createContext();
@@ -53,20 +53,28 @@ export const SiteProvider = ({ children }) => {
   // Fetch subcategories data
   const fetchDataSubCategories = async () => {
     setLoading(true);
+
+    const {  category} = query;
+
+    const responseData = `${wordpressRestApiUrlWoocommerceProductsSubCatCustom}products?per_page=1000&categories=${category}`;
+
     try {
      // const response = await axios.get(`${frontendUrl}/api/subCategories`);
 
-    const maincat = query.main_categories;
+
+     const response = await axios.get(responseData);
+    
 
 
-      const response = await axios.get(`${frontendUrl}/api/subCategories`, {
-        params: {
-          per_page: 2000,
-          main_categories: maincat,
-        },
-      });
+    // const maincat = query.categories;
 
 
+    //   const response = await axios.get(`${frontendUrl}/api/subCategories`, {
+    //     params: {
+    //       per_page: 2000,
+    //       categories: maincat,
+    //     },
+    //   });
 
       setSubCategoryData(response.data);
     } catch (err) {
@@ -78,10 +86,10 @@ export const SiteProvider = ({ children }) => {
 
 
   useEffect(() => {
-    if (query.main_categories) {
+    if (query.category) {
       fetchDataSubCategories();
     }
-  }, [query.main_categories]); // Re-fetch when main_categories changes
+  }, [query.category]); // Re-fetch when main_categories changes
 
   
 

@@ -29,6 +29,8 @@ export default function PageHeader({ title, type, data, mainCat }) {
     setModalFor("filter");
   };
 
+  //console.log(data)
+
   let pageHeaderType;
 
   switch (type) {
@@ -36,25 +38,20 @@ export default function PageHeader({ title, type, data, mainCat }) {
       const FilteredCategories = (color, mainCat) => {
         const allSubCategories =
           data &&
-          data.map((item, index) => (
-            <Link
-              key={index}
-              aria-label={item?.acf?.sub_categories[0]}
-              title={item?.acf?.sub_categories[0]}
-              className={`btn btn-${
-                data &&
-                item?.acf?.main_categories?.toLowerCase().replace(/ /g, "-")
-              }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
-              href={catUrlWithSubCat(
-                data && item?.acf?.main_categories,
-                data && item?.acf?.sub_categories[0],
-                language
-              )}>
-              {language === "en"
-                ? data && item?.acf?.sub_categories[0]
-                : item?.acf?.title_arabic}
-            </Link>
-          ));
+          data.map((item, index) =>
+            item?.categories.map((item, index) => (
+              <Link
+                key={index}
+                aria-label={item?.name}
+                title={item?.name}
+                className={`btn btn-${
+                  data && mainCat.toLowerCase().replace(/ /g, "-")
+                }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                {language === "en" ? data && item?.name : item?.name}
+              </Link>
+            ))
+          );
 
         return allSubCategories;
       };
@@ -62,24 +59,20 @@ export default function PageHeader({ title, type, data, mainCat }) {
       const FilteredCategoriesMore = (color) => {
         const allSubCategories =
           data &&
-          data.map((item, index) => (
-            <li key={index} className="!block">
-              <Link
-                key={index}
-                aria-label={item?.acf?.sub_categories[0]}
-                title={item?.acf?.sub_categories[0]}
-                className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
-                href={catUrlWithSubCat(
-                  data && item?.acf?.main_categories,
-                  data && item?.acf?.sub_categories[0],
-                  language
-                )}>
-                {language === "en"
-                  ? data && item?.acf?.sub_categories[0]
-                  : item?.acf?.title_arabic}
-              </Link>
-            </li>
-          ));
+          data.map((item, index) =>
+            item?.categories.map((item, index) => (
+              <li key={index} className="!block">
+                <Link
+                  key={index}
+                  aria-label={item?.name}
+                  title={item?.name}
+                  className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
+                  href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                  {language === "en" ? data && item?.name : item?.name}
+                </Link>
+              </li>
+            ))
+          );
 
         return allSubCategories;
       };
@@ -120,7 +113,7 @@ export default function PageHeader({ title, type, data, mainCat }) {
                     )}
                   </Link>
                   <div className="sm:flex hidden gap-2">
-                    {FilteredCategories(color)}
+                    {FilteredCategories(color, mainCat)}
                   </div>
                   <div
                     className="dropdown dropdown-hover sm:dropdown-end dropdown-start  rounded-[6px] hover:bg-transparent sm:hidden"

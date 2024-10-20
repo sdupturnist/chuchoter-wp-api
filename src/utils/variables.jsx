@@ -27,17 +27,15 @@ export const catUrl = (mainCat, lang) => {
   return `/${
     mainCat &&
     mainCat
-      ?.replace(/-ar/g, "")
-      .replace(/-en/g, "")
-      .replace(/-/g, "-")
+      ?.replace(/ /g, "-")
       .toLowerCase()
   }`;
 };
 
 export const catUrlWithSubCat = (mainCat, subCat, lang) => {
-  return `/${mainCat
-    .replace(/ /g, "-")
-    .toLowerCase()}/${lang}/?categories=${subCat.toLowerCase()}`;
+  return `/${mainCat?.replace(/ /g, "-")
+    .toLowerCase()}/?sub_category=${subCat ?.replace(/ /g, "-")
+      .toLowerCase()}`;
 };
 
 //https://chuchoterqatar.com/chocolates/luxury-chocolate-gift-tray-acrylic-vox-small/en/

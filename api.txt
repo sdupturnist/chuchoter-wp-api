@@ -341,6 +341,12 @@ function wc_custom_register_api_endpoints() {
                     return is_numeric($param);
                 }
             ),
+            'categories' => array( // Updated to accept category names
+                'required' => false,
+                'validate_callback' => function($param, $request, $key) {
+                    return is_array($param) && !empty($param);
+                }
+            ),
             'main_categories' => array(
                 'required' => false,
                 'validate_callback' => function($param, $request, $key) {
@@ -377,6 +383,7 @@ function wc_custom_get_products($request) {
     $page = $request->get_param('page') ? absint($request->get_param('page')) : 1;
     $per_page = $request->get_param('per_page') ? absint($request->get_param('per_page')) : 10;
     $search = $request->get_param('search');
+    $categories = $request->get_param('categories'); // Get the categories filter
     $data = array();
 
     // Build the query arguments for products
@@ -410,34 +417,21 @@ function wc_custom_get_products($request) {
         );
     }
 
-    // Check for ACF main category
-    $main_categories = $request->get_param('main_categories');
-    if (!empty($main_categories)) {
-        $args['meta_query'][] = array(
-            'key' => 'main_categories',
-            'value' => sanitize_text_field($main_categories),
-            'compare' => 'LIKE',
+    // Filter by categories if provided
+    if (!empty($categories)) {
+        $args['tax_query'] = array(
+            'relation' => 'OR',
         );
-    }
 
-    // Check for ACF sub category
-    $sub_categories = $request->get_param('sub_categories');
-    if (!empty($sub_categories)) {
-        $args['meta_query'][] = array(
-            'key' => 'sub_categories',
-            'value' => sanitize_text_field($sub_categories),
-            'compare' => 'LIKE',
-        );
-    }
-
-    // Check for ACF language
-    $language = $request->get_param('language');
-    if (!empty($language)) {
-        $args['meta_query'][] = array(
-            'key' => 'language',
-            'value' => sanitize_text_field($language),
-            'compare' => 'LIKE',
-        );
+        foreach ($categories as $category_name) {
+            if (!empty($category_name)) {
+                $args['tax_query'][] = array(
+                    'taxonomy' => 'product_cat',
+                    'field' => 'slug',
+                    'terms' => sanitize_title($category_name),
+                );
+            }
+        }
     }
 
     if ($id) {
@@ -506,6 +500,19 @@ function get_product_data($product) {
     // Get ACF data
     $acf_data = get_fields($product->get_id());
 
+    // Get product categories
+    $terms = get_the_terms($product->get_id(), 'product_cat');
+    $categories = [];
+    if ($terms && !is_wp_error($terms)) {
+        foreach ($terms as $term) {
+            $categories[] = array(
+                'id' => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            );
+        }
+    }
+
     return array(
         'id' => $product->get_id(),
         'name' => $product->get_name(),
@@ -517,6 +524,7 @@ function get_product_data($product) {
         'sale_price' => $product->get_sale_price(),
         'images' => $images,
         'attributes' => $product->get_attributes(),
+        'categories' => $categories, // Include categories here
         'acf' => $acf_data,
         'yoast_head' => $yoast_head,
         'yoast_head_json' => json_decode($yoast_json, true),
@@ -534,7 +542,8 @@ function format_image_data($image_id) {
 }
 
 
-// https://demo.chuchoterqatar.com/wp-json/wc-custom/v1/products?search=&reviews_count=0&min_price=0&page=0&per_page=0&sub_categories=&main_categories=
+
+// https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/products?search=&reviews_count=0&min_price=0&page=0&per_page=0&sub_categories=&main_categories=
 
 
 
@@ -542,76 +551,92 @@ function format_image_data($image_id) {
 add_action('rest_api_init', function () {
     register_rest_route('subcat/v1', '/products', array(
         'methods' => 'GET',
-        'callback' => 'fetch_woocommerce_products',
-        'permission_callback' => '__return_true', // Ensure to set proper permissions in production
+        'callback' => 'get_filtered_products',
+        'permission_callback' => '__return_true', // Adjust for security as needed
     ));
 });
 
-function fetch_woocommerce_products(WP_REST_Request $request) {
-    $paged = $request->get_param('page') ? intval($request->get_param('page')) : 1;
-    $per_page = $request->get_param('per_page') ? intval($request->get_param('per_page')) : 10; // Default to 10 products
-    $main_categories = $request->get_param('main_categories'); // Get the main_categories parameter
+function get_filtered_products($request) {
+    $categories = $request->get_param('categories');
+    $per_page = $request->get_param('per_page') ?: 10;
 
-    $meta_query = [];
-    
-    // Check if main_categories is provided and adjust the meta query
-    if (!empty($main_categories)) {
-        $meta_query[] = [
-            'key' => 'main_categories',
-            'value' => $main_categories,
-            'compare' => 'LIKE', // Use LIKE for partial matches
-        ];
-    }
-
-    $args = [
+    $args = array(
         'post_type' => 'product',
         'posts_per_page' => $per_page,
-        'paged' => $paged,
-        'meta_query' => $meta_query,
-    ];
+    );
+
+    if ($categories) {
+        $parent_terms = explode(',', $categories);
+        $args['tax_query'] = array(
+            array(
+                'taxonomy' => 'product_cat',
+                'field'    => 'slug',
+                'terms'    => $parent_terms,
+                'include_children' => true,
+            ),
+        );
+    }
 
     $query = new WP_Query($args);
-    $products = [];
-    $unique_sub_categories = [];
+    $products = array();
+    $all_term_ids = array(); // Array to track all unique term IDs
 
     if ($query->have_posts()) {
         while ($query->have_posts()) {
             $query->the_post();
-            $product = wc_get_product(get_the_ID());
+            $product_id = get_the_ID();
+            $product = array(
+                'id' => $product_id,
+                'categories' => array(),
+            );
 
-            // Get ACF fields
-            $main_categories_field = get_field('main_categories');
-            $sub_categories = get_field('sub_categories');
+            // Get categories
+            $terms = wp_get_post_terms($product_id, 'product_cat');
+            $unique_terms = array(); // Array to track unique terms for this product
 
-            // Ensure unique sub-category
-            if (!in_array($sub_categories, $unique_sub_categories)) {
-                $unique_sub_categories[] = $sub_categories; // Track the unique sub-category
+            foreach ($terms as $term) {
+                // Only add category if its term ID hasn't been added yet
+                if (!in_array($term->term_id, $all_term_ids)) {
+                    $product['categories'][] = array(
+                        'term_id' => $term->term_id,
+                        'name' => $term->name,
+                        'slug' => $term->slug,
+                    );
+                    $unique_terms[] = $term->term_id; // Track unique term ID for this product
+                    $all_term_ids[] = $term->term_id; // Track all unique term IDs across products
+                }
+            }
 
-                $products[] = [
-                    'id' => $product->get_id(),
-                    'acf' => [
-                        'main_categories' => $main_categories_field,
-                        'sub_categories' => $sub_categories,
-                    ],
-                ];
+            // Only add product if it has categories
+            if (!empty($product['categories'])) {
+                $products[] = $product;
             }
         }
         wp_reset_postdata();
     }
 
-    // Add pagination info
-    return new WP_REST_Response([
-        'products' => $products,
-        'pagination' => [
-            'total' => $query->found_posts,
-            'per_page' => $per_page,
-            'current_page' => $paged,
-            'total_pages' => ceil($query->found_posts / $per_page),
-        ],
-    ], 200);
+    return new WP_REST_Response($products, 200);
 }
 
 
 
+//https://admin.chuchoterqatar.com/wp-json/subcat/v1/products?per_page=1000&categories=flowers
 
-//https://demo.chuchoterqatar.com/wp-json/subcat/v1/products?per_page=1000&main_categories=flowers
+
+
+//EXCLUDE TRANSALATIONS
+
+function exclude_custom_post_types_from_translation($post_types) {
+    //Debug: Output post types
+    error_log(print_r($post_types, true));
+
+    // Exclude specific post types
+    unset($post_types['product']); // Exclude default post type
+    
+    // Debug: Output modified post types
+    error_log(print_r($post_types, true));
+
+    return $post_types;
+}
+add_filter('pll_get_post_types', 'exclude_custom_post_types_from_translation');
+

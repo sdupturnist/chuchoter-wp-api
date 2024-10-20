@@ -7,14 +7,14 @@ const WooCommerce = axios.create({
 
 // Handler function
 export default async function handler(req, res) {
-  const { per_page, main_categories } = req.query; // Default to page 1 and 100 items per page
+  const { per_page, categories } = req.query; // Default to page 1 and 100 items per page
 
   try {
     // Fetch products
     const response = await WooCommerce.get("products", {
       params: {
         per_page:1000,
-        main_categories: main_categories,
+        categories: categories,
       },
     });
 

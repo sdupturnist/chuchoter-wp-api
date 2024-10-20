@@ -40,7 +40,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
     );
   };
 
-//console.log(totalCount)
+
 
   return (
     <>
@@ -53,16 +53,14 @@ export default function AllProducts({ products, currentPage, totalCount }) {
 
       <Layout page="category">
         <div className="container [&>*]:text-black grid xl:gap-[50px] gap-[30px] lg:pt-[30px] xl:pb-[70px] pb-[20px] overflow-hidden">
-          {/* <PageHeader */}
-            {/* type="cat" */}
-            {/* catcount={5} */}
-            {/* title={query.main_categories || ""} */}
-            {/* mainCat={query.main_categories} */}
-            {/* subCat={query.main_categories} */}
-            {/* data={subCategoryData && subCategoryData?.products} */}
-          {/* /> */}
-
-          {}
+          <PageHeader
+            type="cat"
+            catcount={5}
+            title={query.category || ""}
+            mainCat={query.category}
+            //subCat={query.main_categories}
+            data={subCategoryData && subCategoryData}
+          />
           <ProductListing
             data={allProducts}
             currentPage={currentPage}
@@ -89,10 +87,12 @@ export async function getServerSideProps(context) {
   // Destructure query parameters
   const { page = 1, category, minPrice = 0, minReviewCount = 0 } = query;
 
-  // Build the URL using the category and other parameters
-  const productsRes = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${category || ''}&reviews_count=${minReviewCount}&min_price=${minPrice}&page=${page}&per_page=30`;
+  const subCat = context.query.sub_category
 
-  const resCount = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${category || ''}&per_page=5000`
+  // Build the URL using the category and other parameters
+  const productsRes = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${subCat || category}&reviews_count=${minReviewCount}&min_price=${minPrice}&page=${page}&per_page=30`;
+
+  const resCount = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${subCat || category}&per_page=5000`
 
   try {
     const response = await axios.get(productsRes);
@@ -104,6 +104,7 @@ export async function getServerSideProps(context) {
         locale, // Pass locale directly
         totalCount:responseTotalProductCount.data.total,
         currentPage: Number(page),
+        //test: subCat || category
       },
     };
   } catch (error) {

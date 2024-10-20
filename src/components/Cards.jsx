@@ -55,6 +55,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2`}
                 data-id={item?.id ?? null}
                 data-review={review?.length}>
+                  {console.log(item?.acf?.title_arabic)}
                 <div className="relative overflow-hidden">
                   <Link
                     className="block"
@@ -94,17 +95,26 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                     )}>
                     <h4
                       className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize`}>
-                      {item?.name?.toLowerCase() ?? null}
+                      {/* {item?.acf?.title_arabic == null ? item?.name?.toLowerCase() : item?.acf?.title_arabic} */}
+                      {item?.acf?.title_arabic}
+                      {console.log(item?.acf)}
+                      asd
                     </h4>
                   </Link>
 
                   {!desc == true ? (
                     <span
                       className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`}>
-                      {transalateText(
+                          {
+                          
+                          item?.categories.map(item => item?.name).join(', ')
+                            
+
+                        }
+                      {/* {transalateText(
                         siteTransalations?.subCatTranslations?.[subCat],
                         language
-                      )}
+                      )} */}
                     </span>
                   ) : null}
                   {type == true ? (
@@ -282,10 +292,16 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
             </Link>
             {!desc == true ? (
               <span className="block text-[12px] text-black text-opacity-80 capitalize">
-                {transalateText(
-                  siteTransalations?.subCatTranslations?.[subCat],
-                  language
-                )}
+                     {
+                          
+                          item?.categories.map(item => item?.name).join(', ')
+                            
+
+                        }
+                      {/* {transalateText(
+                        siteTransalations?.subCatTranslations?.[subCat],
+                        language
+                      )} */}
               </span>
             ) : null}
             {type == true ? (

@@ -272,8 +272,8 @@ export default function Layout({ children, type, page, header }) {
                   <span
                     className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>
                 
-                    {transalateText(
-              siteTransalations?.filter?.home,
+                {transalateText(
+              siteTransalations?.generalTranslations?.filter,
               language
             )}
                   </span>
@@ -307,7 +307,7 @@ export default function Layout({ children, type, page, header }) {
                     className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`}
                     onClick={closeModal}>
                     {transalateText(
-              siteTransalations?.apply?.home,
+              siteTransalations?.generalTranslations?.apply,
               language
             )}
                   </button>
