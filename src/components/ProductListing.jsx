@@ -13,12 +13,15 @@ export default function ProductListing({
   onPageChange,
   productsPerPage,
   totalCount,
-  mainCat
+  mainCat,
+  currenPageNumber
 }) {
   const { language } = useLanguageContext();
 
   const { themeLayout } = useThemeContext();
   const { siteTransalations } = useSiteContext();
+
+
 
   return data.length > 0 ? (
     <>
@@ -39,11 +42,12 @@ export default function ProductListing({
           })}
       </div>
       <div className="text-center pb-[80px] lg:pb-[0]">
-        {totalCount > productsPerPage ? (
+     {totalCount > productsPerPage ? (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
+            currenPageNumber={currenPageNumber}
           />
         ) : null}
       </div>

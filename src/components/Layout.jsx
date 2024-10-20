@@ -45,8 +45,8 @@ export default function Layout({ children, type, page, header }) {
 
     return (
       sitemapMenus &&
-      groupedItems["0"]?.map((item) => (
-        <div key={item.ID} className="collapse collapse-plus rounded-none">
+      groupedItems["0"]?.map((item, key) => (
+        <div key={key} className="collapse collapse-plus rounded-none">
           <input
             type="radio"
             className="min-h-[10px] after:top-0"
@@ -59,8 +59,8 @@ export default function Layout({ children, type, page, header }) {
           <div className="collapse-content !pb-0 px-0 mb-0">
             {groupedItems[item.ID] && (
               <ul className="mt-[24px] grid gap-[24px] m-0 p-0">
-                {groupedItems[item.ID].map((childItem) => (
-                  <li key={item.ID}>
+                {groupedItems[item.ID].map((childItem, key) => (
+                  <li key={key}>
                     <Link
                       onClick={() => {
                         setThemeLayout(

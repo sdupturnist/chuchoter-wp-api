@@ -2,7 +2,7 @@ import { useThemeContext } from "@/context/themeContext";
 
 
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, currenPageNumber }) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const { themeLayout } = useThemeContext();
@@ -13,8 +13,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
      {pages.map(page => (
         <button
           key={page}
+          disabled={currenPageNumber == page ? 'true' : null}
           onClick={() => onPageChange(page)}
-          className={`border-${currentTheme}-100 text-${currentTheme}-100 join-item btn bg-transparent border-0 shadow-none hover:!bg-transparent hover:opacity-30  ${page === currentPage ? 'text-opacity-30' : ''}`}
+          className={`!bg-transparent border-${currentTheme}-100 text-${currentTheme}-100 join-item btn border-0 shadow-none  hover:opacity-30  ${page === currentPage ? 'text-opacity-30' : ''}`}
         >
           {page}
         </button>

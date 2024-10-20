@@ -15,8 +15,6 @@ import {
   frontendUrl,
   transalateText,
 } from "@/utils/variables";
-import LanguageSwitchCat from "./LangaugeSwitchCat";
-import LangaugeSwitchSingleProduct from "./LangaugeSwitchSingleProduct";
 import { useSiteContext } from "@/context/siteContext";
 
 export default function Nav({ theme, page }) {
@@ -120,13 +118,19 @@ export default function Nav({ theme, page }) {
 
         {FilteredCategories(color, language)}
 
+      
+
         {headerMenus &&
           headerMenus.map((item, key) => (
             <Link
               key={key}
               aria-label={item?.title}
               title={item?.title}
-              href={`${frontendUrl}`}
+              href={`${frontendUrl}/${item?.title
+    ?.replace(/-ar/g, "")
+    .replace(/-en/g, "")
+    .replace(/-/g, "-")
+    .toLowerCase()}/`}
               onClick={() => setThemeLayout("gray")}
               style={{
                 color,
@@ -159,13 +163,7 @@ export default function Nav({ theme, page }) {
           )}{" "}
           ({currentCartCOunt})
         </Link>
-        {page === "page-cat" ? (
-          <LanguageSwitchCat color={color} label="test language toggle" />
-        ) : page === "page-single" ? (
-          <LangaugeSwitchSingleProduct label="test language toggle" />
-        ) : (
-          <LanguageSwitch label="test language toggle" />
-        )}
+        <LanguageSwitch label="test language toggle" />
         <SearchBox theme={color} page={page} />
         <button
           aria-label="Navigation Menu"

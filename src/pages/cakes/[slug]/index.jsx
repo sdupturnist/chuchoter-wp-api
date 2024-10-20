@@ -62,6 +62,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
             onPageChange={handlePageChange}
             productsPerPage={productsPerPage}
             totalCount={totalCount?.data?.length}
+           
           />
         </div>
       </Layout>

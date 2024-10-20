@@ -48,11 +48,18 @@ export const itemUrl = (mainCat, url, lang) => {
     .replace(/ /g, "-")}/${lang}`;
 };
 
-export const paginationUrl = (mainCat, subCat, page, lang) => {
+export const paginationUrl = (mainCat, page) => {
   return `/${mainCat
     .replace(/-/g, "-")
-    .toLowerCase()}/${lang}?page=${page}&categories=${mainCat}`;
+    .toLowerCase()}?page=${page}`;
 };
+
+
+// export const paginationUrl = (mainCat, subCat, page, lang) => {
+//   return `/${mainCat
+//     .replace(/-/g, "-")
+//     .toLowerCase()}/${lang}?page=${page}&categories=${mainCat}`;
+// };
 
 export const colorTheme = (theme) => {
   let color;
