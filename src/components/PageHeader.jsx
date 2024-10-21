@@ -154,7 +154,7 @@ export default function PageHeader({ title, type, data, mainCat }) {
                   <div className="sm:flex hidden gap-2">
                     {FilteredCategories(color, mainCat)}
                   </div>
-                  <div className="dropdown">
+                  <div className="dropdown sm:hidden">
                     {/* Button to toggle dropdown */}
                     <button
                       onClick={toggleDropdown}

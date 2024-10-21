@@ -24,7 +24,7 @@ export default function Cart({ pageData, allProducts_ }) {
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
 
-  const filteredProducts = allProducts_?.data?.filter(
+  const filteredProducts = allProducts_?.products?.filter(
     (product) => cartItems && cartItems.some((item) => item.id === product.id)
   );
 
@@ -204,11 +204,9 @@ export default function Cart({ pageData, allProducts_ }) {
 }
 
 export async function getServerSideProps(context) {
-  const { params } = context;
+  const { locale, params } = context;
 
-  // Extract the language from the params
-  const lang = params.slug; // Assuming you have a dynamic route like /about/[slug]
-  const slug = `cart-${lang}`; // Constructing the slug
+  const slug = `cart-${locale}`; // Constructing the slug
 
   try {
     const cartRes = await axios.get(`${frontendUrl}/api/cart`, {

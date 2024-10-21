@@ -57,10 +57,10 @@ export const itemUrl = (mainCat, url) => {
     .replace(/ /g, "-")}`;
 };
 
-export const paginationUrl = (mainCat, page) => {
+export const paginationUrl = (mainCat, subCat, page) => {
   return `/${mainCat
     .replace(/-/g, "-")
-    .toLowerCase()}?page=${page}`;
+    .toLowerCase()}?page=${page}&sub_category=${subCat || ''}`;
 };
 
 
@@ -139,7 +139,7 @@ export const languageText = (en, ar, language, separation) => {
     text = text.slice(0, -2);  // Remove the last 2 characters (comma and space)
   }
 
-  return text;
+  return text.replace(/,([^ ])/g, ', $1');
 };
 
 

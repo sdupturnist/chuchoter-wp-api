@@ -18,7 +18,6 @@ export default function AllProducts({
   products,
   currentPage,
   totalCount,
-  test,
 }) {
   const router = useRouter();
   const { query } = router;
@@ -27,8 +26,8 @@ export default function AllProducts({
 
   const allProducts = products?.products ?? [];
   const totalProducts = totalCount;
-  const productsPerPage = 30;
-  const totalPages = parseInt(totalProducts / productsPerPage);
+  const productsPerPage = 30
+  const totalPages = Math.ceil(totalCount/productsPerPage);
 
   const { language } = useLanguageContext();
 
@@ -43,8 +42,10 @@ export default function AllProducts({
   }, [router.asPath]);
 
   const handlePageChange = (page) => {
-    router.push(paginationUrl("chocolates", page));
+    router.push(paginationUrl(query.category, query.sub_category, page));
   };
+
+  console.log(totalCount)
 
   return (
     <>
@@ -81,32 +82,33 @@ export default function AllProducts({
   );
 }
 
-export async function getServerSideProps(context) {
-  // Destructure query params
-  const { page = 1 } = context.query; // Default to page 1
-  const minPrice = context.query.minPrice;
-  const reviewVal = context.query.minReviewCount;
-  const mainCat = context.query.category;
-  const subCat = context.query.sub_category;
-  //const currentLanguage = context.params.slug; // Language-based context
 
-  // Ensure categories is always an array
-  //const categoriesParam = Array.isArray(mainCat) ? mainCat : [mainCat];
+
+export async function getServerSideProps(context) {
+  // Destructure query params with defaults
+  const { page = 1, minPrice, minReviewCount, category: mainCat, sub_category: subCat } = context.query;
+  
+  // Ensure categories are handled correctly
+  const category = subCat || mainCat;
 
   try {
     // Fetch products
     const res = await axios.get(`${frontendUrl}/api/products`, {
       params: {
         page,
-        per_page: 30, // Set the number of products per page (30 is more common)
+        per_page: 30, // Adjust this if needed
         min_price: minPrice,
-        reviews_count: reviewVal,
-        category: subCat || mainCat, // Correct usage of categories array
+        reviews_count: minReviewCount,
+        category: category?.replace(/-/g, " ") // Handle categories with hyphens, if necessary
       },
     });
 
     // Fetch total product count
-    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
+    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`, {
+      params: {
+        categories: category?.replace(/-/g, " ") // Ensure categories format is correct
+      },
+    });
 
     // Return props
     return {
@@ -114,12 +116,12 @@ export async function getServerSideProps(context) {
         products: res.data,
         currentPage: Number(page),
         totalCount: resCount.data.total_count,
-        test: subCat || mainCat,
       },
     };
   } catch (error) {
-    // Log error and return fallback values
-    console.error("Error fetching products:", error.message);
+    // Log more error details for easier debugging
+    console.error("Error fetching products:", error.response ? error.response.data : error.message);
+
     return {
       props: {
         products: [],
@@ -129,4 +131,3 @@ export async function getServerSideProps(context) {
     };
   }
 }
-

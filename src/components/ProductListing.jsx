@@ -42,6 +42,7 @@ export default function ProductListing({
           })}
       </div>
       <div className="text-center pb-[80px] lg:pb-[0]">
+        
      {totalCount > productsPerPage ? (
           <Pagination
             currentPage={currentPage}

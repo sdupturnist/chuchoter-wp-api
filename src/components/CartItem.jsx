@@ -1,7 +1,7 @@
 import Cart from "@/components/Cart";
 import Images from "@/components/Images";
 import { useCartContext } from "@/context/cartContext";
-import { adminUrl, transalateText } from "@/utils/variables";
+import { adminUrl, languageText, transalateText } from "@/utils/variables";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -41,10 +41,10 @@ export default function CartItem({ item, color }) {
             height="170"
             quality={100}
             placeholder={true}
-            imageurl={item?.images[0]?.src && item?.images[0]?.src}
+            imageurl={item?.images && item?.images}
             classes="md:w-[60px] md:h-[60px] md:min-w-[60px] md:min-h-[60px] w-[100px] h-[130px] min-w-[130px] min-h-[130px] object-cover rounded-[4px]"
-            alt={item?.images[0]?.alt ?? "Product"}
-            title={item?.images[0]?.alt ?? "Product"}
+            alt={item?.name ?? "Product"}
+            title={item?.name ?? "Product"}
           />
         </Link>
 
@@ -61,7 +61,13 @@ export default function CartItem({ item, color }) {
               <h4 className="text-[14px] text-black">{item?.name}</h4>
             </Link>
             <span className="block text-[12px] text-black text-opacity-80 capitalize">
-              {item?.acf?.sub_categories[0]?.post_name?.replace(/_/g, " ")}
+              {languageText(
+                item?.categories.map((item) => item.name),
+                item?.categories.map((item) => item.arabic_label),
+                language,
+                "yes"
+              )}
+              {/* {console.log(item)} */}
             </span>
           </div>
 

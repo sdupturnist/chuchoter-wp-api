@@ -170,8 +170,12 @@ export default function ProductSingle({ product, reviews }) {
                     </div>
                   )}
                   <span className="block text-[16px] text-black text-opacity-50 mb-[10px] capitalize">
-                    {/* {console.log(product?.acf?.test[0])} */}
-                    {/* {product?.acf?.test[0] && product?.acf?.test[0]?.post_title} */}
+                  {languageText(
+                        product?.categories.map((item) => item.name),
+                        product?.categories.map((item) => item.arabic_label),
+                        language,
+                        "yes"
+                      )}
                   </span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">
                     {languageText(
