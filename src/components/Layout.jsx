@@ -186,11 +186,11 @@ export default function Layout({ children, type, page, header }) {
               key={key}
               aria-label={item?.title}
               title={item?.title}
-              href={`/${item?.title
+              href={`${frontendUrl}/${item?.title
                 ?.replace(/-ar/g, "")
                 .replace(/-en/g, "")
                 .replace(/-/g, "-")
-                .toLowerCase()}/${language}`}
+                .toLowerCase()}/`}
               onClick={() => {
                 setThemeLayout("gray");
                 closeModal();

@@ -23,7 +23,7 @@ export default function Search({ pageData, products }) {
   const { siteTransalations } = useSiteContext();
   const { language } = useLanguageContext();
 
-console.log(searchedProducts?.products)
+
 
   useEffect(() => {
     const { query } = router.query;
@@ -85,8 +85,7 @@ console.log(searchedProducts?.products)
                 const publicReviews = item?.reviews?.filter(review => review.showPublic);
                 return (
                   <div className="w-full" key={key}>
-                    {console.log(item?.categories.map((item) => item.name)[0].toLowerCase())}
-                    <Card
+                     <Card
                       type="cat"
                       item={item}
                       mainCat={item?.categories.map((item) => item.name)[0].toLowerCase()}

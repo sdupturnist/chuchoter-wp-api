@@ -27,10 +27,9 @@ import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { useSiteContext } from "@/context/siteContext";
 
-
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function Home({ featuredProducts, pageData, homeSections, test }) {
+export default function Home({ featuredProducts, pageData, homeSections }) {
   const { siteTransalations } = useSiteContext();
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
@@ -43,8 +42,6 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
   const events = useRef();
 
   const windowWidth = useWindowWidth();
-
-  console.log(test)
 
   useGSAP(
     () => {
@@ -331,20 +328,6 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
     }
   }, []);
 
-  const featuredProductsSlider = {
-    dots: false,
-    // fade: true,
-    rtl: true,
-    infinite: true,
-    autoplay: true,
-    loop: true,
-    lazyLoad: true,
-    speed: 3000,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    pauseOnHover: false,
-  };
-
   const filteredSectionsByLanguage = homeSections
     ? homeSections.filter((item) => item?.acf?.language === language)
     : [];
@@ -365,21 +348,22 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
     1024: { items: 5 },
   };
 
-  // const items = featuredProducts?.data
-  //   .filter(
-  //     (item) => item?.acf?.featured === true && item?.acf?.language === language
-  //   ) // Filter for featured items
-  //   .map((item, index) => (
-  //     <div className="item" key={index} data-value={index}>
-  //       <Card
-  //         theme="chocolates"
-  //         item={item}
-  //         subCat={item?.acf?.sub_categories[0]
-  //           ?.toLowerCase()
-  //           .replace(/\s+/g, "")}
-  //       />
-  //     </div>
-  //   ));
+  // {console.log(featuredProducts?.products)}
+
+  const items = featuredProducts?.products
+    .filter((item) => item?.acf?.featured === true) // Filter for featured items
+    .map((item, index) => (
+      <div className="item" key={index} data-value={index}>
+        <Card
+          theme="chocolates"
+          item={item}
+          mainCat={(item?.categories && item?.categories[0]?.slug) || ""}
+          subCat={
+            (item?.categories && item?.categories[0]?.slug.toLowerCase()) || ""
+          }
+        />
+      </div>
+    ));
 
   return (
     <>
@@ -660,7 +644,7 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
             );
           })}
 
-          {/* {featuredProducts.length !== 0 && windowWidth > 999 ? (
+          {featuredProducts?.products?.length !== 0 && windowWidth > 999 ? (
             <section>
               <div className="container">
                 <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
@@ -679,18 +663,19 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
                         disableButtonsControls
                         responsive={responsive}
                         controlsStrategy="alternate"
+                        rtl={true}
                       />
                     )}
                   </div>
                 </div>
               </div>
             </section>
-          ) : null} */}
+          ) : null}
           <section>
             <div className="container">
               <div
                 className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${
-                  featuredProducts.length !== 0 && windowWidth > 999
+                  featuredProducts?.products?.length !== 0 && windowWidth > 999
                     ? "border-t border-solid border-black "
                     : null
                 }`}>
@@ -731,10 +716,9 @@ export default function Home({ featuredProducts, pageData, homeSections, test })
 }
 
 export async function getServerSideProps(context) {
-  const { params } = context;
-  //const lang = params.lang; // Get the language from the URL
- // const slug = `home-${lang}`;
- const slug = `home-en`;
+  const { locale, params } = context;
+
+  const slug = `home-${locale}`; // Constructing the slug
 
   try {
     const homeRes = await axios.get(`${frontendUrl}/api/home`, {
@@ -746,10 +730,9 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-      pageData: homeRes.data,
-       homeSections: homeSectionsRes.data,
-       featuredProducts: featuredProductsRes.data,
-        test: 'tets'
+        pageData: homeRes.data,
+        homeSections: homeSectionsRes.data,
+        featuredProducts: featuredProductsRes.data,
       },
     };
   } catch (error) {
@@ -777,49 +760,4 @@ export async function getServerSidePaths() {
   };
 }
 
-// export async function getStaticPaths() {
-//   const paths = [
-//     { params: { lang: 'en' } },
-//     { params: { lang: 'es' } },
-//     // Add more languages as needed
-//   ];
 
-//   return {
-//     paths,
-//     fallback: 'blocking',
-//   };
-// }
-// export async function getStaticProps(context) {
-//   const { params } = context;
-//   const lang = params.lang; // Change 'slug' to 'lang'
-//   const slug = `home-${lang}`;
-
-//   try {
-//     const homeRes = await axios.get(`${frontendUrl}/api/home`, {
-//       params: { slug },
-//     });
-
-//     const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
-//     const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
-
-//     return {
-//       props: {
-//         pageData: homeRes.data,
-//         homeSections: homeSectionsRes.data,
-//         featuredProducts: featuredProductsRes.data,
-
-//       },
-//       revalidate: 60,
-//     };
-//   } catch (error) {
-//     console.error('Error fetching data:', error.message);
-//     return {
-//       props: {
-//         pageData: [],
-//         homeSections: [],
-//         featuredProducts: [],
-//       },
-//       revalidate: 60,
-//     };
-//   }
-// }

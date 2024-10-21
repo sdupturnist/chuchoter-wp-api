@@ -111,7 +111,7 @@ export default function ProductSingle({ product, reviews }) {
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid sm:gap-[10px] gap-[10px] sm:mb-[50px] mb-[30px] mt-[10px] ">
-            {console.log(product?.acf)}
+          
             <Breadcrumbs
               pages={[
                 {
@@ -150,7 +150,7 @@ export default function ProductSingle({ product, reviews }) {
                   />
                 )}
               </div>
-              {console.log(product?.meta_data.find(item => item.key === '_product_review_count')?.value)}
+         
 
               
               <div

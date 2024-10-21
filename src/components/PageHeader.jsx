@@ -14,6 +14,7 @@ import {
 } from "@/utils/variables";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function PageHeader({ title, type, data, mainCat }) {
   const { themeLayout } = useThemeContext();
@@ -25,7 +26,9 @@ export default function PageHeader({ title, type, data, mainCat }) {
   const { query } = router;
   //console.log(navigationData)
 
-  const currentTheme = query.category && query.category.toString().toLowerCase() || themeLayout.toString().toLowerCase();
+  const currentTheme =
+    (query.category && query.category.toString().toLowerCase()) ||
+    themeLayout.toString().toLowerCase();
 
   const color = colorTheme(currentTheme);
   const titleLanguage = titleLanguages(title, catTranslations, language);
@@ -37,6 +40,19 @@ export default function PageHeader({ title, type, data, mainCat }) {
 
   //console.log(data)
 
+  // State to track whether the dropdown is open or closed
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Toggle the dropdown open/close state
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  // Close dropdown when an item is clicked
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
+
   let pageHeaderType;
 
   switch (type) {
@@ -46,44 +62,55 @@ export default function PageHeader({ title, type, data, mainCat }) {
           data &&
           data.map((item, index) =>
             item?.categories
-              .filter(subItem => subItem?.name?.toLowerCase() !== mainCat) 
+              .filter((subItem) => subItem?.name?.toLowerCase() !== mainCat)
               .map((item, index) => (
-                  <Link
-                    key={index}
-                    aria-label={item?.name}
-                    title={item?.name}
-                    className={`btn btn-${
-                      data && mainCat.toLowerCase().replace(/ /g, "-")
-                    }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                    href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                    {language === "en" ? data && item?.name : item?.name}
-                  </Link>
-                ))
+                <Link
+                  key={index}
+                  aria-label={item?.name}
+                  title={item?.name}
+                  className={`btn btn-${
+                    data && mainCat.toLowerCase().replace(/ /g, "-")
+                  }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                  href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                  {language === "en" ? data && item?.name : item?.name}
+                </Link>
+              ))
           );
-    
+
         return allSubCategories;
-    };
-    
+      };
 
       const FilteredCategoriesMore = (color) => {
         const allSubCategories =
           data &&
           data.map((item, index) =>
             item?.categories
-          .filter(subItem => subItem?.name?.toLowerCase() !== mainCat) 
-          .map((item, index) => (
-              <li key={index} className="!block" onClick={autoCloseDropDown}>
-                <Link
-                 onClick={autoCloseDropDown}
-                  key={index}
-                  aria-label={item?.name}
-                  title={item?.name}
-                  className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
-                  href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                  {language === "en" ? data && item?.name : item?.name}
-                </Link>
-              </li>
-            ))
+              .filter((subItem) => subItem?.name?.toLowerCase() !== mainCat)
+              .map((item, index) => (
+                <li key={index}>
+                  <Link
+                    onClick={closeDropdown}
+                    key={index}
+                    aria-label={item?.name}
+                    title={item?.name}
+                    className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
+                    href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                    {language === "en" ? data && item?.name : item?.name}
+                  </Link>
+                </li>
+
+                // <li key={index} className="!block" onClick={autoCloseDropDown}>
+                //   <Link
+                //   onClick={closeDropdown}
+                //     key={index}
+                //     aria-label={item?.name}
+                //     title={item?.name}
+                //     className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
+                //     href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                //     {language === "en" ? data && item?.name : item?.name}
+                //   </Link>
+                // </li>
+              ))
           );
 
         return allSubCategories;
@@ -127,27 +154,25 @@ export default function PageHeader({ title, type, data, mainCat }) {
                   <div className="sm:flex hidden gap-2">
                     {FilteredCategories(color, mainCat)}
                   </div>
-                  <div
-                    className="dropdown dropdown-hover sm:dropdown-end dropdown-start  rounded-[6px] hover:bg-transparent sm:hidden"
-                    onClick={autoCloseDropDown}>
-                    <div
-                      tabIndex={0}
-                      role="button"
+                  <div className="dropdown">
+                    {/* Button to toggle dropdown */}
+                    <button
+                      onClick={toggleDropdown}
                       className={`btn btn-${mainCat}-border px-[20px] border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}>
-                      <span className={`text-[${color}]`}>
-                        {" "}
-                        {transalateText(
-                          siteTransalations?.generalTranslations?.categories,
-                          language
-                        )}
-                      </span>
-                    </div>
-                    <ul
-                      tabIndex={0}
-                      className="dropdown-content menu bg-base-100  z-[1] w-52 p-0 shadow overflow-hidden rounded-[6px] m-0">
-                      {FilteredCategoriesMore(currentTheme)}
-                    </ul>
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.categories,
+                        language
+                      )}
+                    </button>
+
+                    {/* Dropdown menu */}
+                    {isOpen && (
+                      <ul className="dropdown-content menu p-0 !shadow-none bg-base-100 rounded-box w-52 z-[1]">
+                        {FilteredCategoriesMore(currentTheme)}
+                      </ul>
+                    )}
                   </div>
+
                   {data && data.length > 3 && (
                     <div className="dropdown dropdown-hover dropdown-end  rounded-[6px]">
                       <div

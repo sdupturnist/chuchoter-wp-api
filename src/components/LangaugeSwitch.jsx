@@ -29,11 +29,10 @@ const LanguageSwitcher = () => {
 
   return (
     <div>
-      <button onClick={handleToggle}>
-        {locale === 'en' ? 'العربية' : 'English'}
+      <button className='font-ar' onClick={handleToggle}>
+        {locale === 'en' ? 'العربية' : 'إنجليزي'}
       </button>
-      <p>Current Language: {locale}</p>
-    </div>
+   </div>
   );
 };
 

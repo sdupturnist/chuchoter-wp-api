@@ -1,4 +1,4 @@
-import { frontendUrl } from "@/utils/variables";
+import { frontendUrl, languageText } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from '@/components/Seo';
 import PageHeader from "@/components/PageHeader";
@@ -8,32 +8,15 @@ import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 import { Link } from "react-alice-carousel";
 import { useSiteContext } from "@/context/siteContext";
+import { useLanguageContext } from "@/context/LanguageContext";
 
 
 export default function Contact({ initialData, pageData }) {
 
 
 
-
-
   const { contactData } = useSiteContext();
-
-  console.log(contactData)
-
-  const [isLoading, setIsLoading] = useState(true);
-
-
-  useEffect(() => {
-    setContactData(dataContact && dataContact[0])
-
-    if (dataContact) {
-      setIsLoading(false);
-    }
-
-
-  }, [dataContact]);
-
-
+  const { language } = useLanguageContext();
 
 
 
@@ -52,36 +35,33 @@ export default function Contact({ initialData, pageData }) {
             <div className="md:flex grid [&>*]:text-black lg:mb-[70px] sm:py-[50px] pb-[30px] justify-between lg:gap-[100px] gap-[50px]">
               <div className="grid gap-[32px] w-full" data-aos="fade-up">
                 <div className="grid gap-[32px] w-full">
-                  {isLoading ? (
-                    <div>
-                      <div className="skeleton h-4 w-[50%] rounded-[10px] mb-5"></div>
-                      <div className="skeleton h-4 w-full rounded-[10px] mb-5"></div>
-                      <div className="skeleton h-4 w-full rounded-[10px]"></div>
-                    </div>
-                  ) : (
-                    <div>
+                <div>
                       <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
 
                         {pageData && pageData?.acf?.contact_heading}
 
                       </h2>
                       <p className="mb-[8px]">
-                        <div dangerouslySetInnerHTML={{ __html: dataContact && dataContact[0].content?.rendered }} />
+                        <div dangerouslySetInnerHTML={{ __html:    languageText(
+                        contactData && contactData[0].content?.rendered,
+                        contactData && contactData[1].content?.rendered,
+                        language,
+                        "no"
+                      ) }} />
                       </p>
                       <Link
-                      href={`tel:${dataContact && dataContact[0].acf?.phone}`}
+                      href={`tel:${contactData && contactData[0].acf?.phone}`}
                       className="mb-[8px] block pb-[5px]">
-                      {dataContact && dataContact[0].acf?.phone}
+                      {contactData && contactData[0].acf?.phone}
                     </Link>
                     <Link
                       href={`mailto:${
-                        dataContact && dataContact[0].acf?.email
+                        contactData && contactData[0].acf?.email
                       }`}
                       className="mb-[8px] block">
-                      {dataContact && dataContact[0].acf?.email}
+                      {contactData && contactData[0].acf?.email}
                     </Link>
                     </div>
-                  )}
 
                   <div>
                     <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">

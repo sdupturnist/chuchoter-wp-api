@@ -67,7 +67,7 @@ const ReviewForm = ({ productId, productName, productReviewCount }) => {
       if (response.ok) {
         setSuccessLabel(true);
         setSendProgress(false);
-        console.log('Review submitted successfully');
+        //console.log('Review submitted successfully');
       } else {
         const errorResponse = await response.json();
         console.error("Failed to submit review", response.status, errorResponse);
@@ -89,7 +89,7 @@ const ReviewForm = ({ productId, productName, productReviewCount }) => {
     });
     
     if (responseUpdateCount.ok) {
-        console.log('Review count updated successfully');
+       // console.log('Review count updated successfully');
     } else {
         const errorResponse = await responseUpdateCount.json();
         console.error("Failed to update review count", responseUpdateCount.status, errorResponse);
