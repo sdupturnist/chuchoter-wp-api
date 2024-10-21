@@ -5,12 +5,13 @@ import {
   transalateText,
   wordpressGraphQlApiUrl,
   wordpressRestApiUrl,
+  wordpressRestApiUrlWoocommerceProductsReviewCountUpdate,
 } from "@/utils/variables";
 import { useModalContext } from "@/context/modalContext";
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useSiteContext } from "@/context/siteContext";
 
-const ReviewForm = ({ productId, productName }) => {
+const ReviewForm = ({ productId, productName, productReviewCount }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [comment, setComment] = useState("");
@@ -58,7 +59,7 @@ const ReviewForm = ({ productId, productName }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2RlbW8uY2h1Y2hvdGVycWF0YXIuY29tIiwiaWF0IjoxNzI5MjQ1MTYwLCJuYmYiOjE3MjkyNDUxNjAsImV4cCI6MTcyOTg0OTk2MCwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMSJ9fX0.oExivofDCrpedvlhJeN3ItakYjccKIlqa-68OFnFwAc`, // Replace with JWT or Basic Auth
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FkbWluLmNodWNob3RlcnFhdGFyLmNvbSIsImlhdCI6MTcyOTUwNDY3NywibmJmIjoxNzI5NTA0Njc3LCJleHAiOjE3MzAxMDk0NzcsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.l51rRbO9BRGoi9NVnfN99f3Um8Mwl7glo66ByXQ9y5M`, // Replace with JWT or Basic Auth
         },
         body: JSON.stringify(requestData),
       });
@@ -71,7 +72,34 @@ const ReviewForm = ({ productId, productName }) => {
         const errorResponse = await response.json();
         console.error("Failed to submit review", response.status, errorResponse);
       }
+
+
+      const responseUpdateCount = await fetch(wordpressRestApiUrlWoocommerceProductsReviewCountUpdate, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FkbWluLmNodWNob3RlcnFhdGFyLmNvbSIsImlhdCI6MTcyOTUwNDY3NywibmJmIjoxNzI5NTA0Njc3LCJleHAiOjE3MzAxMDk0NzcsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.l51rRbO9BRGoi9NVnfN99f3Um8Mwl7glo66ByXQ9y5M`, // Replace with JWT or Basic Auth
+        },
+        body: JSON.stringify({
+          id: productId,  
+          user_reviews: "Updated reviews content",  // ACF field value
+          meta_key: "_product_review_count",  // Custom post meta key
+          meta_value: parseInt(productReviewCount) + 1  // Increment productReviewCount by 1 and ensure it's a number
+        }),
+    });
+    
+    if (responseUpdateCount.ok) {
+        console.log('Review count updated successfully');
+    } else {
+        const errorResponse = await responseUpdateCount.json();
+        console.error("Failed to update review count", responseUpdateCount.status, errorResponse);
+    }
+    
   
+
+      
+
+
       // Send email notification
       const emailResponse = await fetch("/api/reviewSendMail", {
         method: "POST",

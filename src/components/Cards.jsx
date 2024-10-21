@@ -7,6 +7,7 @@ import {
   colorTheme,
   frontendUrl,
   itemUrl,
+  languageText,
   transalateText,
 } from "@/utils/variables";
 import { truncateWords } from "@/utils/TruncateWords";
@@ -49,30 +50,26 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
           ) : (
             <>
               <AOSInit />
-{/* {console.log(mainCat)} */}
               <div
                 data-aos="fade-up"
                 className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2`}
                 data-id={item?.id ?? null}
                 data-review={review?.length}>
-                  {console.log(item?.acf?.title_arabic)}
                 <div className="relative overflow-hidden">
                   <Link
                     className="block"
-                    href={itemUrl(mainCat,
-                      language
-                    )}>
+                    href={`${itemUrl(mainCat, item?.slug)}`}>
                     <Images
                       width="170"
                       height="170"
                       quality={100}
                       placeholder={true}
-                      imageurl={item?.images[0]?.src && item?.images[0]?.src}
+                      imageurl={item?.images && item?.images}
                       classes={
                         "w-full object-cover rounded-[10px] aspect-square 2xl:min-w-[170px]"
                       }
-                      alt={item?.images[0]?.alt ?? "Product"}
-                      title={item?.images[0]?.alt ?? "Product"}
+                      alt={item?.images?.alt ?? "Product"}
+                      title={item?.images?.alt ?? "Product"}
                     />
                   </Link>
 
@@ -88,33 +85,27 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 <div className="grid gap-[7px] mt-[2px]">
                   <Link
                     className="block"
-                    href={itemUrl(
-                      item?.acf?.main_categories,
-                      item?.slug,
-                      language
-                    )}>
+                    href={`${itemUrl(mainCat, item?.slug)}`}>
                     <h4
                       className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize`}>
-                      {/* {item?.acf?.title_arabic == null ? item?.name?.toLowerCase() : item?.acf?.title_arabic} */}
-                      {item?.acf?.title_arabic}
-                      {console.log(item?.acf)}
-                      asd
+                      {languageText(
+                        item?.name,
+                        item?.acf?.title_arabic,
+                        language,
+                        "no"
+                      )}
                     </h4>
                   </Link>
 
                   {!desc == true ? (
                     <span
                       className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`}>
-                          {
-                          
-                          item?.categories.map(item => item?.name).join(', ')
-                            
-
-                        }
-                      {/* {transalateText(
-                        siteTransalations?.subCatTranslations?.[subCat],
-                        language
-                      )} */}
+                      {languageText(
+                        item?.categories.map((item) => item.name),
+                        item?.categories.map((item) => item.arabic_label),
+                        language,
+                        "yes"
+                      )}
                     </span>
                   ) : null}
                   {type == true ? (
@@ -128,7 +119,6 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                     </p>
                   ) : null}
                 </div>
-
                 {review?.length > 0 ? (
                   <>
                     <span className="flex gap-[6px] text-[12px] text-black text-opacity-80 items-center">
@@ -140,11 +130,15 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                         fill="none"
                         viewBox="0 0 13 13">
                         <path
-                          fill={color}
+                          fill={"#c89a3f"}
                           d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z"
                         />
                       </svg>
-                      {review?.length} Reviews
+                      {review?.length}{" "}
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.review,
+                        language
+                      )}
                     </span>
                   </>
                 ) : null}
@@ -170,12 +164,16 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                       {transalateText(
                         siteTransalations?.generalTranslations.qr,
                         language
-                      )}{" "}
-                      {item?.acf?.unit && (
-                        <span className="text-[11px] font-light uppercase ">
-                          / {item?.acf?.unit}
-                        </span>
                       )}
+                      <span className="text-[11px] font-light uppercase">
+                        /{" "}
+                        {languageText(
+                          item?.acf?.unit,
+                          item?.acf?.unit_arabic,
+                          language,
+                          "no"
+                        )}
+                      </span>
                     </span>
                   </span>
                 )}
@@ -197,7 +195,6 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
       break;
 
     case "blog":
-      // console.log(item.attributes.Banner.data.attributes.url)
       cardType = (
         <>
           {isLoading ? (
@@ -268,12 +265,12 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 height="170"
                 quality={100}
                 placeholder={true}
-                imageurl={item?.images[0]?.src && item?.images[0]?.src}
+                imageurl={item?.images && item?.images}
                 classes={
                   "w-full object-cover rounded-[10px] aspect-square 2xl:min-w-[170px]"
                 }
-                alt={item?.images[0]?.alt ?? "Product"}
-                title={item?.images[0]?.alt ?? "Product"}
+                alt={item?.images?.alt ?? "Product"}
+                title={item?.images?.alt ?? "Product"}
               />
             </Link>
             <Cart
@@ -285,23 +282,27 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
           </div>
 
           <div className="grid gap-[7px] mt-[2px]">
-            <Link
-              className="block"
-              href={itemUrl(item?.acf?.main_categories, item?.name, language)}>
-              <h4 className="text-[14px] text-black">{item?.name ?? null}</h4>
+            <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
+              <h4
+                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize`}>
+                {languageText(
+                  item?.name,
+                  item?.acf?.title_arabic,
+                  language,
+                  "no"
+                )}
+              </h4>
             </Link>
-            {!desc == true ? (
-              <span className="block text-[12px] text-black text-opacity-80 capitalize">
-                     {
-                          
-                          item?.categories.map(item => item?.name).join(', ')
-                            
 
-                        }
-                      {/* {transalateText(
-                        siteTransalations?.subCatTranslations?.[subCat],
-                        language
-                      )} */}
+            {!desc == true ? (
+              <span
+                className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`}>
+                {languageText(
+                  item?.categories.map((item) => item.name),
+                  item?.categories.map((item) => item.arabic_label),
+                  language,
+                  "yes"
+                )}
               </span>
             ) : null}
             {type == true ? (
@@ -353,11 +354,15 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                   siteTransalations?.generalTranslations.qr,
                   language
                 )}{" "}
-                {item?.acf?.unit && (
-                  <span className="text-[11px] font-light uppercase ">
-                    / {item?.acf?.unit}
-                  </span>
-                )}
+                <span className="text-[11px] font-light uppercase">
+                  /{" "}
+                  {languageText(
+                    item?.acf?.unit,
+                    item?.acf?.unit_arabic,
+                    language,
+                    "no"
+                  )}
+                </span>
               </span>
             </span>
           )}

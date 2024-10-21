@@ -2,6 +2,7 @@ import {
   adminUrl,
   catUrl,
   frontendUrl,
+  languageText,
   transalateText,
   wordpressGraphQlApiUrl,
 } from "@/utils/variables";
@@ -26,10 +27,10 @@ export default function ProductSingle({ product, reviews }) {
   const router = useRouter();
   const { query } = router;
 
-  // console.log(product?.acf?.main_categories?.post_title)
+
 
   const { setModalFor, setShowModal } = useModalContext();
-  const { setProductId, setProductName } = useProductContext();
+  const { setProductId, setProductName, setProductReviewCount } = useProductContext();
   const { cartItems, setCartItems } = useCartContext();
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
@@ -47,6 +48,7 @@ export default function ProductSingle({ product, reviews }) {
   // Update product context
   useEffect(() => {
     setProductId(product?.id ?? null);
+    setProductReviewCount(product?.meta_data.find(item => item.key === '_product_review_count')?.value ?? null)
     setProductName(product?.name ?? null);
     // setProductReviewCount(reviewData_?.data?.review?.data?.length ?? 0);
   }, []);
@@ -109,13 +111,13 @@ export default function ProductSingle({ product, reviews }) {
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid sm:gap-[10px] gap-[10px] sm:mb-[50px] mb-[30px] mt-[10px] ">
+            {console.log(product?.acf)}
             <Breadcrumbs
               pages={[
                 {
-                  name: `${product && product?.acf?.main_categories}`,
+                  name: `${query.category}`,
                   link: catUrl(
-                    product?.acf?.main_categories,
-                    product?.acf?.main_categories,
+                    query.category,
                     language
                   ),
                 },
@@ -141,13 +143,16 @@ export default function ProductSingle({ product, reviews }) {
                     height={500}
                     quality={100}
                     placeholder={false}
-                    imageurl={frontendUrl + "images/plcaeholder-ni-image.webp"}
+                    imageurl={frontendUrl + "/images/plcaeholder-ni-image.webp"}
                     classes={"w-full object-cover rounded-[10px] aspect-square"}
                     alt={"Sorry no image available"}
                     title={"Sorry no image available"}
                   />
                 )}
               </div>
+              {console.log(product?.meta_data.find(item => item.key === '_product_review_count')?.value)}
+
+              
               <div
                 data-aos="fade-up"
                 data-aos-delay="500"
@@ -165,18 +170,16 @@ export default function ProductSingle({ product, reviews }) {
                     </div>
                   )}
                   <span className="block text-[16px] text-black text-opacity-50 mb-[10px] capitalize">
-                    {/* {transalateText( */}
-                    {/* siteTransalations?.subCatTranslations?.[subCat], */}
-                    {/* language */}
-                    {/* )} */}
-                    {product?.acf?.sub_categories[0] &&
-                      product?.acf?.sub_categories[0]
-                        ?.replace(/-ar/g, "")
-                        .replace(/-en/g, "")
-                        .replace(/-/g, "-")}
+                    {/* {console.log(product?.acf?.test[0])} */}
+                    {/* {product?.acf?.test[0] && product?.acf?.test[0]?.post_title} */}
                   </span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">
-                    {product?.name ?? null}
+                    {languageText(
+                      product?.name,
+                      product?.acf?.title_arabic,
+                      language,
+                      "no"
+                    )}
                   </h1>
                   {filteredReviews.length > 0 ? (
                     <span className="flex gap-[10px] text-[16px] text-black text-opacity-50 items-center mt-[14px]">
@@ -192,7 +195,11 @@ export default function ProductSingle({ product, reviews }) {
                           d="M5.678.864C6.02.046 7.18.046 7.522.864l.969 2.312a1 1 0 0 0 .84.61l2.498.207c.884.073 1.242 1.175.57 1.754l-1.9 1.636a1 1 0 0 0-.32.987l.575 2.44c.204.863-.734 1.545-1.492 1.084l-2.143-1.301a1 1 0 0 0-1.038 0l-2.143 1.301c-.758.46-1.696-.22-1.492-1.084l.576-2.44a1 1 0 0 0-.321-.987L.8 5.747c-.672-.579-.314-1.681.57-1.754l2.498-.207a1 1 0 0 0 .84-.61l.97-2.312Z"
                         />
                       </svg>
-                      {filteredReviews.length} Reviews
+                      {filteredReviews.length}{" "}
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.review,
+                        language
+                      )}
                     </span>
                   ) : null}
 
@@ -218,7 +225,13 @@ export default function ProductSingle({ product, reviews }) {
                         )}
                         {product?.attributes[0]?.options[0] && (
                           <span className="text-[11px] font-light uppercase ">
-                            / {product?.attributes[0]?.options[0]}
+                            /
+                            {languageText(
+                              product?.acf?.unit,
+                              product?.acf?.unit_arabic,
+                              language,
+                              "no"
+                            )}{" "}
                           </span>
                         )}
                       </span>
@@ -230,7 +243,12 @@ export default function ProductSingle({ product, reviews }) {
                       <div
                         className="text-gray-500 sm:mt-[30px] mt-[34px]"
                         dangerouslySetInnerHTML={{
-                          __html: product?.short_description,
+                          __html:
+                            language == "en"
+                              ? product?.short_description ?? null
+                              : product?.acf
+                                  ?.product_short_description_arabic ??
+                                product?.short_description,
                         }}
                       />
                     </>
@@ -308,7 +326,10 @@ export default function ProductSingle({ product, reviews }) {
                         <div
                           dangerouslySetInnerHTML={{
                             __html:
-                              product?.acf?.includes && product?.acf?.includes,
+                              language == "en"
+                                ? product?.acf?.includes ?? null
+                                : product?.acf?.includes_arabic ??
+                                  product?.acf?.includes,
                           }}
                         />
                       </div>
@@ -334,7 +355,10 @@ export default function ProductSingle({ product, reviews }) {
                         <div
                           dangerouslySetInnerHTML={{
                             __html:
-                              product?.description && product?.description,
+                              language == "en"
+                                ? product?.description ?? null
+                                : product?.acf?.product_description_arabic ??
+                                  product?.description,
                           }}
                         />
                       </div>
@@ -350,7 +374,10 @@ export default function ProductSingle({ product, reviews }) {
                       name="my_tabs_2"
                       role="tab"
                       className="tab rounded-lg !border-black uppercase sm:text-[16px] text-[14px] font-semibold tracking-[1%] min-h-[50px] border-b border-solid sm:min-w-[150px] min-w-[120px]"
-                      aria-label={`${filteredReviews.length} Reviews`}
+                      aria-label={`${filteredReviews.length}  ${transalateText(
+                        siteTransalations?.generalTranslations?.review,
+                        language
+                      )}`}
                     />
                     <div
                       role="tabpanel"
@@ -372,7 +399,10 @@ export default function ProductSingle({ product, reviews }) {
                 <button
                   className="btn border sm:mt-[32px] mt-[24px]  rounded-[6px] sm:w-[170px] w-[100%] min-h-[60px]"
                   onClick={openAddReviewModal}>
-                  Write a review
+                  {transalateText(
+                    siteTransalations?.generalTranslations?.write_review,
+                    language
+                  )}
                 </button>
               ) : null}
             </div>

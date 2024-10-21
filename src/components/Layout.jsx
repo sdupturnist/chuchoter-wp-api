@@ -17,7 +17,7 @@ import { useSiteContext } from "@/context/siteContext";
 export default function Layout({ children, type, page, header }) {
   const { showModal, setShowModal, setModalData, modalFor, setIsClassAdded } =
     useModalContext();
-  const { productId, productName } = useProductContext();
+  const { productId, productName, productReviewCount } = useProductContext();
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
   const {
@@ -339,7 +339,7 @@ export default function Layout({ children, type, page, header }) {
                     />
                   </svg>
                 </button>
-                <AddReview productId={productId} productName={productName} />
+                <AddReview productId={productId} productName={productName} productReviewCount={productReviewCount}/>
               </div>
             </div>
           ) : null}

@@ -9,6 +9,7 @@ import { useCartContext } from "@/context/cartContext";
 import SearchBox from "./Search";
 import LanguageSwitch from "./LangaugeSwitch";
 import { useLanguageContext } from "@/context/LanguageContext";
+
 import {
   catUrl,
   colorTheme,
@@ -16,6 +17,7 @@ import {
   transalateText,
 } from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
+import { useRouter } from "next/router";
 
 export default function Nav({ theme, page }) {
   const { setModalFor, setShowModal } = useModalContext();
@@ -26,9 +28,11 @@ export default function Nav({ theme, page }) {
   const { catData, navigationData, headerMenus, subCategoryData, contactData } =
     useSiteContext();
 
+  const router = useRouter();
+  const { query } = router;
   //console.log(navigationData)
 
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = query.category && query.category.toString().toLowerCase() || themeLayout.toString().toLowerCase();
 
   // TOGGLE MENU
   const [hidden, setHidden] = useState(false);
@@ -117,9 +121,6 @@ export default function Nav({ theme, page }) {
         </Link>
 
         {FilteredCategories(color, language)}
-
-      
-
         {headerMenus &&
           headerMenus.map((item, key) => (
             <Link
@@ -127,10 +128,10 @@ export default function Nav({ theme, page }) {
               aria-label={item?.title}
               title={item?.title}
               href={`${frontendUrl}/${item?.title
-    ?.replace(/-ar/g, "")
-    .replace(/-en/g, "")
-    .replace(/-/g, "-")
-    .toLowerCase()}/`}
+                ?.replace(/-ar/g, "")
+                .replace(/-en/g, "")
+                .replace(/-/g, "-")
+                .toLowerCase()}/`}
               onClick={() => setThemeLayout("gray")}
               style={{
                 color,
@@ -270,12 +271,7 @@ export default function Nav({ theme, page }) {
           className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-${currentTheme}-100 bg-white lg:block hidden`}>
           <div className="container">
             <div className="flex items-center justify-between">
-              <Logo
-                url={`/`}
-                alt={"#"}
-                logoTitle={"#"}
-                theme={headerColor}
-              />
+              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme={headerColor} />
 
               <div
                 className={`flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]`}>
@@ -355,12 +351,7 @@ export default function Nav({ theme, page }) {
           className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50`}>
           <div className="container">
             <div className="flex items-center justify-between">
-              <Logo
-                url={`/`}
-                alt={"#"}
-                logoTitle={"#"}
-                theme="#c89a3f"
-              />
+              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme="#c89a3f" />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                   {Navigations(headerColor, language)}
@@ -391,12 +382,7 @@ export default function Nav({ theme, page }) {
           className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-gray-200 bg-white`}>
           <div className="container">
             <div className="flex items-center justify-between">
-              <Logo
-                url={`/`}
-                alt={"#"}
-                logoTitle={"#"}
-                theme={color}
-              />
+              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme={color} />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                   {Navigations("", language)}

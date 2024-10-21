@@ -23,6 +23,7 @@ export default function Search({ pageData, products }) {
   const { siteTransalations } = useSiteContext();
   const { language } = useLanguageContext();
 
+console.log(searchedProducts?.products)
 
   useEffect(() => {
     const { query } = router.query;
@@ -38,11 +39,10 @@ export default function Search({ pageData, products }) {
     try {
       const res = await axios.get(`${frontendUrl}/api/products`, {
         params: {
-          per_page: 29,
+          page:0,
+          per_page: 30, // Set the number of products per page (30 is more common)
           min_price: 0,
-          reviews_count: 0,
-          main_categories: '',
-          sub_categories: '',
+          category:null,
           search: term,
         },
       });
@@ -70,7 +70,7 @@ export default function Search({ pageData, products }) {
 
           {loading && <Loading />}
 
-            {!loading && searchedProducts?.data?.length === 0 && (
+            {!loading && searchedProducts?.products?.length === 0 && (
             <NoData title={transalateText(
               siteTransalations?.generalTranslations?.no_search_results,
               language
@@ -78,15 +78,19 @@ export default function Search({ pageData, products }) {
             
             />
           )}
- {searchedProducts?.data?.length > 0 && (
+          
+ {searchedProducts?.products?.length > 0 && (
             <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
-              {products && searchedProducts?.data?.map((item, key) => {
+              {products && searchedProducts?.products?.map((item, key) => {
                 const publicReviews = item?.reviews?.filter(review => review.showPublic);
                 return (
                   <div className="w-full" key={key}>
+                    {console.log(item?.categories.map((item) => item.name)[0].toLowerCase())}
                     <Card
                       type="cat"
                       item={item}
+                      mainCat={item?.categories.map((item) => item.name)[0].toLowerCase()}
+                      subCat={item?.categories[0]?.name || ''}
                       theme={themeLayout}
                     />
                   </div>
@@ -112,11 +116,10 @@ export async function getServerSideProps(context) {
 
     const res = await axios.get(`${frontendUrl}/api/products`, {
       params: {
-        per_page: 29,
+        page:0,
+        per_page: 30, // Set the number of products per page (30 is more common)
         min_price: 0,
-        reviews_count: 0,
-        main_categories: '',
-        sub_categories: '',
+        category:null,
         search: searchTerm,
       },
     });

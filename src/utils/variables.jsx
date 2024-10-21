@@ -8,6 +8,17 @@ export const wordpressRestApiUrlWoocommerceCustom =
 export const wordpressRestApiUrlWoocommerceProductsSubCatCustom =
   process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_SUBCAT_CUSTOM_URL;
 
+
+  export const wordpressRestApiUrlWoocommerceProductsTotalCount =
+  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_TOTAL_COUNT_CUSTOM_URL;
+
+  
+  export const wordpressRestApiUrlWoocommerceProductsSingle =
+  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCT_SINGLE_CUSTOM_URL;
+
+  export const wordpressRestApiUrlWoocommerceProductsReviewCountUpdate =
+  process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_UPDATE_REVIEW_COUNT;
+
 export const wordpressRestApiUrlWordpressMenus =
   process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_MENUS;
 export const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
@@ -40,10 +51,10 @@ export const catUrlWithSubCat = (mainCat, subCat, lang) => {
 
 //https://chuchoterqatar.com/chocolates/luxury-chocolate-gift-tray-acrylic-vox-small/en/
 
-export const itemUrl = (mainCat, url, lang) => {
+export const itemUrl = (mainCat, url) => {
   return `/${mainCat.toString().replace(/ /g, "-").toLowerCase()}/${url
     .toLowerCase()
-    .replace(/ /g, "-")}/${lang}`;
+    .replace(/ /g, "-")}`;
 };
 
 export const paginationUrl = (mainCat, page) => {
@@ -110,6 +121,30 @@ export const transalateText = (item, language) => {
   const text = item?.[language];
   return text;
 };
+
+
+export const languageText = (en, ar, language, separation) => {
+  let text = '';
+
+  if (language === 'en') {
+    text = `${en}${separation === 'yes' ? ', ' : ''}`;
+  } else if (language === 'ar' && ar !== '') {
+    text = `${ar}${separation === 'yes' ? ', ' : ''}`;
+  } else {
+    text = en;  // Default to English if no valid condition is met
+  }
+
+  // Remove the last comma if there was one
+  if (separation === 'yes' && text.endsWith(', ')) {
+    text = text.slice(0, -2);  // Remove the last 2 characters (comma and space)
+  }
+
+  return text;
+};
+
+
+
+
 
 
 

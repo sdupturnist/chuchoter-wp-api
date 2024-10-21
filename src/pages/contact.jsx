@@ -3,23 +3,25 @@ import Layout from "@/components/Layout";
 import Metatags from '@/components/Seo';
 import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/Forms/ContactUs";
-import { ContactData } from "@/hooks/contactData";
 import { useEffect, useState } from "react";
 import { AOSInit } from "@/components/Aos";
 import axios from "axios";
 import { Link } from "react-alice-carousel";
+import { useSiteContext } from "@/context/siteContext";
 
 
 export default function Contact({ initialData, pageData }) {
 
 
 
-  const { dataContact } = ContactData(initialData);
 
 
+  const { contactData } = useSiteContext();
+
+  console.log(contactData)
 
   const [isLoading, setIsLoading] = useState(true);
-  const [contactData, setContactData] = useState('');
+
 
   useEffect(() => {
     setContactData(dataContact && dataContact[0])
@@ -102,14 +104,10 @@ export default function Contact({ initialData, pageData }) {
 }
 
 
-
-
 export async function getServerSideProps(context) {
-  const { params } = context;
+  const { locale, params } = context;
 
-  // Extract the language from the params
- // const lang = params.slug; // Assuming you have a dynamic route like /contact/[slug]
-  const slug = `contact-en`; // Constructing the slug
+  const slug = `contact-${locale}`; // Constructing the slug
 
   try {
     // Fetch data based on the slug
@@ -130,62 +128,9 @@ export async function getServerSideProps(context) {
       },
     };
   } catch (error) {
-    console.error('Error fetching contact data:', error.message);
+    console.error("Error fetching about data:", error.message);
     return {
       notFound: true, // Redirect to 404 page in case of an error
     };
   }
 }
-
-// No need for getStaticPaths in SSR
-
-
-
-// export async function getStaticProps(context) {
-//   const { params } = context;
-
-//   // Extract the language from the params
-//   const lang = params.slug; // Assuming you have a dynamic route like /about/[slug]
-//   const slug = `contact-${lang}`; // Constructing the slug
-
-//   try {
-//     // Fetch data based on the slug
-//     const res = await axios.get(`${frontendUrl}/api/contact`, {
-//       params: { slug },
-//     });
-
-//     // Check if the data is empty or undefined
-//     if (!res.data || res.data.length === 0) {
-//       return {
-//         notFound: true, // Redirect to 404 page if no data found
-//       };
-//     }
-
-//     return {
-//       props: {
-//         pageData: res.data[0], // Return the first item from the response
-//       },
-//       revalidate: 60, // Regenerate the page every 60 seconds
-//     };
-//   } catch (error) {
-//     console.error('Error fetching about data:', error.message);
-//     return {
-//       notFound: true, // Redirect to 404 page in case of an error
-//     };
-//   }
-// }
-
-// export async function getStaticPaths() {
-//   // Define the paths that should be pre-rendered at build time
-//   const paths = [
-//     { params: { slug: 'en' } }, // Add other languages as needed
-//     { params: { slug: 'es' } },
-//     // ...more paths
-//   ];
-
-//   return {
-//     paths,
-//     fallback: 'blocking', // Use blocking fallback for SSR if not found
-//   };
-// }
-

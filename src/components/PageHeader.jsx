@@ -13,6 +13,7 @@ import {
   transalateText,
 } from "@/utils/variables";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function PageHeader({ title, type, data, mainCat }) {
   const { themeLayout } = useThemeContext();
@@ -20,7 +21,12 @@ export default function PageHeader({ title, type, data, mainCat }) {
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
 
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const router = useRouter();
+  const { query } = router;
+  //console.log(navigationData)
+
+  const currentTheme = query.category && query.category.toString().toLowerCase() || themeLayout.toString().toLowerCase();
+
   const color = colorTheme(currentTheme);
   const titleLanguage = titleLanguages(title, catTranslations, language);
 
@@ -39,30 +45,36 @@ export default function PageHeader({ title, type, data, mainCat }) {
         const allSubCategories =
           data &&
           data.map((item, index) =>
-            item?.categories.map((item, index) => (
-              <Link
-                key={index}
-                aria-label={item?.name}
-                title={item?.name}
-                className={`btn btn-${
-                  data && mainCat.toLowerCase().replace(/ /g, "-")
-                }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                {language === "en" ? data && item?.name : item?.name}
-              </Link>
-            ))
+            item?.categories
+              .filter(subItem => subItem?.name?.toLowerCase() !== mainCat) 
+              .map((item, index) => (
+                  <Link
+                    key={index}
+                    aria-label={item?.name}
+                    title={item?.name}
+                    className={`btn btn-${
+                      data && mainCat.toLowerCase().replace(/ /g, "-")
+                    }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                    href={catUrlWithSubCat(mainCat, item?.name, language)}>
+                    {language === "en" ? data && item?.name : item?.name}
+                  </Link>
+                ))
           );
-
+    
         return allSubCategories;
-      };
+    };
+    
 
       const FilteredCategoriesMore = (color) => {
         const allSubCategories =
           data &&
           data.map((item, index) =>
-            item?.categories.map((item, index) => (
-              <li key={index} className="!block">
+            item?.categories
+          .filter(subItem => subItem?.name?.toLowerCase() !== mainCat) 
+          .map((item, index) => (
+              <li key={index} className="!block" onClick={autoCloseDropDown}>
                 <Link
+                 onClick={autoCloseDropDown}
                   key={index}
                   aria-label={item?.name}
                   title={item?.name}

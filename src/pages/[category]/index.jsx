@@ -1,5 +1,9 @@
 import { useRouter } from "next/router";
-import { frontendUrl, paginationUrl, wordpressRestApiUrlWoocommerceCustom } from "@/utils/variables";
+import {
+  frontendUrl,
+  paginationUrl,
+  wordpressRestApiUrlWoocommerceCustom,
+} from "@/utils/variables";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import { useEffect, useState } from "react";
@@ -10,17 +14,21 @@ import { useSiteContext } from "@/context/siteContext";
 import ProductListing from "@/components/ProductListing";
 import { useTranslation } from "next-i18next";
 
-
-export default function AllProducts({ products, currentPage, totalCount }) {
+export default function AllProducts({
+  products,
+  currentPage,
+  totalCount,
+  test,
+}) {
   const router = useRouter();
   const { query } = router;
 
-  const { i18n } = useTranslation()
+  const { i18n } = useTranslation();
 
-  const allProducts = products?.data ?? [];
+  const allProducts = products?.products ?? [];
   const totalProducts = totalCount;
   const productsPerPage = 30;
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
+  const totalPages = parseInt(totalProducts / productsPerPage);
 
   const { language } = useLanguageContext();
 
@@ -35,12 +43,8 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   }, [router.asPath]);
 
   const handlePageChange = (page) => {
-    router.push(
-      paginationUrl('chocolates', page)
-    );
+    router.push(paginationUrl("chocolates", page));
   };
-
-
 
   return (
     <>
@@ -67,7 +71,7 @@ export default function AllProducts({ products, currentPage, totalCount }) {
             totalPages={totalPages}
             onPageChange={handlePageChange}
             productsPerPage={productsPerPage}
-            mainCat={query}
+            mainCat={query.category}
             totalCount={totalCount}
             currenPageNumber={query.page}
           />
@@ -77,45 +81,52 @@ export default function AllProducts({ products, currentPage, totalCount }) {
   );
 }
 
-
-
-
-
 export async function getServerSideProps(context) {
-  const { locale, query } = context;
+  // Destructure query params
+  const { page = 1 } = context.query; // Default to page 1
+  const minPrice = context.query.minPrice;
+  const reviewVal = context.query.minReviewCount;
+  const mainCat = context.query.category;
+  const subCat = context.query.sub_category;
+  //const currentLanguage = context.params.slug; // Language-based context
 
-  // Destructure query parameters
-  const { page = 1, category, minPrice = 0, minReviewCount = 0 } = query;
-
-  const subCat = context.query.sub_category
-
-  // Build the URL using the category and other parameters
-  const productsRes = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${subCat || category}&reviews_count=${minReviewCount}&min_price=${minPrice}&page=${page}&per_page=30`;
-
-  const resCount = `${wordpressRestApiUrlWoocommerceCustom}products?categories[]=${subCat || category}&per_page=5000`
+  // Ensure categories is always an array
+  //const categoriesParam = Array.isArray(mainCat) ? mainCat : [mainCat];
 
   try {
-    const response = await axios.get(productsRes);
-    const responseTotalProductCount = await axios.get(resCount);
+    // Fetch products
+    const res = await axios.get(`${frontendUrl}/api/products`, {
+      params: {
+        page,
+        per_page: 30, // Set the number of products per page (30 is more common)
+        min_price: minPrice,
+        reviews_count: reviewVal,
+        category: subCat || mainCat, // Correct usage of categories array
+      },
+    });
 
+    // Fetch total product count
+    const resCount = await axios.get(`${frontendUrl}/api/totalproductCount`);
+
+    // Return props
     return {
       props: {
-        products: response.data,
-        locale, // Pass locale directly
-        totalCount:responseTotalProductCount.data.total,
+        products: res.data,
         currentPage: Number(page),
-        //test: subCat || category
+        totalCount: resCount.data.total_count,
+        test: subCat || mainCat,
       },
     };
   } catch (error) {
-    console.error('Failed to fetch data:', error);
+    // Log error and return fallback values
+    console.error("Error fetching products:", error.message);
     return {
       props: {
         products: [],
-        error: 'Failed to load products',
+        currentPage: 1,
+        totalCount: 0,
       },
     };
   }
 }
-
 

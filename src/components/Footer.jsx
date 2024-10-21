@@ -9,6 +9,7 @@ import {
   transalateText,
 } from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
+import { useRouter } from "next/router";
 
 export default function Footer({ page, initialData }) {
   const { language } = useLanguageContext();
@@ -17,6 +18,10 @@ export default function Footer({ page, initialData }) {
   const { siteTransalations } = useSiteContext();
 
   const currentTheme = themeLayout.toString().toLowerCase();
+
+  const router = useRouter();
+  const { query } = router;
+
 
   const date = new Date();
   const year = date.getFullYear();
@@ -51,7 +56,7 @@ export default function Footer({ page, initialData }) {
                       <Link
                         onClick={() => {
                           setThemeLayout(
-                            childItem.post_title
+                            query.category
                               ?.replace(/-/g, "-")
                               .toLowerCase()
                           );
