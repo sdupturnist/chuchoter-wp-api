@@ -13,7 +13,7 @@ export default function BottomNav() {
   const color = colorTheme(currentTheme);
 
   return (
-    <>
+    themeLayout !== "black" && (
       <div className="py-[14px] [&>*]:text-[12px] uppercase font-light tracking-wider fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 border-solid lg:hidden">
         <div className="container">
           <div className="flex justify-between items-center">
@@ -46,7 +46,10 @@ export default function BottomNav() {
                   d="m1.848 8.783.117.05a21.585 21.585 0 0 0 8.335 1.674h.492c.291 0 .582-.026.868-.077 3.438-.609 5.196-4.477 3.393-7.467l-.473-.785"
                 />
               </svg>
-              {transalateText(siteTransalations?.catTranslations?.chocolates, language)}
+              {transalateText(
+                siteTransalations?.catTranslations?.chocolates,
+                language
+              )}
             </Link>
             <Link
               aria-label="Flowers"
@@ -71,7 +74,10 @@ export default function BottomNav() {
                   clipRule="evenodd"
                 />
               </svg>
-              {transalateText(siteTransalations?.catTranslations?.flowers, language)}
+              {transalateText(
+                siteTransalations?.catTranslations?.flowers,
+                language
+              )}
             </Link>
             <Link
               aria-label="Cakes"
@@ -95,7 +101,10 @@ export default function BottomNav() {
                 />
               </svg>
 
-              {transalateText(siteTransalations?.catTranslations?.cakes, language)}
+              {transalateText(
+                siteTransalations?.catTranslations?.cakes,
+                language
+              )}
             </Link>
             <Link
               aria-label="Events"
@@ -121,11 +130,14 @@ export default function BottomNav() {
                 />
               </svg>
 
-              {transalateText(siteTransalations?.catTranslations?.cakes, language)}
+              {transalateText(
+                siteTransalations?.catTranslations?.cakes,
+                language
+              )}
             </Link>
           </div>
         </div>
       </div>
-    </>
+    )
   );
 }

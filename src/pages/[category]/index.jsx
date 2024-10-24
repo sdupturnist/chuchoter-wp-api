@@ -45,7 +45,7 @@ export default function AllProducts({
     router.push(paginationUrl(query.category, query.sub_category, page));
   };
 
-  console.log(totalCount)
+
 
   return (
     <>
@@ -66,6 +66,7 @@ export default function AllProducts({
             //subCat={query.main_categories}
             data={subCategoryData && subCategoryData}
           />
+        
           <ProductListing
             data={allProducts}
             currentPage={currentPage}

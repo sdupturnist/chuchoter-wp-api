@@ -8,15 +8,14 @@ export const wordpressRestApiUrlWoocommerceCustom =
 export const wordpressRestApiUrlWoocommerceProductsSubCatCustom =
   process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_SUBCAT_CUSTOM_URL;
 
+export const wordpressRestApiUrlWoocommerceProductsTotalCount =
+  process.env
+    .NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_TOTAL_COUNT_CUSTOM_URL;
 
-  export const wordpressRestApiUrlWoocommerceProductsTotalCount =
-  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_TOTAL_COUNT_CUSTOM_URL;
-
-  
-  export const wordpressRestApiUrlWoocommerceProductsSingle =
+export const wordpressRestApiUrlWoocommerceProductsSingle =
   process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCT_SINGLE_CUSTOM_URL;
 
-  export const wordpressRestApiUrlWoocommerceProductsReviewCountUpdate =
+export const wordpressRestApiUrlWoocommerceProductsReviewCountUpdate =
   process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_UPDATE_REVIEW_COUNT;
 
 export const wordpressRestApiUrlWordpressMenus =
@@ -35,18 +34,13 @@ export let woocommerceConsumerSecret =
   process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET;
 
 export const catUrl = (mainCat, lang) => {
-  return `/${
-    mainCat &&
-    mainCat
-      ?.replace(/ /g, "-")
-      .toLowerCase()
-  }`;
+  return `/${mainCat && mainCat?.replace(/ /g, "-").toLowerCase()}`;
 };
 
 export const catUrlWithSubCat = (mainCat, subCat, lang) => {
-  return `/${mainCat?.replace(/ /g, "-")
-    .toLowerCase()}/?sub_category=${subCat ?.replace(/ /g, "-")
-      .toLowerCase()}`;
+  return `/${mainCat?.replace(/ /g, "-").toLowerCase()}/?sub_category=${subCat
+    ?.replace(/ /g, "-")
+    .toLowerCase()}`;
 };
 
 //https://chuchoterqatar.com/chocolates/luxury-chocolate-gift-tray-acrylic-vox-small/en/
@@ -60,9 +54,8 @@ export const itemUrl = (mainCat, url) => {
 export const paginationUrl = (mainCat, subCat, page) => {
   return `/${mainCat
     .replace(/-/g, "-")
-    .toLowerCase()}?page=${page}&sub_category=${subCat || ''}`;
+    .toLowerCase()}?page=${page}&sub_category=${subCat || ""}`;
 };
-
 
 // export const paginationUrl = (mainCat, subCat, page, lang) => {
 //   return `/${mainCat
@@ -122,52 +115,43 @@ export const transalateText = (item, language) => {
   return text;
 };
 
-
 export const languageText = (en, ar, language, separation) => {
-  let text = '';
+  let text = "";
 
-  if (language === 'en') {
-    text = `${en}${separation === 'yes' ? ', ' : ''}`;
-  } else if (language === 'ar' && ar !== '') {
-    text = `${ar}${separation === 'yes' ? ', ' : ''}`;
+  if (language === "en") {
+    text = `${en}${separation === "yes" ? ", " : ""}`;
+  } else if (language === "ar" && ar !== "") {
+    text = `${ar}${separation === "yes" ? ", " : ""}`;
   } else {
-    text = en;  // Default to English if no valid condition is met
+    text = en; // Default to English if no valid condition is met
   }
 
   // Remove the last comma if there was one
-  if (separation === 'yes' && text.endsWith(', ')) {
-    text = text.slice(0, -2);  // Remove the last 2 characters (comma and space)
+  if (separation === "yes" && text.endsWith(", ")) {
+    text = text.slice(0, -2); // Remove the last 2 characters (comma and space)
   }
 
-  return text.replace(/,([^ ])/g, ', $1');
+  return text.replace(/,([^ ])/g, ", $1");
 };
-
-
-
-
-
-
 
 export const autoCloseDropDown = () => {
   const elem = document.activeElement;
   if (elem) {
     elem?.blur();
   }
-}
-
+};
 
 export const formatDate = (dateString) => {
-  
   const options = {
-    year: 'numeric',
-    month: 'long', // 'short' for abbreviated month
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
+    year: "numeric",
+    month: "long", // 'short' for abbreviated month
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
     hour12: false, // Use true for 12-hour format
   };
 
   const date = new Date(dateString);
-  return date.toLocaleString('en-US', options);
-}
+  return date.toLocaleString("en-US", options);
+};

@@ -27,10 +27,9 @@ export default function ProductSingle({ product, reviews }) {
   const router = useRouter();
   const { query } = router;
 
-
-
   const { setModalFor, setShowModal } = useModalContext();
-  const { setProductId, setProductName, setProductReviewCount } = useProductContext();
+  const { setProductId, setProductName, setProductReviewCount } =
+    useProductContext();
   const { cartItems, setCartItems } = useCartContext();
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
@@ -48,7 +47,10 @@ export default function ProductSingle({ product, reviews }) {
   // Update product context
   useEffect(() => {
     setProductId(product?.id ?? null);
-    setProductReviewCount(product?.meta_data.find(item => item.key === '_product_review_count')?.value ?? null)
+    setProductReviewCount(
+      product?.meta_data.find((item) => item.key === "_product_review_count")
+        ?.value ?? null
+    );
     setProductName(product?.name ?? null);
     // setProductReviewCount(reviewData_?.data?.review?.data?.length ?? 0);
   }, []);
@@ -111,15 +113,11 @@ export default function ProductSingle({ product, reviews }) {
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%] grid sm:gap-[10px] gap-[10px] sm:mb-[50px] mb-[30px] mt-[10px] ">
-          
             <Breadcrumbs
               pages={[
                 {
                   name: `${query.category}`,
-                  link: catUrl(
-                    query.category,
-                    language
-                  ),
+                  link: catUrl(query.category, language),
                 },
               ]}
             />
@@ -150,9 +148,7 @@ export default function ProductSingle({ product, reviews }) {
                   />
                 )}
               </div>
-         
 
-              
               <div
                 data-aos="fade-up"
                 data-aos-delay="500"
@@ -170,12 +166,12 @@ export default function ProductSingle({ product, reviews }) {
                     </div>
                   )}
                   <span className="block text-[16px] text-black text-opacity-50 mb-[10px] capitalize">
-                  {languageText(
-                        product?.categories.map((item) => item.name),
-                        product?.categories.map((item) => item.arabic_label),
-                        language,
-                        "yes"
-                      )}
+                    {languageText(
+                      product?.categories.map((item) => item.name),
+                      product?.categories.map((item) => item.arabic_label),
+                      language,
+                      "yes"
+                    )}
                   </span>
                   <h1 className="sm:text-[40px] text-[6.5vw] font-semibold">
                     {languageText(

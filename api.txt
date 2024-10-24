@@ -477,31 +477,54 @@ function get_wc_custom_products( $data ) {
 //COUNT OF TOTAL PTODUCTS
 
 add_action('rest_api_init', function () {
+    // Register the route with a 'categories' parameter (a comma-separated list of category names)
     register_rest_route('wc-custom/v1', '/products/count', array(
         'methods' => 'GET',
-        'callback' => 'get_product_count',
+        'callback' => 'get_product_count_by_categories',
         'permission_callback' => '__return_true', // Adjust permissions as needed
+        'args' => array(
+            'categories' => array(
+                'required' => true, // Make the categories parameter required
+                'validate_callback' => function ($param, $request, $key) {
+                    return !empty($param); // Ensure the categories parameter is not empty
+                },
+            ),
+        ),
     ));
 });
 
-function get_product_count() {
-    // Query to count products
+function get_product_count_by_categories($data) {
+    // Get the categories string from the request
+    $categories_string = sanitize_text_field($data['categories']); // Sanitize the input
+    
+    // Split the string into an array of categories (by comma)
+    $categories = array_map('sanitize_text_field', explode(',', $categories_string));
+
+    // Query to count products by multiple categories
     $args = array(
-        'post_type' => 'product',  // Correct post type for WooCommerce products
+        'post_type' => 'product',  // WooCommerce product post type
         'post_status' => 'publish',
-        'fields' => 'ids', // Only get IDs for a faster response
+        'fields' => 'ids', // Only get product IDs for faster performance
         'posts_per_page' => -1, // Get all products
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'product_cat', // Use the 'product_cat' taxonomy
+                'field' => 'name', // Filter by category names
+                'terms' => $categories, // The list of categories to filter by
+                'operator' => 'IN', // The 'IN' operator ensures any product that belongs to any of these categories will be counted
+            ),
+        ),
     );
 
     $query = new WP_Query($args);
     $total_count = $query->post_count; // Get the count of products
 
-    return new WP_REST_Response(array('total_count' => $total_count), 200);
+    return new WP_REST_Response(array('categories' => $categories, 'total_count' => $total_count), 200);
 }
 
 
 
-//https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/products/count
+//https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/products/count?categories=Flowers,test%202
 
 
 
@@ -709,11 +732,16 @@ function get_filtered_products($request) {
             foreach ($terms as $term) {
                 // Only add category if its term ID hasn't been added yet
                 if (!in_array($term->term_id, $all_term_ids)) {
+                    // Get ACF field for the category
+                    $arabic_label = get_field('arabic_label', 'product_cat_' . $term->term_id);
+                    
                     $product['categories'][] = array(
                         'term_id' => $term->term_id,
                         'name' => $term->name,
                         'slug' => $term->slug,
+                        'arabic_label' => $arabic_label ? $arabic_label : null, // Add arabic_label, or null if not set
                     );
+
                     $unique_terms[] = $term->term_id; // Track unique term ID for this product
                     $all_term_ids[] = $term->term_id; // Track all unique term IDs across products
                 }
@@ -729,7 +757,6 @@ function get_filtered_products($request) {
 
     return new WP_REST_Response($products, 200);
 }
-
 
 
 //https://admin.chuchoterqatar.com/wp-json/subcat/v1/products?per_page=1000&categories=flowers

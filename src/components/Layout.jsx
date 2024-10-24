@@ -9,10 +9,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useProductContext } from "@/context/productContext";
 import FilterProducts from "./Filter";
 import { useLanguageContext } from "@/context/LanguageContext";
-import { catUrlWithSubCat, colorTheme, frontendUrl, transalateText } from "@/utils/variables";
+import {
+  catUrlWithSubCat,
+  colorTheme,
+  frontendUrl,
+  transalateText,
+} from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
-
-
 
 export default function Layout({ children, type, page, header }) {
   const { showModal, setShowModal, setModalData, modalFor, setIsClassAdded } =
@@ -47,15 +50,34 @@ export default function Layout({ children, type, page, header }) {
       sitemapMenus &&
       groupedItems["0"]?.map((item, key) => (
         <div key={key} className="collapse collapse-plus rounded-none">
-          <input
-            type="radio"
-            className="min-h-[10px] after:top-0"
-            name="my-accordion-3"
-            id={`category-${item.ID}`} // Changed ID to be unique
-          />
-          <div className="collapse-title p-0 min-h-0" style={{ color: "#fff" }}>
-            {language === "en" ? item?.title : item?.acf?.arabic}
-          </div>
+          {groupedItems[item.ID] == null ? (
+            <Link
+              onClick={() => {
+                setThemeLayout(`black`);
+                closeModal();
+              }}
+              aria-label={item?.post_title}
+              title={item?.post_title}
+              style={{ color: "#fff" }}
+              href={catUrlWithSubCat(item?.title, item?.post_title, language)}
+              className="hover:opacity-50">
+              {language === "en" ? item?.title : item?.acf?.arabic}
+            </Link>
+          ) : (
+            <>
+              <input
+                type="radio"
+                className="min-h-[10px] after:top-0"
+                name="my-accordion-3"
+                id={`category-${item.ID}`} // Changed ID to be unique
+              />
+              <div
+                className="collapse-title p-0 min-h-0"
+                style={{ color: "#fff" }}>
+                {language === "en" ? item?.title : item?.acf?.arabic}
+              </div>
+            </>
+          )}
           <div className="collapse-content !pb-0 px-0 mb-0">
             {groupedItems[item.ID] && (
               <ul className="mt-[24px] grid gap-[24px] m-0 p-0">
@@ -71,7 +93,11 @@ export default function Layout({ children, type, page, header }) {
                       aria-label={childItem?.post_title}
                       title={childItem?.post_title}
                       style={{ color: "#fff" }}
-                      href={catUrlWithSubCat(item?.title, childItem?.post_title, language)}
+                      href={catUrlWithSubCat(
+                        item?.title,
+                        childItem?.post_title,
+                        language
+                      )}
                       className="hover:opacity-50">
                       {language === "en"
                         ? childItem?.title
@@ -86,8 +112,6 @@ export default function Layout({ children, type, page, header }) {
       ))
     );
   };
-
- 
 
   const colors = useMemo(
     () => [
@@ -173,9 +197,9 @@ export default function Layout({ children, type, page, header }) {
           }}
           style={{ color: "#fff" }}>
           {transalateText(
-              siteTransalations?.generalTranslations?.home,
-              language
-            )}
+            siteTransalations?.generalTranslations?.home,
+            language
+          )}
         </Link>
 
         {FilteredCategoriesAccordin(language)}
@@ -271,11 +295,10 @@ export default function Layout({ children, type, page, header }) {
                 <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
                   <span
                     className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>
-                
-                {transalateText(
-              siteTransalations?.generalTranslations?.filter,
-              language
-            )}
+                    {transalateText(
+                      siteTransalations?.generalTranslations?.filter,
+                      language
+                    )}
                   </span>
                   <button
                     aria-label="Home"
@@ -307,9 +330,9 @@ export default function Layout({ children, type, page, header }) {
                     className={`btn rounded-[6px] w-full  text-white hover:border-${currentTheme}-100`}
                     onClick={closeModal}>
                     {transalateText(
-              siteTransalations?.generalTranslations?.apply,
-              language
-            )}
+                      siteTransalations?.generalTranslations?.apply,
+                      language
+                    )}
                   </button>
                 </div>
               </div>
@@ -339,7 +362,11 @@ export default function Layout({ children, type, page, header }) {
                     />
                   </svg>
                 </button>
-                <AddReview productId={productId} productName={productName} productReviewCount={productReviewCount}/>
+                <AddReview
+                  productId={productId}
+                  productName={productName}
+                  productReviewCount={productReviewCount}
+                />
               </div>
             </div>
           ) : null}

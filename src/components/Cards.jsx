@@ -87,7 +87,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                     className="block"
                     href={`${itemUrl(mainCat, item?.slug)}`}>
                     <h4
-                      className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize`}>
+                      className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase`}>
                       {languageText(
                         item?.name,
                         item?.acf?.title_arabic,
@@ -97,7 +97,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                     </h4>
                   </Link>
 
-                  {!desc == true ? (
+                  {/* {!desc == true ? (
                     <span
                       className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`}>
                       {languageText(
@@ -107,7 +107,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                         "yes"
                       )}
                     </span>
-                  ) : null}
+                  ) : null} */}
                   {type == true ? (
                     <p
                       className={`text-${currentTheme}-100 text-[12px] leading-[20px] text-opacity-80`}>
@@ -284,7 +284,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
           <div className="grid gap-[7px] mt-[2px]">
             <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
               <h4
-                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize !leading-[1.5] mb-[2px]`}>
+                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase !leading-[1.5] mb-[2px]`}>
                 {languageText(
                   item?.name,
                   item?.acf?.title_arabic,
@@ -293,7 +293,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 )}
               </h4>
             </Link>
-
+            {/* 
             {!desc == true ? (
               <span
                 className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize !leading-[1.5]`}>
@@ -304,7 +304,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                   "yes"
                 )}
               </span>
-            ) : null}
+            ) : null} */}
             {type == true ? (
               <p
                 className={`text-${currentTheme}-100 text-[12px] leading-[20px] text-opacity-80`}>

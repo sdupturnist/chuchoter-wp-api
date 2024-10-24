@@ -32,7 +32,9 @@ export default function Nav({ theme, page }) {
   const { query } = router;
   //console.log(navigationData)
 
-  const currentTheme = query.category && query.category.toString().toLowerCase() || themeLayout.toString().toLowerCase();
+  const currentTheme =
+    (query.category && query.category.toString().toLowerCase()) ||
+    themeLayout.toString().toLowerCase();
 
   // TOGGLE MENU
   const [hidden, setHidden] = useState(false);
@@ -92,11 +94,6 @@ export default function Nav({ theme, page }) {
     },
   };
 
-  const openSearchModal = () => {
-    setShowModal(true);
-    setModalFor("search");
-  };
-
   const openNavigationModal = () => {
     setShowModal(true);
     setModalFor("nav");
@@ -111,7 +108,6 @@ export default function Nav({ theme, page }) {
           href={`${frontendUrl}/`}
           onClick={() => {
             setThemeLayout("gray");
-            closeModal();
           }}
           style={{ color: color }}>
           {transalateText(
@@ -143,12 +139,6 @@ export default function Nav({ theme, page }) {
     );
   };
 
-  // /${item?.title
-  //   ?.replace(/-ar/g, "")
-  //   .replace(/-en/g, "")
-  //   .replace(/-/g, "-")
-  //   .toLowerCase()}/
-
   function NavigationRight(page, color) {
     return (
       <>
@@ -164,7 +154,7 @@ export default function Nav({ theme, page }) {
           )}{" "}
           ({currentCartCOunt})
         </Link>
-        <LanguageSwitch label="test language toggle" />
+        <LanguageSwitch color={color} label="test language toggle" />
         <SearchBox theme={color} page={page} />
         <button
           aria-label="Navigation Menu"
@@ -188,8 +178,6 @@ export default function Nav({ theme, page }) {
       </>
     );
   }
-
-  //console.log(catData)
 
   const FilteredCategories = (headerColor, language) => {
     const customOrder = ["Chocolates", "Flowers", "Cakes", "Events"];
@@ -296,13 +284,8 @@ export default function Nav({ theme, page }) {
           className={`w-full sm:py-[30px] py-[16px] right-0 top-0 left-0 z-50 border-b bg-white`}>
           <div className="container">
             <div className="flex items-center justify-between">
-              <Logo
-                url={`/`}
-                alt={"#"}
-                logoTitle={"#"}
-                theme={headerColorLogoHome}
-              />
-              <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
+              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme={"#c89a3f"} />
+              <div className="flex gap-[24px] items-centerfont-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                   {Navigations("", language)}
                 </ul>
@@ -382,7 +365,7 @@ export default function Nav({ theme, page }) {
           className={`w-full sm:py-[30px] py-[16px]  right-0 top-0 left-0 z-50 border-b border-solid border-gray-200 bg-white`}>
           <div className="container">
             <div className="flex items-center justify-between">
-              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme={color} />
+              <Logo url={`/`} alt={"#"} logoTitle={"#"} theme={"#c89a3f"} />
               <div className="flex gap-[24px] items-center font-semibold text-[14px] uppercase [&>li>*]:rounded-[4px] [&>summary>*]:rounded-[4px]">
                 <ul className="xl:flex hidden gap-[24px] items-center justify-end nav-list">
                   {Navigations("", language)}

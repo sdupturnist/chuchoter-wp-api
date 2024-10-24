@@ -9,6 +9,7 @@ import {
   catUrl,
   catUrlWithSubCat,
   colorTheme,
+  languageText,
   titleLanguages,
   transalateText,
 } from "@/utils/variables";
@@ -31,7 +32,6 @@ export default function PageHeader({ title, type, data, mainCat }) {
     themeLayout.toString().toLowerCase();
 
   const color = colorTheme(currentTheme);
-  const titleLanguage = titleLanguages(title, catTranslations, language);
 
   const openFilterModal = () => {
     setShowModal(true);
@@ -72,7 +72,12 @@ export default function PageHeader({ title, type, data, mainCat }) {
                     data && mainCat.toLowerCase().replace(/ /g, "-")
                   }-border rounded-[6px] !capitalize !font-regular !text-[13px]`}
                   href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                  {language === "en" ? data && item?.name : item?.name}
+                  {languageText(
+                    data && item?.name,
+                    data && item?.arabic_label,
+                    language,
+                    "no"
+                  )}
                 </Link>
               ))
           );
@@ -95,38 +100,50 @@ export default function PageHeader({ title, type, data, mainCat }) {
                     title={item?.name}
                     className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
                     href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                    {language === "en" ? data && item?.name : item?.name}
+                    {languageText(
+                      data && item?.name,
+                      data && item?.arabic_label,
+                      language,
+                      "no"
+                    )}
                   </Link>
                 </li>
-
-                // <li key={index} className="!block" onClick={autoCloseDropDown}>
-                //   <Link
-                //   onClick={closeDropdown}
-                //     key={index}
-                //     aria-label={item?.name}
-                //     title={item?.name}
-                //     className={`w-full px-[15px] hover:border-[${color}] rounded-none hover:bg-transparent text-[${color}] btn bg-transparent border-0 hover:border-gray-300 !capitalize !font-regular !text-[13px]`}
-                //     href={catUrlWithSubCat(mainCat, item?.name, language)}>
-                //     {language === "en" ? data && item?.name : item?.name}
-                //   </Link>
-                // </li>
               ))
           );
 
         return allSubCategories;
       };
 
-      // href={catUrlWithSubCat(mainCat, item?.slug, language)}>
+      const pageHeaderTitle =
+        data &&
+        data
+          .filter((item) =>
+            item.categories.some((category) => category.slug === query.category)
+          )
+          .map((item) => ({
+            id: item.id,
+            categories: item.categories.filter(
+              (category) => category.slug === query.category
+            ),
+          }));
       pageHeaderType = (
         <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
           <div className="xl:w-[50%] hidden lg:block">
-            <h1
-              className={`font-primary first-letter:uppercase text-[40px]`}
-              style={{
-                color: color,
-              }}>
-              {titleLanguage}
-            </h1>
+            {data && (
+              <h1
+                className={`font-primary first-letter:uppercase text-[40px]`}
+                style={{
+                  color: color,
+                }}>
+                {languageText(
+                  data && pageHeaderTitle[0]?.categories[0]?.name,
+                  (data && pageHeaderTitle[0]?.categories[0]?.arabic_label) ||
+                    (data && pageHeaderTitle[0]?.categories[0]?.name),
+                  language,
+                  "no"
+                )}
+              </h1>
+            )}{" "}
             <p
               style={{
                 color: color,
@@ -141,16 +158,18 @@ export default function PageHeader({ title, type, data, mainCat }) {
             <div className="flex gap-[6px] w-full xl:justify-end">
               {
                 <>
-                  <Link
-                    aria-label={title.replace(/-/g, " ")}
-                    className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                    title={title.replace(/-/g, " ")}
-                    href={catUrl(mainCat, language)}>
-                    {transalateText(
-                      siteTransalations?.generalTranslations?.all,
-                      language
-                    )}
-                  </Link>
+                  {data && data.length > 1 && (
+                    <Link
+                      aria-label={title.replace(/-/g, " ")}
+                      className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                      title={title.replace(/-/g, " ")}
+                      href={catUrl(mainCat, language)}>
+                      {transalateText(
+                        siteTransalations?.generalTranslations?.all,
+                        language
+                      )}
+                    </Link>
+                  )}
                   <div className="sm:flex hidden gap-2">
                     {FilteredCategories(color, mainCat)}
                   </div>
