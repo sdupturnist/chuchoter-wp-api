@@ -1,6 +1,6 @@
 import { frontendUrl, languageText } from "@/utils/variables";
 import Layout from "@/components/Layout";
-import Metatags from '@/components/Seo';
+import Metatags from "@/components/Seo";
 import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/Forms/ContactUs";
 import { useEffect, useState } from "react";
@@ -10,16 +10,9 @@ import { Link } from "react-alice-carousel";
 import { useSiteContext } from "@/context/siteContext";
 import { useLanguageContext } from "@/context/LanguageContext";
 
-
 export default function Contact({ initialData, pageData }) {
-
-
-
   const { contactData } = useSiteContext();
   const { language } = useLanguageContext();
-
-
-
 
   return (
     <>
@@ -28,52 +21,68 @@ export default function Contact({ initialData, pageData }) {
         <AOSInit />
         <div className="container [&>*]:text-black">
           <div className="mx-auto 2xl:w-[70%] xl:w-[80%]">
-
-
             <PageHeader title={pageData && pageData?.acf?.page_title} />
 
             <div className="md:flex grid [&>*]:text-black lg:mb-[70px] sm:py-[50px] pb-[30px] justify-between lg:gap-[100px] gap-[50px]">
               <div className="grid gap-[32px] w-full" data-aos="fade-up">
                 <div className="grid gap-[32px] w-full">
-                <div>
-                      <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
-
-                        {pageData && pageData?.acf?.contact_heading}
-
-                      </h2>
-                      <p className="mb-[8px]">
-                        <div dangerouslySetInnerHTML={{ __html:    languageText(
-                        contactData && contactData[0].content?.rendered,
-                        contactData && contactData[1].content?.rendered,
-                        language,
-                        "no"
-                      ) }} />
-                      </p>
-                      <Link
+                  <div>
+                    <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
+                      {pageData && pageData?.acf?.contact_heading}
+                    </h2>
+                    <p className="mb-[8px]">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: languageText(
+                            contactData && contactData[0].content?.rendered,
+                            contactData && contactData[1].content?.rendered,
+                            language,
+                            "no"
+                          ),
+                        }}
+                      />
+                    </p>
+                    <Link
                       href={`tel:${contactData && contactData[0].acf?.phone}`}
                       className="mb-[8px] block pb-[5px]">
-                      {contactData && contactData[0].acf?.phone}
+                      {languageText(
+                        contactData && contactData[0].acf?.phone,
+                        contactData && contactData[1].acf?.phone,
+                        language,
+                        "no"
+                      )}
                     </Link>
                     <Link
                       href={`mailto:${
                         contactData && contactData[0].acf?.email
                       }`}
                       className="mb-[8px] block">
-                      {contactData && contactData[0].acf?.email}
+                      {languageText(
+                        contactData && contactData[0].acf?.email,
+                        contactData && contactData[1].acf?.email,
+                        language,
+                        "no"
+                      )}
                     </Link>
-                    </div>
+                  </div>
 
                   <div>
                     <h2 className="font-semibold text-[16px] uppercase tracking-[1%] mb-[12px] text-black">
                       {pageData && pageData?.acf?.enquiry_heading}
                     </h2>
-                    <div dangerouslySetInnerHTML={{ __html: pageData && pageData.content?.rendered }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: pageData && pageData.content?.rendered,
+                      }}
+                    />
                   </div>
                 </div>
               </div>
-              <div className="w-full block" data-aos="fade-up" data-aos-delay="500">
-                <ContactForm
-                />
+              <div
+                className="w-full block"
+                data-aos="fade-up"
+                data-aos-delay="500">
+                <ContactForm />
               </div>
             </div>
           </div>
@@ -82,7 +91,6 @@ export default function Contact({ initialData, pageData }) {
     </>
   );
 }
-
 
 export async function getServerSideProps(context) {
   const { locale, params } = context;
