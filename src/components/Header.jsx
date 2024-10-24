@@ -25,12 +25,10 @@ export default function Nav({ theme, page }) {
   const { cartItems } = useCartContext();
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
-  const { catData, navigationData, headerMenus, subCategoryData, contactData } =
-    useSiteContext();
+  const { catData, headerMenus, headerCatMenus } = useSiteContext();
 
   const router = useRouter();
   const { query } = router;
-  //console.log(navigationData)
 
   const currentTheme =
     (query.category && query.category.toString().toLowerCase()) ||
@@ -180,36 +178,24 @@ export default function Nav({ theme, page }) {
   }
 
   const FilteredCategories = (headerColor, language) => {
-    const customOrder = ["Chocolates", "Flowers", "Cakes", "Events"];
-
-    const sortedCategories = catData
-      ? catData
-          .filter((item) => item?.acf?.show_in_menu === true) // Filter by show_in_menu and language
-          .sort(
-            (a, b) =>
-              customOrder.indexOf(a.title.rendered) -
-              customOrder.indexOf(b.title.rendered)
-          ) // Optional: sort based on customOrder
-      : [];
-
     return (
       <>
-        {sortedCategories.map((item, index) => (
-          <li key={index}>
-            <Link
-              aria-label={item?.title?.rendered}
-              title={item?.title?.rendered}
-              href={catUrl(item?.title?.rendered, language)}
-              onClick={(e) =>
-                setThemeLayout(item?.title?.rendered.toLowerCase())
-              }
-              style={{ color: headerColor }}>
-              {language === "en"
-                ? item?.title?.rendered
-                : item?.acf?.title_english}
-            </Link>
-          </li>
-        ))}
+        {headerCatMenus &&
+          headerCatMenus.map((item, index) => (
+            <li key={index}>
+              <Link
+                aria-label={item?.post_title}
+                title={item?.post_title}
+                href={catUrl(
+                  item?.url.replace(/https?:\/\//, "").toLowerCase(),
+                  language
+                )}
+                onClick={(e) => setThemeLayout(item?.post_title.toLowerCase())}
+                style={{ color: headerColor }}>
+                {language === "en" ? item?.post_title : item?.acf?.arabic}
+              </Link>
+            </li>
+          ))}
       </>
     );
   };

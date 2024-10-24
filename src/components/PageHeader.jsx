@@ -129,7 +129,7 @@ export default function PageHeader({ title, type, data, mainCat }) {
       pageHeaderType = (
         <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
           <div className="xl:w-[50%] hidden lg:block">
-            {data && (
+            {data && pageHeaderTitle[0] && (
               <h1
                 className={`font-primary first-letter:uppercase text-[40px]`}
                 style={{

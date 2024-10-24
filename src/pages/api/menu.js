@@ -7,14 +7,15 @@ const Wordpress = axios.create({
 
 // Handler function
 export default async function handler(req, res) {
-  const { slug } = req.query; // Get the slug from the query parameters
+ // const { slug } = req.query; // Get the slug from the query parameters
 
   try {
     // Fetch menus for header and footer
-    const [footerResponse, headerResponse, footerSitemapResponse] = await Promise.all([
+    const [footerResponse, headerResponse, footerSitemapResponse, headerCatMenu] = await Promise.all([
       Wordpress.get('menus/footer-menu'),
       Wordpress.get('menus/header-menu'),
       Wordpress.get('menus/footer-sitemap'),
+      Wordpress.get('menus/header-cat-menu'),
     ]);
 
     // Return both menu data
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
       footerMenu: footerResponse.data,
       headerMenu: headerResponse.data,
       footerSitemapMenu: footerSitemapResponse.data,
+      headerCatMenu: headerCatMenu.data,
     });
   } catch (error) {
     console.error('Error fetching menus:', error.response ? error.response.data : error.message);

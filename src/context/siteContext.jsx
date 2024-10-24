@@ -14,6 +14,7 @@ export const SiteProvider = ({ children }) => {
   const [footerMenus, setFooterMenus] = useState(null); 
   const [headerMenus, setHeaderMenus] = useState(null); 
   const [sitemapMenus, setSitemapMenus] = useState(null); 
+  const [headerCatMenus, setHeaderCatMenus] = useState(null); 
   const [siteTransalations, setSiteTransalations] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -116,6 +117,7 @@ export const SiteProvider = ({ children }) => {
       setFooterMenus(response.data.footerMenu);
       setHeaderMenus(response.data.headerMenu); 
       setSitemapMenus(response.data.footerSitemapMenu); 
+      setHeaderCatMenus(response.data.headerCatMenu); 
     } catch (err) {
       setError(err);
     } finally {
@@ -157,6 +159,7 @@ export const SiteProvider = ({ children }) => {
       headerMenus,
       footerMenus, 
       sitemapMenus,
+      headerCatMenus,
       siteTransalations,
       loading, 
       error, 
