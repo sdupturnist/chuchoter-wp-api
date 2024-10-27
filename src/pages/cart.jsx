@@ -203,8 +203,10 @@ export default function Cart({ pageData, allProducts_ }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { locale, params } = context;
+
+
+export async function getStaticProps(context) {
+  const { locale } = context;
 
   const slug = `cart-${locale}`; // Constructing the slug
 
@@ -224,9 +226,48 @@ export async function getServerSideProps(context) {
         pageData: cartRes.data,
         allProducts_: productsRes.data,
       },
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
-    console.error("Error fetching products:", error.message);
-    return { props: { pageData: [], allProducts_: [] } }; // Set default total count to 0 on error
+    console.error("Error fetching cart or products:", error.message);
+    return {
+      props: {
+        pageData: [],
+        allProducts_: [],
+      },
+      revalidate: 60, // Still revalidate to allow updates
+    };
   }
 }
+
+// Remove getStaticPaths since this is a static route
+
+
+
+// export async function getServerSideProps(context) {
+//   const { locale, params } = context;
+
+//   const slug = `cart-${locale}`; // Constructing the slug
+
+//   try {
+//     const cartRes = await axios.get(`${frontendUrl}/api/cart`, {
+//       params: { slug },
+//     });
+
+//     const productsRes = await axios.get(`${frontendUrl}/api/products`, {
+//       params: {
+//         per_page: 100,
+//       },
+//     });
+
+//     return {
+//       props: {
+//         pageData: cartRes.data,
+//         allProducts_: productsRes.data,
+//       },
+//     };
+//   } catch (error) {
+//     console.error("Error fetching products:", error.message);
+//     return { props: { pageData: [], allProducts_: [] } }; // Set default total count to 0 on error
+//   }
+// }

@@ -92,8 +92,9 @@ export default function Contact({ initialData, pageData }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { locale, params } = context;
+
+export async function getStaticProps(context) {
+  const { locale } = context;
 
   const slug = `contact-${locale}`; // Constructing the slug
 
@@ -114,11 +115,14 @@ export async function getServerSideProps(context) {
       props: {
         pageData: res.data[0], // Return the first item from the response
       },
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
-    console.error("Error fetching about data:", error.message);
+    console.error("Error fetching contact data:", error.message);
     return {
       notFound: true, // Redirect to 404 page in case of an error
     };
   }
 }
+
+// Remove getStaticPaths since this is a static route
