@@ -715,8 +715,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { locale, params } = context;
+
+
+export async function getStaticProps(context) {
+  const { locale } = context;
 
   const slug = `home-${locale}`; // Constructing the slug
 
@@ -734,6 +736,7 @@ export async function getServerSideProps(context) {
         homeSections: homeSectionsRes.data,
         featuredProducts: featuredProductsRes.data,
       },
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
     console.error("Error fetching data:", error.message);
@@ -743,21 +746,9 @@ export async function getServerSideProps(context) {
         homeSections: [],
         featuredProducts: [],
       },
+      revalidate: 60, // Still revalidate to allow updates
     };
   }
-}
-
-export async function getServerSidePaths() {
-  const paths = [
-    { params: { lang: "en" } },
-    { params: { lang: "es" } },
-    // Add more languages as needed
-  ];
-
-  return {
-    paths,
-    fallback: "blocking",
-  };
 }
 
 

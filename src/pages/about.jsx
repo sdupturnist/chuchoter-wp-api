@@ -70,8 +70,10 @@ export default function About({ pageData }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { locale, params } = context;
+
+
+export async function getStaticProps(context) {
+  const { locale } = context;
 
   const slug = `about-${locale}`; // Constructing the slug
 
@@ -92,6 +94,7 @@ export async function getServerSideProps(context) {
       props: {
         pageData: res.data[0], // Return the first item from the response
       },
+      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
     console.error("Error fetching about data:", error.message);
@@ -100,3 +103,5 @@ export async function getServerSideProps(context) {
     };
   }
 }
+
+// Remove getStaticPaths since this is a static route
