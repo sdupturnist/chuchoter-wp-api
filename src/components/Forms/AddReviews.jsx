@@ -59,7 +59,7 @@ const ReviewForm = ({ productId, productName, productReviewCount }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FkbWluLmNodWNob3RlcnFhdGFyLmNvbSIsImlhdCI6MTcyOTUwNDY3NywibmJmIjoxNzI5NTA0Njc3LCJleHAiOjE3MzAxMDk0NzcsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.l51rRbO9BRGoi9NVnfN99f3Um8Mwl7glo66ByXQ9y5M`, // Replace with JWT or Basic Auth
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FkbWluLmNodWNob3RlcnFhdGFyLmNvbSIsImlhdCI6MTczMDEyMDMwNSwibmJmIjoxNzMwMTIwMzA1LCJleHAiOjE3MzA3MjUxMDUsImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19._UIh4Ms-mm6DCHz8vAN21AZ62tBk753k_svQGvG21r4`, // Replace with JWT or Basic Auth
         },
         body: JSON.stringify(requestData),
       });
