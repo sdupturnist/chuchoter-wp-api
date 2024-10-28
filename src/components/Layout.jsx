@@ -33,7 +33,9 @@ export default function Layout({ children, type, page, header }) {
   } = useSiteContext();
 
   const { themeLayout, setThemeLayout } = useThemeContext();
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
+
+ 
   const color = colorTheme(currentTheme);
 
   const FilteredCategoriesAccordin = (language) => {

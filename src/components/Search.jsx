@@ -13,7 +13,7 @@ export default function SearchBox({ theme, page }) {
   const { themeLayout } = useThemeContext();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
   const color = colorTheme(currentTheme);
 
   const [isSearchVisible, setSearchVisible] = useState(false);

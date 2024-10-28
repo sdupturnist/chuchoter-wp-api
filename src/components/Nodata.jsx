@@ -5,7 +5,7 @@ export default function NoData({title}){
 
 
   const { themeLayout } = useThemeContext();
-  const currentTheme = themeLayout.toString().toLowerCase()
+  const currentTheme = themeLayout?.toString().toLowerCase()
 
 
     let color;

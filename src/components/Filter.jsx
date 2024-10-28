@@ -9,7 +9,7 @@ import { useSiteContext } from "@/context/siteContext";
 export default function FilterProducts() {
   const router = useRouter();
   const { themeLayout } = useThemeContext();
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
   const { language } = useLanguageContext();
   const { siteTransalations } = useSiteContext();
 

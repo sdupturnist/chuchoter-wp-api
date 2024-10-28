@@ -2,7 +2,7 @@ import { useThemeContext } from "@/context/themeContext";
 
 const Pagination = ({ currentPage, totalPages, onPageChange, currenPageNumber }) => {
   const { themeLayout } = useThemeContext();
-  const currentTheme = themeLayout[0].toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
 
   // Define the maximum number of buttons to display
   const maxVisiblePages = 5;

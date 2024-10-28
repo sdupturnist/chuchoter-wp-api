@@ -23,7 +23,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
   const { language } = useLanguageContext();
 
   const { themeLayout } = useThemeContext();
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
   const color = colorTheme(currentTheme);
 
   const [isLoading, setIsLoading] = useState(true);

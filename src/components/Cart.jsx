@@ -12,7 +12,7 @@ export default function Cart({ type, size, itemid, price, name }) {
   const { language } = useLanguageContext();
   const { themeLayout } = useThemeContext();
   const [quantity, setQuantity] = useState(1);
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
 
   // Memoize safeCartItems to avoid unnecessary recalculations
   const safeCartItems = useMemo(

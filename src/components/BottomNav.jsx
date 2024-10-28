@@ -8,7 +8,7 @@ export default function BottomNav() {
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { siteTransalations } = useSiteContext();
 
-  const currentTheme = themeLayout.toString().toLowerCase();
+  const currentTheme = themeLayout?.toString().toLowerCase();
   const { language } = useLanguageContext();
   const color = colorTheme(currentTheme);
 

@@ -29,7 +29,7 @@ export default function PageHeader({ title, type, data, mainCat }) {
 
   const currentTheme =
     (query.category && query.category.toString().toLowerCase()) ||
-    themeLayout.toString().toLowerCase();
+    themeLayout?.toString().toLowerCase();
 
   const color = colorTheme(currentTheme);
 

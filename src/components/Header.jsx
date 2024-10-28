@@ -32,7 +32,7 @@ export default function Nav({ theme, page }) {
 
   const currentTheme =
     (query.category && query.category.toString().toLowerCase()) ||
-    themeLayout.toString().toLowerCase();
+    themeLayout?.toString().toLowerCase();
 
   // TOGGLE MENU
   const [hidden, setHidden] = useState(false);
