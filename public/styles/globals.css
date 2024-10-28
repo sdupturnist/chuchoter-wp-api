@@ -2010,3 +2010,9 @@ footer .collapse-title:after {
   visibility: visible;
   opacity: 1;
 }
+
+.radio:checked, .radio[aria-checked=true] {
+  --tw-bg-opacity: 1;
+  background-color: #c89a3f;
+  background-image: none;
+}

@@ -296,6 +296,7 @@ export default function Layout({ children, type, page, header }) {
               <div className="bg-white w-[280px] h-screen">
                 <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
                   <span
+                style={{color: color}}
                     className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>
                     {transalateText(
                       siteTransalations?.generalTranslations?.filter,
