@@ -227,7 +227,7 @@ export default function Footer({ page, initialData }) {
         <Link
           aria-label="Home"
           title="Home"
-          href={`${frontendUrl}/${language}`}
+          href={`${frontendUrl}`}
           className="hover:bg-transparent">
           {transalateText(
             siteTransalations?.generalTranslations?.home,
@@ -250,7 +250,7 @@ export default function Footer({ page, initialData }) {
                   ?.replace(/-ar/g, "")
                   .replace(/-en/g, "")
                   .replace(/-/g, "-")
-                  .toLowerCase()}/${language}`}
+                  .toLowerCase()}/`}
                 className="hover:opacity-50">
                 {language === "en" ? item?.title : item?.acf?.arabic}
               </Link>
