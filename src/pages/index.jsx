@@ -707,7 +707,7 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
                     }}
                   />
                   <Link
-                    href={`/about/${language}`}
+                    href={`/about`}
                     aria-label="About"
                     title="About"
                     className={`${
