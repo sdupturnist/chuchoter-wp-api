@@ -461,9 +461,7 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
                       background: color_bg,
                       color: color_text,
                     }}>
-                    {index === 0 ? (
-                      <Header page="home2" theme="chocolate" />
-                    ) : null}
+                 
 
                     <div className="wrpr sm:pt-[100px] pt-[80px]">
                       <Images
