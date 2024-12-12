@@ -945,3 +945,86 @@ function get_products_by_tag($data) {
 }
 
 
+//GET ALL PRODUCT TAGS
+
+// Register the custom REST API endpoint for product tags
+add_action( 'rest_api_init', 'register_custom_product_tags_endpoint' );
+
+function register_custom_product_tags_endpoint() {
+    register_rest_route( 'wc-custom/v1', '/product-tags/', array(
+        'methods'             => 'GET',
+        'callback'            => 'get_all_product_tags',
+        'permission_callback' => '__return_true', // Change to your permission logic
+    ));
+}
+
+/**
+ * Callback function to retrieve all product tags with ACF data and order by 'order_number'
+ */
+function get_all_product_tags( $data ) {
+    // Retrieve all product tags
+    $terms = get_terms( array(
+        'taxonomy'   => 'product_tag',
+        'hide_empty' => false, // Change to true to hide tags with no products
+    ));
+
+    // Check if there are any terms
+    if ( is_wp_error( $terms ) || empty( $terms ) ) {
+        return new WP_Error( 'no_tags_found', 'No product tags found', array( 'status' => 404 ) );
+    }
+
+    // Prepare the response
+    $tags = array();
+
+    // Fetch ACF data and prepare the tags with ACF fields
+    foreach ( $terms as $term ) {
+        // Retrieve ACF fields for each product tag
+        $image = get_field('image', $term);  // ACF 'image' field
+        $arabic_text = get_field('arabic_text', $term); // ACF 'arabic_text' field
+        $order_number = get_field('order_number', $term); // ACF 'order_number' field
+        
+        // Prepare the tag data including ACF fields
+        $tags[] = array(
+            'id'            => $term->term_id,
+            'name'          => $term->name,
+            'slug'          => $term->slug,
+            'count'         => $term->count,
+            'acf'           => array(
+                'image' => $image ? array(
+                    'ID'           => $image['ID'],
+                    'id'           => $image['ID'],
+                    'title'        => $image['title'],
+                    'filename'     => $image['filename'],
+                    'url'          => $image['url'],
+                    'link'         => $image['link'],
+                    'alt'          => $image['alt'],
+                    'author'       => $image['author'],
+                    'description'  => $image['description'],
+                    'caption'      => $image['caption'],
+                    'name'         => $image['name'],
+                    'status'       => $image['status'],
+                    'uploaded_to'  => $image['uploaded_to'],
+                    'date'         => $image['date'],
+                    'modified'     => $image['modified'],
+                    'mime_type'    => $image['mime_type'],
+                    'type'         => $image['type'],
+                    'subtype'      => $image['subtype'],
+                    'icon'         => $image['icon'],
+                    'width'        => $image['width'],
+                    'height'       => $image['height'],
+                    'sizes'        => $image['sizes'],
+                ) : null,
+                'arabic_text'  => $arabic_text,
+                'order_number' => $order_number
+            )
+        );
+    }
+
+    // Sort tags by 'order_number'
+    usort( $tags, function( $a, $b ) {
+        return $a['acf']['order_number'] - $b['acf']['order_number'];
+    });
+
+    return rest_ensure_response( $tags );
+}
+
