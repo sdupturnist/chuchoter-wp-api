@@ -4,7 +4,6 @@ import {
   frontendUrl,
   catUrl,
   transalateText,
-  wordpressRestApiUrl,
 } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from "@/components/Seo";
@@ -30,12 +29,7 @@ import { useSiteContext } from "@/context/siteContext";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function Home({
-  featuredProducts,
-  pageData,
-  homeSections,
-  tags,
-}) {
+export default function Home({ featuredProducts, pageData, homeSections, tags }) {
   const { siteTransalations } = useSiteContext();
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
@@ -377,27 +371,23 @@ export default function Home({
       <Layout page="home2" header="color">
         <AOSInit />
 
-<div style={
-  {
-    background: '#fcf9f4'
-  }
-}>
+        <div
+          style={{
+            background: "#fcf9f4",
+          }}>
+          <Header page="home2" theme="chocolate" />
+          <section className="py-5 sm:hidden">
+            <div className="container">
+              <div className="grid grid-cols-3 gap-3">
+                {tags &&
+                  tags?.map((item, index) => (
+                    <Card key={index} data={item} type="tag-card" />
+                  ))}
+              </div>
+            </div>
+          </section>
+        </div>
 
-
-        <Header page="home2" theme="chocolate" />
-<section className="py-5 sm:hidden">
-                      <div className="container">
-                        <div className="grid grid-cols-3 gap-3">
-                          {tags &&
-                            tags?.map((item, index) => (
-                              <>
-                                <Card key={index} data={item} type="tag-card" />
-                              </>
-                            ))}
-                        </div>
-                      </div>
-                    </section>
-                    </div>
         {/* LARGE DEVICES */}
         <>
           {sortedSections.map((item, index) => {
@@ -443,10 +433,6 @@ export default function Home({
 
             return (
               <>
-
-
-
-
                 {!isOdd ? (
                   <section
                     key={index}
@@ -475,11 +461,11 @@ export default function Home({
                       background: color_bg,
                       color: color_text,
                     }}>
-                    {/* {index === 0 ? (
+                    {index === 0 ? (
                       <Header page="home2" theme="chocolate" />
-                    ) : null} */}
-             
-                    <div className="wrpr sm:pt-[100px] pt-[80px] relative">
+                    ) : null}
+
+                    <div className="wrpr sm:pt-[100px] pt-[80px]">
                       <Images
                         width={190}
                         height={290}
@@ -723,7 +709,7 @@ export default function Home({
                     }}
                   />
                   <Link
-                    href={`/about/`}
+                    href={`/about/${language}`}
                     aria-label="About"
                     title="About"
                     className={`${
@@ -747,8 +733,8 @@ export default function Home({
   );
 }
 
-export async function getStaticProps(context) {
-  const { locale } = context;
+export async function getServerSideProps(context) {
+  const { locale, params } = context;
 
   const slug = `home-${locale}`; // Constructing the slug
 
@@ -769,7 +755,6 @@ export async function getStaticProps(context) {
         featuredProducts: featuredProductsRes.data,
         tags: allTagRes.data,
       },
-      revalidate: 60, // Revalidate every 60 seconds
     };
   } catch (error) {
     console.error("Error fetching data:", error.message);
@@ -778,9 +763,22 @@ export async function getStaticProps(context) {
         pageData: [],
         homeSections: [],
         featuredProducts: [],
-        tags: [],
       },
-      revalidate: 60, // Still revalidate to allow updates
     };
   }
 }
+
+export async function getServerSidePaths() {
+  const paths = [
+    { params: { lang: "en" } },
+    { params: { lang: "es" } },
+    // Add more languages as needed
+  ];
+
+  return {
+    paths,
+    fallback: "blocking",
+  };
+}
+
+
