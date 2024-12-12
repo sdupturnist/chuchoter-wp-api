@@ -14,12 +14,13 @@ import {
   catUrl,
   colorTheme,
   frontendUrl,
+  languageText,
   transalateText,
 } from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
 import { useRouter } from "next/router";
 
-export default function Nav({ theme, page }) {
+export default function Nav({ theme, page, tags }) {
   const { setModalFor, setShowModal } = useModalContext();
   const { themeLayout, setThemeLayout } = useThemeContext();
   const { cartItems } = useCartContext();
@@ -48,8 +49,6 @@ export default function Nav({ theme, page }) {
   const currentCartCOunt = cartCount == null ? 0 : cartCount;
 
   //const color = "#c89a3f";
-
-  // console.log(navigationData)
 
   function update() {
     if (scrollY?.current < scrollY?.prev) {
@@ -200,6 +199,9 @@ export default function Nav({ theme, page }) {
     );
   };
 
+  const tagedFilteredItems =
+    tags && tags.filter((item) => item.slug === query.category);
+
   function catHeader() {
     return (
       <>
@@ -207,7 +209,9 @@ export default function Nav({ theme, page }) {
           className={`w-full ${
             themeLayout == "black"
               ? "bg-black"
-              : `theme-${currentTheme}-header-mobile`
+              : `theme-${
+                  query.tag !== "yes" ? currentTheme : "chocolates"
+                }-header-mobile`
           } sm:py-[30px] pt-[16px] pb-[24px] relative z-50 gap-[20px] grid [&>*]:text-white lg:hidden`}>
           <div className="container">
             <div className="flex items-center justify-between">
@@ -224,7 +228,7 @@ export default function Nav({ theme, page }) {
               </div>
             </div>
           </div>
-          {themeLayout !== "black" && (
+          {themeLayout !== "black" && query.tag !== "yes" && (
             <div className="container grid sm:gap-[10px] gap-[0]">
               <h1 className="font-primary sm:text-[10vw] text-[28px] capitalize">
                 {transalateText(
@@ -232,12 +236,29 @@ export default function Nav({ theme, page }) {
                   language
                 )}
               </h1>
+
               <p className="sm:text-[17px] text-[14px] font-light">
                 {transalateText(
                   siteTransalations?.catTranslations?.explore_collection,
                   language
                 )}
               </p>
+            </div>
+          )}
+
+          {query.tag === "yes" && (
+            <div className="container grid sm:gap-[10px] gap-[0]">
+              <h1 className="font-primary sm:text-[10vw] text-[28px] capitalize">
+                {languageText(
+                  tagedFilteredItems[0]?.name,
+
+                  tagedFilteredItems[0]?.acf?.arabic_text ||
+                    tagedFilteredItems[0]?.name,
+
+                  language,
+                  "no"
+                )}
+              </h1>
             </div>
           )}
         </header>

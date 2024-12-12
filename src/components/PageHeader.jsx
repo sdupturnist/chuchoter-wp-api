@@ -17,7 +17,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function PageHeader({ title, type, data, mainCat }) {
+export default function PageHeader({
+  title,
+  type,
+  data,
+  mainCat,
+  tagPageHeaderData,
+}) {
   const { themeLayout } = useThemeContext();
   const { setModalFor, setShowModal } = useModalContext();
   const { language } = useLanguageContext();
@@ -126,114 +132,131 @@ export default function PageHeader({ title, type, data, mainCat }) {
               (category) => category.slug === query.category
             ),
           }));
+
+      const tagedFilteredItems = tagPageHeaderData.filter(
+        (item) => item.slug === query.category
+      );
+
       pageHeaderType = (
         <div className="xl:flex  justify-between xl:items-end gap-[30px] w-full">
           <div className="xl:w-[50%] hidden lg:block">
-            {data && pageHeaderTitle[0] && (
+            {data && (
               <h1
                 className={`font-primary first-letter:uppercase text-[40px]`}
                 style={{
                   color: color,
                 }}>
                 {languageText(
-                  data && pageHeaderTitle[0]?.categories[0]?.name,
-                  (data && pageHeaderTitle[0]?.categories[0]?.arabic_label) ||
-                    (data && pageHeaderTitle[0]?.categories[0]?.name),
+                  query.tag !== "yes"
+                    ? data && pageHeaderTitle[0]?.categories[0]?.name
+                    : tagedFilteredItems[0]?.name,
+
+                  query.tag !== "yes"
+                    ? (data &&
+                        pageHeaderTitle[0]?.categories[0]?.arabic_label) ||
+                        (data && pageHeaderTitle[0]?.categories[0]?.name)
+                    : tagedFilteredItems[0]?.acf?.arabic_text ||
+                        tagedFilteredItems[0]?.name,
+
                   language,
                   "no"
                 )}
               </h1>
-            )}{" "}
-            <p
-              style={{
-                color: color,
-              }}>
-              {transalateText(
-                siteTransalations?.catTranslations?.explore_collection,
-                language
-              )}
-            </p>
+            )}
+            {query.tag !== "yes" && (
+              <p
+                style={{
+                  color: color,
+                }}>
+                {transalateText(
+                  siteTransalations?.catTranslations?.explore_collection,
+                  language
+                )}
+              </p>
+            )}
           </div>
-          <div className="flex xl:w-[50%] gap-[6px] w-full mt-[20px] xl:mt-[0]">
-            <div className="flex gap-[6px] w-full xl:justify-end">
-              {
-                <>
-                  {data && data.length > 1 && (
-                    <Link
-                      aria-label={title.replace(/-/g, " ")}
-                      className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
-                      title={title.replace(/-/g, " ")}
-                      href={catUrl(mainCat, language)}>
-                      {transalateText(
-                        siteTransalations?.generalTranslations?.all,
-                        language
-                      )}
-                    </Link>
-                  )}
-                  <div className="sm:flex hidden gap-2">
-                    {FilteredCategories(color, mainCat)}
-                  </div>
-                  <div className="dropdown sm:hidden">
-                    {/* Button to toggle dropdown */}
-                    <button
-                      onClick={toggleDropdown}
-                      className={`btn btn-${mainCat}-border px-[20px] border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}>
-                      {transalateText(
-                        siteTransalations?.generalTranslations?.categories,
-                        language
-                      )}
-                    </button>
-
-                    {/* Dropdown menu */}
-                    {isOpen && (
-                      <ul className="dropdown-content menu p-0 !shadow-none bg-base-100 rounded-box w-52 z-[1]">
-                        {FilteredCategoriesMore(currentTheme)}
-                      </ul>
+          {query.tag !== "yes" && (
+            <div className="flex xl:w-[50%] gap-[6px] w-full mt-[20px] xl:mt-[0]">
+              <div className="flex gap-[6px] w-full xl:justify-end">
+                {
+                  <>
+                    {data && data.length > 1 && (
+                      <Link
+                        aria-label={title.replace(/-/g, " ")}
+                        className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}
+                        title={title.replace(/-/g, " ")}
+                        href={catUrl(mainCat, language)}>
+                        {transalateText(
+                          siteTransalations?.generalTranslations?.all,
+                          language
+                        )}
+                      </Link>
                     )}
-                  </div>
-
-                  {data && data.length > 3 && (
-                    <div className="dropdown dropdown-hover dropdown-end  rounded-[6px]">
-                      <div
-                        tabIndex={0}
-                        role="button"
-                        className={`btn hover:border-[${color}] bg-transparent border border-solid rounded-[6px] !capitalize !font-regular !text-[13px] px-[10px]`}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="32"
-                          fill={currentTheme}
-                          viewBox="0 0 256 256">
-                          <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"></path>
-                        </svg>
-                      </div>
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content menu bg-base-100  z-[1] w-52 p-0 shadow overflow-hidden rounded-[6px]">
-                        {FilteredCategoriesMore(currentTheme)}
-                      </ul>
+                    <div className="sm:flex hidden gap-2">
+                      {FilteredCategories(color, mainCat)}
                     </div>
-                  )}
-                </>
-              }
+                    <div className="dropdown sm:hidden">
+                      {/* Button to toggle dropdown */}
+                      <button
+                        onClick={toggleDropdown}
+                        className={`btn btn-${mainCat}-border px-[20px] border border-solid rounded-[6px] !capitalize !font-regular !text-[13px]`}>
+                        {transalateText(
+                          siteTransalations?.generalTranslations?.categories,
+                          language
+                        )}
+                      </button>
+
+                      {/* Dropdown menu */}
+                      {isOpen && (
+                        <ul className="dropdown-content menu p-0 !shadow-none bg-base-100 rounded-box w-52 z-[1]">
+                          {FilteredCategoriesMore(currentTheme)}
+                        </ul>
+                      )}
+                    </div>
+
+                    {data && data.length > 3 && (
+                      <div className="dropdown dropdown-hover dropdown-end  rounded-[6px]">
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          className={`btn hover:border-[${color}] bg-transparent border border-solid rounded-[6px] !capitalize !font-regular !text-[13px] px-[10px]`}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="32"
+                            fill={currentTheme}
+                            viewBox="0 0 256 256">
+                            <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"></path>
+                          </svg>
+                        </div>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content menu bg-base-100  z-[1] w-52 p-0 shadow overflow-hidden rounded-[6px]">
+                          {FilteredCategoriesMore(currentTheme)}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                }
+              </div>
+              <button
+                onClick={openFilterModal}
+                className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px] hover:border-[${color}]`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="19"
+                  height="16"
+                  fill="none"
+                  viewBox="0 0 19 16">
+                  <path
+                    fill={color}
+                    stroke={color}
+                    strokeWidth=".4"
+                    d="M1.125 4.236H4.36a2.825 2.825 0 0 0 5.53 0h7.735a.575.575 0 1 0 0-1.15H9.89a2.825 2.825 0 0 0-5.53 0H1.125a.575.575 0 1 0 0 1.15Zm6-2.25a1.675 1.675 0 1 1 0 3.35 1.675 1.675 0 0 1 0-3.35Zm10.5 10.1H15.89a2.825 2.825 0 0 0-5.53 0H1.125a.575.575 0 1 0 0 1.15h9.235a2.825 2.825 0 0 0 5.53 0h1.735a.575.575 0 0 0 0-1.15Zm-4.5 2.25a1.676 1.676 0 1 1 0-3.35 1.676 1.676 0 0 1 0 3.35Z"
+                  />
+                </svg>
+              </button>
             </div>
-            <button
-              onClick={openFilterModal}
-              className={`btn btn-${mainCat}-border border border-solid rounded-[6px] !capitalize !font-regular !text-[13px] hover:border-[${color}]`}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="16"
-                fill="none"
-                viewBox="0 0 19 16">
-                <path
-                  fill={color}
-                  stroke={color}
-                  strokeWidth=".4"
-                  d="M1.125 4.236H4.36a2.825 2.825 0 0 0 5.53 0h7.735a.575.575 0 1 0 0-1.15H9.89a2.825 2.825 0 0 0-5.53 0H1.125a.575.575 0 1 0 0 1.15Zm6-2.25a1.675 1.675 0 1 1 0 3.35 1.675 1.675 0 0 1 0-3.35Zm10.5 10.1H15.89a2.825 2.825 0 0 0-5.53 0H1.125a.575.575 0 1 0 0 1.15h9.235a2.825 2.825 0 0 0 5.53 0h1.735a.575.575 0 0 0 0-1.15Zm-4.5 2.25a1.676 1.676 0 1 1 0-3.35 1.676 1.676 0 0 1 0 3.35Z"
-                />
-              </svg>
-            </button>
-          </div>
+          )}
         </div>
       );
       break;

@@ -3,16 +3,26 @@ import { useThemeContext } from "@/context/themeContext";
 import { useEffect, useMemo, useState } from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
 import { useSiteContext } from "@/context/siteContext";
-import { transalateText } from "@/utils/variables";
+import { frontendUrl, transalateText } from "@/utils/variables";
 import { useLanguageContext } from "@/context/LanguageContext";
+import Link from "next/link";
 
-export default function Cart({ type, size, itemid, price, name }) {
+export default function Cart({ type, size, itemid, price, name, isSingle }) {
   const { cartItems, setCartItems } = useCartContext();
   const { siteTransalations } = useSiteContext();
   const { language } = useLanguageContext();
   const { themeLayout } = useThemeContext();
   const [quantity, setQuantity] = useState(1);
   const currentTheme = themeLayout?.toString().toLowerCase();
+  const [showGotoCart, setShowGotoCart] = useState(false);
+
+  useEffect(() => {
+    if (isInCart) {
+      setShowGotoCart(true);
+    } else {
+      setShowGotoCart(false);
+    }
+  }, [showGotoCart]);
 
   // Memoize safeCartItems to avoid unnecessary recalculations
   const safeCartItems = useMemo(
@@ -26,7 +36,7 @@ export default function Cart({ type, size, itemid, price, name }) {
     if (currentItem) {
       setQuantity(currentItem.quantity);
     } else {
-      setQuantity(0);
+      setQuantity(1);
     }
   }, [safeCartItems, itemid]);
 
@@ -103,7 +113,7 @@ export default function Cart({ type, size, itemid, price, name }) {
         );
         setCartItems(updatedCartItems);
         updateCartInLocalStorage(updatedCartItems);
-        setQuantity(0);
+        setQuantity(1);
       }
     }
   };
@@ -174,25 +184,52 @@ export default function Cart({ type, size, itemid, price, name }) {
 
     default:
       cartType = (
-        <div
-          className={`${size} rounded-[6px] border border-solid border-black flex justify-between sm:max-w-[150px] sm:min-w-[150px] overflow-hidden`}>
-          <button
-            className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
-            onClick={CartMinus}>
-            <MinusIcon className="text-black size-5" />
-          </button>
-          <input
-            type="number"
-            value={quantity}
-            className="border-none sm:w-full max-w-[50px] text-center !focus:border-none min-h-[55px]"
-            readOnly
-          />
-          <button
-            className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
-            onClick={CartPlus}>
-            <PlusIcon className="text-black size-5" />
-          </button>
-        </div>
+        <>
+          <div
+            className={`${size} rounded-[6px] border border-solid border-black flex justify-between sm:max-w-[150px] sm:min-w-[150px] overflow-hidden`}>
+            <button
+              className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
+              onClick={CartMinus}>
+              <MinusIcon className="text-black size-5" />
+            </button>
+            <input
+              type="number"
+              value={quantity}
+              className="border-none sm:w-full max-w-[50px] text-center !focus:border-none min-h-[55px]"
+              readOnly
+            />
+            <button
+              className="btn bg-transparent rounded-none border-none shadow-none  hover:bg-white min-h-[55px]"
+              onClick={CartPlus}>
+              <PlusIcon className="text-black size-5" />
+            </button>
+          </div>
+
+          {showGotoCart && isSingle && isInCart && (
+            <Link
+              href={`${frontendUrl}/cart`}
+              className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">
+              {transalateText(
+                siteTransalations?.generalTranslations?.go_to_cart,
+                language
+              )}
+            </Link>
+          )}
+
+          {!showGotoCart && isSingle && !isInCart && (
+            <button
+              onClick={(e) => {
+                setShowGotoCart(true);
+                handleCartAction(itemid ?? null, price ?? null, name ?? null);
+              }}
+              className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">
+              {transalateText(
+                siteTransalations?.generalTranslations?.add_to_cart,
+                language
+              )}
+            </button>
+          )}
+        </>
       );
       break;
   }

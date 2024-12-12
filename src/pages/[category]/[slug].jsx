@@ -255,6 +255,7 @@ export default function ProductSingle({ product, reviews }) {
                   )}
                   <div className="sm:flex grid items-center gap-[10px] w-full mt-[40px]">
                     <Cart
+                    isSingle
                       itemid={product?.id ?? null}
                       size="sm:max-w-[170px] w-full min-w-[171px]"
                       price={
@@ -265,21 +266,7 @@ export default function ProductSingle({ product, reviews }) {
                       name={product?.name}
                     />
 
-                    <button
-                      onClick={(e) =>
-                        addToCartAndOrder(
-                          product?.id ?? null,
-                          product?.regular_price ?? null,
-                          product?.sale_price ?? null,
-                          product?.name ?? null
-                        )
-                      }
-                      className="btn border border-black border-solid bg-black hover:bg-gray-900  rounded-[6px] sm:max-w-[170px] min-w-[170px] min-h-[60px] text-white">
-                      {transalateText(
-                        siteTransalations?.generalTranslations?.add_to_cart,
-                        language
-                      )}
-                    </button>
+                    
                   </div>
                   {product?.id && (
                     <span className="block text-[12px] uppercase text-gray-400 sm:my-[40px] mb-[30px] mt-[40px]">

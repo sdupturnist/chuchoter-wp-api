@@ -828,3 +828,120 @@ function update_product_review_and_acf(WP_REST_Request $request) {
     return new WP_REST_Response('Product reviews and post meta updated successfully.', 200);
 }
 
+//TAG FILTER
+
+// Register custom REST API endpoint to filter products by tag slug
+add_action('rest_api_init', function () {
+    register_rest_route('wc-custom/v1', '/products/tag/(?P<tag_slug>[a-zAZ0-9-]+)', [
+        'methods' => 'GET',
+        'callback' => 'get_products_by_tag',
+        'args' => [
+            'tag_slug' => [
+                'validate_callback' => function ($param, $request, $key) {
+                    return !empty($param); // Ensure tag_slug is not empty
+                }
+            ]
+        ]
+    ]);
+});
+
+// Callback function to get products by tag slug
+function get_products_by_tag($data) {
+    // Get the tag slug from the request
+    $tag_slug = $data['tag_slug'];
+
+    // Query products by tag slug
+    $args = [
+        'post_type' => 'product',
+        'posts_per_page' => -1, // Retrieve all products matching the tag
+        'tax_query' => [
+            [
+                'taxonomy' => 'product_tag',
+                'field'    => 'slug',
+                'terms'    => $tag_slug,
+            ],
+        ],
+    ];
+
+    // Run the query
+    $query = new WP_Query($args);
+
+    // If products found, return them
+    if ($query->have_posts()) {
+        $products = [];
+        while ($query->have_posts()) {
+            $query->the_post();
+            $product = wc_get_product(get_the_ID()); // Get product object
+
+            // Get product categories
+            $categories = get_the_terms($product->get_id(), 'product_cat');
+            $category_data = [];
+            if ($categories) {
+                foreach ($categories as $category) {
+                    $category_data[] = [
+                        'id' => $category->term_id,
+                        'name' => $category->name,
+                        'slug' => $category->slug,
+                        // Optional: Add Arabic label if it's available, e.g., from a custom field
+                        'arabic_label' => get_term_meta($category->term_id, 'arabic_label', true),
+                    ];
+                }
+            }
+
+            // Get product tags
+            $tags = get_the_terms($product->get_id(), 'product_tag');
+            $tag_data = [];
+            if ($tags) {
+                foreach ($tags as $tag) {
+                    // Include the tag ID, name, and slug
+                    $tag_data[] = [
+                        'id' => $tag->term_id,
+                        'name' => $tag->name,
+                        'slug' => $tag->slug,
+                    ];
+                }
+            }
+
+            // Get ACF fields (if ACF plugin is installed)
+            if (function_exists('get_fields')) {
+                $acf_fields = get_fields($product->get_id());
+            } else {
+                $acf_fields = null;
+            }
+
+            // Get Yoast SEO head JSON (if Yoast SEO is installed)
+            if (function_exists('wpseo_head')) {
+                $yoast_head_json = wpseo_head();
+            } else {
+                $yoast_head_json = null;
+            }
+
+            // Get post meta fields
+            $post_meta = get_post_meta($product->get_id());
+
+            // Prepare product data
+            $products[] = [
+                'id' => $product->get_id(),
+                'name' => $product->get_name(),
+                'slug' => $product->get_slug(),
+                'description' => $product->get_description(),
+                'short_description' => $product->get_short_description(),
+                'price' => $product->get_price(),
+                'regular_price' => $product->get_regular_price(),
+                'sale_price' => $product->get_sale_price(),
+                'images' => wp_get_attachment_url($product->get_image_id()), // Main product image
+                'categories' => $category_data, // Include category data with arabic_label
+                'tags' => $tag_data, // Include tag data with ID, name, and slug
+                'acf' => $acf_fields, // ACF fields
+                'yoast_head_json' => $yoast_head_json, // Yoast SEO head JSON
+                'post_meta' => $post_meta, // Post meta fields
+            ];
+        }
+        wp_reset_postdata();
+        return $products;
+    } else {
+        return new WP_Error('no_products', 'No products found for this tag.', ['status' => 404]);
+    }
+}
+
+

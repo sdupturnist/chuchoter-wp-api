@@ -29,7 +29,7 @@ export default function ProductListing({
         {data &&
           data.map((item, key) => {
             return (
-              <div className="w-full" key={key}>
+              <div className="w-full grid justify-between" key={key}>
                 <Card
                   type="cat"
                   item={item}

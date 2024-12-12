@@ -1,37 +1,30 @@
+
+
+
 export const wordpressGraphQlApiUrl = process.env.NEXT_PUBLIC_API_URL;
-export const wordpressRestApiUrl = process.env.NEXT_PUBLIC_API_REST_WP_URL;
-export const wordpressRestApiUrlWoocommerce =
-  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_URL;
-export const wordpressRestApiUrlWoocommerceCustom =
-  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_CUSTOM_URL;
+export const wordpressRestApiUrl = `https://admin.chuchoterqatar.com/wp-json/wp/v2/`;
+export const wordpressRestApiUrlWoocommerce = `https://admin.chuchoterqatar.com/wp-json/wc/v3/`
+export const wordpressRestApiUrlWoocommerceCustom = `https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/`
 
-export const wordpressRestApiUrlWoocommerceProductsSubCatCustom =
-  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_SUBCAT_CUSTOM_URL;
+export const wordpressRestApiUrlWoocommerceProductsSubCatCustom = `https://admin.chuchoterqatar.com/wp-json/subcat/v1/`
 
-export const wordpressRestApiUrlWoocommerceProductsTotalCount =
-  process.env
-    .NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCTS_TOTAL_COUNT_CUSTOM_URL;
+export const wordpressRestApiUrlWoocommerceProductsTotalCount = `https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/`
 
-export const wordpressRestApiUrlWoocommerceProductsSingle =
-  process.env.NEXT_PUBLIC_API_REST_WP_WOOCOMMERCE_PRODUCT_SINGLE_CUSTOM_URL;
+export const wordpressRestApiUrlWoocommerceProductsSingle = `https://admin.chuchoterqatar.com/wp-json/wc-single/v1/`
 
-export const wordpressRestApiUrlWoocommerceProductsReviewCountUpdate =
-  process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_UPDATE_REVIEW_COUNT;
+export const wordpressRestApiUrlWoocommerceProductsReviewCountUpdate = `https://admin.chuchoterqatar.com/wp-json/wc-custom/v1/products/reviews-count/`
 
-export const wordpressRestApiUrlWordpressMenus =
-  process.env.NEXT_PUBLIC_API_REST_WP_WORDPRESS_MENUS;
+export const wordpressRestApiUrlWordpressMenus = `https://admin.chuchoterqatar.com/wp-json/sitemenu/v1/`
 export const adminUrl = process.env.NEXT_PUBLIC_ADMIN_URL;
 export let frontendUrl = process.env.NEXT_PUBLIC_SITE_URL;
-export let sitemapPerPage = process.env.NEXT_PUBLIC_ITEM_PER_SITEMAP || 500; //1000
-export let siteEmail = process.env.NEXT_PUBLIC_SITE_EMAIL;
-export let siteFromEmail = process.env.NEXT_PUBLIC_SITE_FROM_EMAIL;
-export let deliveryFee = process.env.NEXT_PUBLIC_DELIVERY_FEE;
-export let emailUsername = process.env.NEXT_PUBLIC_EMAIL_USERNAME;
-export let emailPassword = process.env.NEXT_PUBLIC_EMAIL_PASSWORD;
-export let woocommerceConsumerKey =
-  process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY;
-export let woocommerceConsumerSecret =
-  process.env.NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET;
+export let sitemapPerPage = 500; //1000
+export let siteEmail = 'mohammedrabeeh@gmail.com';
+export let siteFromEmail = `noreply@chuchoter.com`;
+export let deliveryFee = 10;
+export let emailUsername = `jaseerali2012@gmail.com`;
+export let emailPassword = `avjbzfvwygdyretn`;
+export let woocommerceConsumerKey = `ck_270d3c9d3dbee272a02db0d14c1cfc902c0d752d`
+export let woocommerceConsumerSecret = `cs_9dde39d4ec0a12ad1e4fcbcfb5cb6abb428dee79`
 
 export const catUrl = (mainCat, lang) => {
   return `/${mainCat && mainCat?.replace(/ /g, "-").toLowerCase()}`;

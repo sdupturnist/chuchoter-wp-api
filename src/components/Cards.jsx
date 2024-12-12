@@ -15,7 +15,15 @@ import { AOSInit } from "./Aos";
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useSiteContext } from "@/context/siteContext";
 
-export default function Card({ theme, desc, type, item, subCat, mainCat }) {
+export default function Card({
+  theme,
+  desc,
+  type,
+  item,
+  subCat,
+  mainCat,
+  data,
+}) {
   const review = item?.acf?.user_reviews;
 
   const { siteTransalations } = useSiteContext();
@@ -55,7 +63,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2`}
                 data-id={item?.id ?? null}
                 data-review={review?.length}>
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden ">
                   <Link
                     className="block"
                     href={`${itemUrl(mainCat, item?.slug)}`}>
@@ -82,12 +90,13 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                     name={item?.name}
                   />
                 </div>
-                <div className="grid gap-[7px] mt-[2px]">
+
+                <div className="grid gap-2">
                   <Link
                     className="block"
                     href={`${itemUrl(mainCat, item?.slug)}`}>
                     <h4
-                      className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase`}>
+                      className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase line-clamp-2`}>
                       {languageText(
                         item?.name,
                         item?.acf?.title_arabic,
@@ -96,18 +105,6 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                       )}
                     </h4>
                   </Link>
-
-                  {/* {!desc == true ? (
-                    <span
-                      className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize`}>
-                      {languageText(
-                        item?.categories.map((item) => item.name),
-                        item?.categories.map((item) => item.arabic_label),
-                        language,
-                        "yes"
-                      )}
-                    </span>
-                  ) : null} */}
                   {type == true ? (
                     <p
                       className={`text-${currentTheme}-100 text-[12px] leading-[20px] text-opacity-80`}>
@@ -143,7 +140,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                   </>
                 ) : null}
 
-                {item?.regular_price && (
+                {item?.regular_price ? (
                   <span className={`text-${currentTheme}-100 flex gap-[8px]`}>
                     {item?.sale_price && (
                       <del className="text-[14px] font-light">
@@ -176,8 +173,10 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                       </span>
                     </span>
                   </span>
+                ) : (
+                  <span></span>
                 )}
-                <div className="xl:hidden mt-[4px]">
+                <div className="xl:hidden mt-[8px] flex items-end">
                   <Cart
                     itemid={item?.id ?? null}
                     type="button-small"
@@ -250,15 +249,36 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
       );
       break;
 
+    case "tag-card":
+      cardType = (
+        <Link
+          href={`${frontendUrl}/${data?.slug}?tag=yes`}
+          className="p-3 bg-[#fcf9f4] rounded-xl shadow-sm border flex-col justify-center items-center gap-[13px] inline-flex min-h-[150px] hover:border-[#ffe9bf] hover:shadow-none hover:bg-[#fff6e8] transition-all">
+          <Images
+            width="70"
+            height="70"
+            quality={100}
+            placeholder={true}
+            imageurl={data?.acf?.image?.url || ""} // Provide a fallback URL
+            classes="rounded-full max-w-[70px] max-h-[70px] min-w-[70px] min-h-[70px]"
+            alt={data?.acf?.image?.alt || "Default alt text"} // Provide a default alt text
+            title={data?.name || "Default title text"} // Provide a default title text
+          />
+          <div className="self-stretch text-center text-[#c89a3f] text-[12px] font-medium leading-[17px] line-clamp-2">
+            {data?.name}
+          </div>
+        </Link>
+      );
+      break;
+
     default:
       cardType = (
         <div
-          className={`grid gap-[10px] w-full card-cat sm:mb-[10px] max-w-[190px] ${
-            language == "en" ? "[&>*]:text-start" : "[&>*]:text-end"
-          }`}
+          data-aos="fade-up"
+          className={`[&>*]:text-${currentTheme}-100 grid gap-[10px] w-full card-cat sm:mb-[10px] mb-2  max-w-[190px]`}
           data-id={item?.id ?? null}
           data-review={review?.length}>
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden ">
             <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
               <Images
                 width="170"
@@ -281,10 +301,11 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
               name={item?.name}
             />
           </div>
-          <div className="grid gap-[7px] mt-[2px]">
+
+          <div className="grid gap-2">
             <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
               <h4
-                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase !leading-[1.5] mb-[2px]`}>
+                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase line-clamp-2`}>
                 {languageText(
                   item?.name,
                   item?.acf?.title_arabic,
@@ -293,18 +314,6 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 )}
               </h4>
             </Link>
-            {/* 
-            {!desc == true ? (
-              <span
-                className={`text-${currentTheme}-100 block text-[12px]  text-opacity-80 capitalize !leading-[1.5]`}>
-                {languageText(
-                  item?.categories.map((item) => item.name),
-                  item?.categories.map((item) => item.arabic_label),
-                  language,
-                  "yes"
-                )}
-              </span>
-            ) : null} */}
             {type == true ? (
               <p
                 className={`text-${currentTheme}-100 text-[12px] leading-[20px] text-opacity-80`}>
@@ -337,7 +346,7 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
             </>
           ) : null}
 
-          {item?.regular_price && (
+          {item?.regular_price ? (
             <span className={`text-${currentTheme}-100 flex gap-[8px]`}>
               {item?.sale_price && (
                 <del className="text-[14px] font-light">
@@ -370,8 +379,10 @@ export default function Card({ theme, desc, type, item, subCat, mainCat }) {
                 </span>
               </span>
             </span>
+          ) : (
+            <span></span>
           )}
-          <div className="xl:hidden mt-[4px]">
+          <div className="xl:hidden mt-[8px] flex items-end">
             <Cart
               itemid={item?.id ?? null}
               type="button-small"

@@ -18,6 +18,9 @@ import axios from "axios";
 import { useLanguageContext } from "@/context/LanguageContext";
 import { useSiteContext } from "@/context/siteContext";
 
+
+
+
 export default function Cart({ pageData, allProducts_ }) {
   const { themeLayout } = useThemeContext();
   const { cartItems } = useCartContext();

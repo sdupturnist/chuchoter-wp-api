@@ -1,30 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { useLanguageContext } from "@/context/LanguageContext";
+import debounce from "lodash.debounce";
 
-const LanguageSwitcher = (color) => {
+const LanguageSwitcher = ({ color }) => {
   const router = useRouter();
-  const { locale } = router;
+  const { locale, pathname, query } = router;
   const { toggleLanguage } = useLanguageContext();
 
   // Load the language from localStorage on mount
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     if (savedLanguage && savedLanguage !== locale) {
-      router.replace(router.pathname, router.asPath, { locale: savedLanguage });
+      router.replace({ pathname, query }, undefined, { locale: savedLanguage });
     }
-  }, [locale, router]);
+  }, [locale, router, pathname, query]);
 
-  const changeLanguage = (lang) => {
-    router.push(router.pathname, router.asPath, { locale: lang });
-    localStorage.setItem("language", lang); // Store the selected language
-  };
+  // Debounced function to handle language change
+  const debouncedChangeLanguage = useCallback(
+    debounce((lang) => {
+      router.push({ pathname, query }, undefined, { locale: lang });
+      localStorage.setItem("language", lang);
+    }, 300),
+    [pathname, query]
+  );
 
-  // Toggle between languages
   const handleToggle = () => {
     const newLang = locale === "en" ? "ar" : "en";
-    changeLanguage(newLang);
-    toggleLanguage(); // Call toggleLanguage after changing the language
+    debouncedChangeLanguage(newLang);
+    toggleLanguage();
   };
 
   return (
@@ -32,9 +36,7 @@ const LanguageSwitcher = (color) => {
       <button
         className="font-ar"
         onClick={handleToggle}
-        style={{
-          color: color.color,
-        }}>
+        style={{ color: color }}>
         {locale === "en" ? "العربية" : "English"}
       </button>
     </div>

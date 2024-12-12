@@ -4,6 +4,7 @@ import {
   frontendUrl,
   catUrl,
   transalateText,
+  wordpressRestApiUrl,
 } from "@/utils/variables";
 import Layout from "@/components/Layout";
 import Metatags from "@/components/Seo";
@@ -29,7 +30,12 @@ import { useSiteContext } from "@/context/siteContext";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
-export default function Home({ featuredProducts, pageData, homeSections }) {
+export default function Home({
+  featuredProducts,
+  pageData,
+  homeSections,
+  tags,
+}) {
   const { siteTransalations } = useSiteContext();
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
@@ -370,6 +376,28 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
       <Metatags seo={pageData && pageData[0]?.yoast_head_json} />
       <Layout page="home2" header="color">
         <AOSInit />
+
+<div style={
+  {
+    background: '#fcf9f4'
+  }
+}>
+
+
+        <Header page="home2" theme="chocolate" />
+<section className="py-5 sm:hidden">
+                      <div className="container">
+                        <div className="grid grid-cols-3 gap-3">
+                          {tags &&
+                            tags?.map((item, index) => (
+                              <>
+                                <Card key={index} data={item} type="tag-card" />
+                              </>
+                            ))}
+                        </div>
+                      </div>
+                    </section>
+                    </div>
         {/* LARGE DEVICES */}
         <>
           {sortedSections.map((item, index) => {
@@ -415,6 +443,10 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
 
             return (
               <>
+
+
+
+
                 {!isOdd ? (
                   <section
                     key={index}
@@ -443,11 +475,11 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                       background: color_bg,
                       color: color_text,
                     }}>
-                    {index === 0 ? (
+                    {/* {index === 0 ? (
                       <Header page="home2" theme="chocolate" />
-                    ) : null}
-
-                    <div className="wrpr sm:pt-[100px] pt-[80px]">
+                    ) : null} */}
+             
+                    <div className="wrpr sm:pt-[100px] pt-[80px] relative">
                       <Images
                         width={190}
                         height={290}
@@ -691,7 +723,7 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
                     }}
                   />
                   <Link
-                    href={`/about/${language}`}
+                    href={`/about/`}
                     aria-label="About"
                     title="About"
                     className={`${
@@ -715,8 +747,6 @@ export default function Home({ featuredProducts, pageData, homeSections }) {
   );
 }
 
-
-
 export async function getStaticProps(context) {
   const { locale } = context;
 
@@ -730,11 +760,14 @@ export async function getStaticProps(context) {
     const homeSectionsRes = await axios.get(`${frontendUrl}/api/homeSections`);
     const featuredProductsRes = await axios.get(`${frontendUrl}/api/products`);
 
+    const allTagRes = await axios.get(`${frontendUrl}/api/tags`);
+
     return {
       props: {
         pageData: homeRes.data,
         homeSections: homeSectionsRes.data,
         featuredProducts: featuredProductsRes.data,
+        tags: allTagRes.data,
       },
       revalidate: 60, // Revalidate every 60 seconds
     };
@@ -745,10 +778,9 @@ export async function getStaticProps(context) {
         pageData: [],
         homeSections: [],
         featuredProducts: [],
+        tags: [],
       },
       revalidate: 60, // Still revalidate to allow updates
     };
   }
 }
-
-

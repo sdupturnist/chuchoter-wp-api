@@ -17,7 +17,7 @@ import {
 } from "@/utils/variables";
 import { useSiteContext } from "@/context/siteContext";
 
-export default function Layout({ children, type, page, header }) {
+export default function Layout({ children, type, page, header, tags }) {
   const { showModal, setShowModal, setModalData, modalFor, setIsClassAdded } =
     useModalContext();
   const { productId, productName, productReviewCount } = useProductContext();
@@ -35,7 +35,6 @@ export default function Layout({ children, type, page, header }) {
   const { themeLayout, setThemeLayout } = useThemeContext();
   const currentTheme = themeLayout?.toString().toLowerCase();
 
- 
   const color = colorTheme(currentTheme);
 
   const FilteredCategoriesAccordin = (language) => {
@@ -231,7 +230,7 @@ export default function Layout({ children, type, page, header }) {
 
   return (
     <>
-      {header !== "color" && <Header page={page} />}
+      {header !== "color" && <Header page={page} tags={tags} />}
 
       <main>{children}</main>
       <Footer page={page} />
@@ -296,7 +295,7 @@ export default function Layout({ children, type, page, header }) {
               <div className="bg-white w-[280px] h-screen">
                 <div className="border-b border-gray-200 border-solid w-[280px] h-[60px] p-[16px] flex justify-between">
                   <span
-                style={{color: color}}
+                    style={{ color: color }}
                     className={`text-${currentTheme}-100 uppercase block font-semibold text-[14px] leading-[0] pt-[14px]`}>
                     {transalateText(
                       siteTransalations?.generalTranslations?.filter,
