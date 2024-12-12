@@ -253,7 +253,7 @@ export default function Card({
       cardType = (
         <Link
           href={`${frontendUrl}/${data?.slug}?tag=yes`}
-          className=" bg-[#fcf9f4] rounded-xl mb-6 flex-col justify-start items-center gap-[10px] inline-flex hover:border-[#ffe9bf] hover:shadow-none hover:bg-[#fff6e8] transition-all">
+          className="p-3 bg-[#fcf9f4] rounded-xl shadow-sm border flex-col justify-center items-center gap-[13px] inline-flex min-h-[130px] hover:border-[#ffe9bf] hover:shadow-none hover:bg-[#fff6e8] transition-all">
         {/* p-3 bg-[#fcf9f4] rounded-xl shadow-sm border flex-col justify-center items-center gap-[13px] inline-flex min-h-[150px] hover:border-[#ffe9bf] hover:shadow-none hover:bg-[#fff6e8] transition-all */}
           <Images
             width="70"
@@ -261,7 +261,7 @@ export default function Card({
             quality={100}
             placeholder={true}
             imageurl={data?.acf?.image?.url || ""} // Provide a fallback URL
-            classes="rounded-full max-w-[85px] max-h-[85px] min-w-[85px] min-h-[85px]"
+            classes="rounded-full max-w-[80px] max-h-[80px] min-w-[80px] min-h-[80px]"
             alt={data?.acf?.image?.alt || "Default alt text"} // Provide a default alt text
             title={data?.name || "Default title text"} // Provide a default title text
           />
