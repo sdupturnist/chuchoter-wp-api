@@ -25,7 +25,7 @@ export default function ProductListing({
 
   return data.length > 0 ? (
     <>
-      <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]">
+      <div className="grid xl:grid-cols-6 lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:gap-[40px] gap-[20px]" >
         {data &&
           data.map((item, key) => {
             return (

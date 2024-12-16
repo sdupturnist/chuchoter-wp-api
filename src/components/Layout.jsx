@@ -232,7 +232,7 @@ export default function Layout({ children, type, page, header, tags }) {
     <>
       {header !== "color" && <Header page={page} tags={tags} />}
 
-      <main>{children}</main>
+      <main id="main">{children}</main>
       <Footer page={page} />
 
       <a

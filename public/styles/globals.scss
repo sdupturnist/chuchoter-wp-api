@@ -231,6 +231,7 @@ z-index: -1; /* Make sure it’s behind the content */
   @apply  border border-events-100 text-events-100 hover:bg-events-800 hover:text-events-100 bg-transparent;
 }
 
+
 .card-cat:hover .btn-cart{
   opacity: 1 !important;
 }

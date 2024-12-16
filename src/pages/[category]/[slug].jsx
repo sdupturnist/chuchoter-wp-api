@@ -129,9 +129,13 @@ export default function ProductSingle({ product, reviews }) {
 
                 {images.length !== 0 && (
                   <ImageGallery
-                    items={images}
-                    showNav={false}
-                    lazyLoad={true}
+                  items={images}            
+                  showNav={false}          
+                  lazyLoad={true}           
+                  showThumbnails={false}    
+                  autoPlay={true}           
+                  showFullscreenButton={false}   
+                  showPlayButton={false}   
                   />
                 )}
 

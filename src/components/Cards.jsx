@@ -96,7 +96,7 @@ export default function Card({
                     className="block"
                     href={`${itemUrl(mainCat, item?.slug)}`}>
                     <h4
-                      className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase line-clamp-2`}>
+                      className={`text-${currentTheme}-100 text-[14px] line-clamp-2`}>
                       {languageText(
                         item?.name,
                         item?.acf?.title_arabic,
@@ -306,7 +306,7 @@ export default function Card({
           <div className="grid gap-2">
             <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
               <h4
-                className={`text-${currentTheme}-100 text-[14px] first-letter:capitalize lowercase line-clamp-2`}>
+                className={`text-${currentTheme}-100 text-[14px] line-clamp-2`}>
                 {languageText(
                   item?.name,
                   item?.acf?.title_arabic,

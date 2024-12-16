@@ -131,7 +131,7 @@ export default function BottomNav() {
               </svg>
 
               {transalateText(
-                siteTransalations?.catTranslations?.cakes,
+                siteTransalations?.catTranslations?.events,
                 language
               )}
             </Link>
