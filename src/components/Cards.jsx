@@ -58,7 +58,13 @@ export default function Card({
             data-id={item?.id ?? null}
             data-review={review?.length}>
             <div className="relative overflow-hidden ">
-              <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
+
+            {clicked && (
+            <div className="absolute top-0 left-0 right-0 bottom-0 z-10 bg-white bg-opacity-80 flex items-center justify-center">
+              <Loading spinner classes="size-4 text-dark" />
+            </div>
+          )}
+           <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`} onClick={(e) => setClicked(!clicked)}>
                 <Images
                   width="170"
                   height="170"
@@ -269,7 +275,13 @@ export default function Card({
           data-id={item?.id ?? null}
           data-review={review?.length}>
           <div className="relative overflow-hidden ">
-            <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}>
+          {clicked && (
+            <div className="absolute top-0 left-0 right-0 bottom-0 z-10 bg-white bg-opacity-80 flex items-center justify-center">
+              <Loading spinner classes="size-4 text-dark" />
+            </div>
+          )}
+            <Link className="block" href={`${itemUrl(mainCat, item?.slug)}`}   onClick={(e) => setClicked(!clicked)}>
+            
               <Images
                 width="170"
                 height="170"

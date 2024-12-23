@@ -41,15 +41,12 @@ export default function AllProducts({ products, currentPage, totalCount, tagedPr
         const parsedData = JSON.parse(sessionData);
 
         if (currentTime - parsedData.timestamp < CACHE_DURATION) {
-          // If the cached data is still valid, use it
           setCachedData(parsedData.data);
           setIsLoading(false);
         } else {
-          // If the cache has expired, fetch new data
           fetchDataAndUpdateCache(pageKey);
         }
       } else {
-        // No cache exists, fetch new data
         fetchDataAndUpdateCache(pageKey);
       }
     }
@@ -66,7 +63,7 @@ export default function AllProducts({ products, currentPage, totalCount, tagedPr
     const cacheKey = `productsData_${categoryKey}_${subCategoryKey}_${pageKey}`;
     const dataWithTimestamp = { timestamp: new Date().getTime(), data: dataToStore };
 
-    // Check the number of cached items in sessionStorage
+    // First, check the number of cached items in sessionStorage
     const cacheKeys = Object.keys(sessionStorage);
     const cacheItemCount = cacheKeys.length;
 
@@ -115,22 +112,12 @@ export default function AllProducts({ products, currentPage, totalCount, tagedPr
 
   const { products: allProductsCached, totalCount: totalProductsCached } = cachedData || {};
 
-  //console.log("Cached Data:", cachedData);  // Debugging log
-
-  // Determine which products to display (tagged or all products)
-  const cateogaryData = query.tag === "yes" ?  cachedData?.tagedProducts?.products : allProductsCached;
-
-  // Debugging: check what data is being displayed
-  //console.log("Category Data:", cateogaryData);  // Debugging log
-
-
-
   return (
-    <Layout page="category" tags={tags && tags} showHeadingTag={!query.tag}>
+    <Layout page="category" tags={query.tag === "yes" ? tagedProducts : allProductsCached} showHeadingTag={!query.tag}>
       <div className="container grid xl:gap-[50px] gap-[30px] lg:pt-[30px] xl:pb-[70px] pb-[20px] overflow-hidden">
         <Category
           pageHeaderData={subCategoryData}
-          cateogaryData={cateogaryData}
+          cateogaryData={query.tag === "yes" ? tagedProducts : allProductsCached}
           cateogaryCurrentPage={currentPage}
           cateogaryTotalPages={totalPages}
           cateogaryOnPageChange={handlePageChange}
@@ -138,7 +125,7 @@ export default function AllProducts({ products, currentPage, totalCount, tagedPr
           cateogaryMainCat={query.category}
           cateogaryTotalCount={totalCount}
           cateogaryCurrenPageNumber={query.page}
-          tags={tags}
+          tags={query.tag === "yes" ? tagedProducts : allProductsCached}
           onCategoryChange={handleCategoryChange}
         />
       </div>
@@ -165,10 +152,14 @@ export async function getServerSideProps(context) {
 
     if (tagList?.length > 0) {
       productRequests.push(
-        fetch(`${wordpressRestApiUrlWoocommerceCustom}products?tag=${tagList.join(",")}`).then((res) => res.json()),
+        fetch(`${wordpressRestApiUrlWoocommerceCustom}products/tag/${context.query.category}`).then((res) => res.json()),
         axios.get(`${frontendUrl}/api/tags`)
       );
     }
+
+
+   // ${wordpressRestApiUrlWoocommerceCustom}products/tag/${context.query.category}
+    //console.log(tagList?.length > 0)
 
     const [productsRes, totalCountRes, tagedProductsRes = [], tagsRes = { data: [] }] = await Promise.all(productRequests);
 

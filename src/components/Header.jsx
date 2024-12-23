@@ -248,16 +248,14 @@ export default function Nav({ theme, page, tags }) {
             </div>
           )}
 
-     
-
           {query.tag === "yes" && (
             <div className="container grid sm:gap-[10px] gap-[0]">
               <h1 className="font-primary sm:text-[10vw] text-[28px] capitalize">
                 {languageText(
-                 tags[0]?.name,
+                 tags[0]?.tags[0]?.name,
 
                  tags[0]?.acf?.arabic_text ||
-                  tags[0]?.name,
+                  tags[0]?.tags[0]?.name,
 
                   language,
                   "no"

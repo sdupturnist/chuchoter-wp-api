@@ -31,6 +31,7 @@ import Loading from "@/components/Loading";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export default function Home({ featuredProducts, pageData, homeSections, tags }) {
+  
   const { siteTransalations } = useSiteContext();
   const { language, toggleLanguage } = useLanguageContext();
   const t = translations[language];
@@ -684,7 +685,7 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
             );
           })}
 
-          {featuredProducts?.products?.length !== 0 && windowWidth > 999 ? (
+          {items?.length !== 0 && windowWidth > 999 ? (
             <section>
               <div className="container">
                 <div className="mx-auto 2xl:w-[70%] xl:w-[90%]  gap-[20px] md:py-[60px] py-[50px]">
@@ -715,7 +716,7 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
             <div className="container">
               <div
                 className={`mx-auto 2xl:w-[70%] xl:w-[90%] grid sm:gap-[20px] gap-[16px] md:py-[60px] py-[30px] justify-end ${
-                  featuredProducts?.products?.length !== 0 && windowWidth > 999
+                  items?.length!== 0 && windowWidth > 999
                     ? "border-t border-solid border-black "
                     : null
                 }`}>
