@@ -148,15 +148,15 @@ export default function PageHeader({
                 }}>
                 {languageText(
                   query.tag !== "yes"
-                    ? data && pageHeaderTitle[0]?.categories[0]?.name
-                    : tagedFilteredItems[0]?.name,
+                    ? data && pageHeaderTitle[0]?.categories[0]?.name || query.category
+                    : tagedFilteredItems[0]?.name || query.category,
 
                   query.tag !== "yes"
                     ? (data &&
                         pageHeaderTitle[0]?.categories[0]?.arabic_label) ||
-                        (data && pageHeaderTitle[0]?.categories[0]?.name)
+                        (data && pageHeaderTitle[0]?.categories[0]?.name) || query.category
                     : tagedFilteredItems[0]?.acf?.arabic_text ||
-                        tagedFilteredItems[0]?.name,
+                        tagedFilteredItems[0]?.name || query.category,
 
                   language,
                   "no"

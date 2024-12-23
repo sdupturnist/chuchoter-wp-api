@@ -1,6 +1,8 @@
+
 import PageHeader from "./PageHeader";
 import ProductListing from "./ProductListing";
 import { useRouter } from "next/router";
+
 
 export default function Category({
   pageHeaderData,
@@ -16,6 +18,8 @@ export default function Category({
 }) {
   const router = useRouter();
   const { query } = router;
+
+
 
   return (
     <>

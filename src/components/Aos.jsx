@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';  // Import useRouter from Next.js
 import AOS from 'aos';
-import 'aos/dist/aos.css';  // Ensure AOS styles are included
+import 'aos/dist/aos.css';
 
 export const AOSInit = () => {
   const router = useRouter();

@@ -26,6 +26,7 @@ import translations from "@/hooks/translations";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import { useSiteContext } from "@/context/siteContext";
+import Loading from "@/components/Loading";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -35,6 +36,7 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
   const t = translations[language];
 
   const { setThemeLayout } = useThemeContext();
+  const [clicked, setClicked] = useState(false);
 
   const chocolate = useRef();
   const flowers = useRef();
@@ -531,9 +533,18 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
                                   title={item?.acf?.cateogary}
                                   href={catUrl(item?.acf?.cateogary, language)}
                                   onClick={(e) =>
-                                    setThemeLayout(item?.acf?.cateogary)
+                                  {
+                                    setThemeLayout(item?.acf?.cateogary),
+                                    setClicked(!clicked)
+
+                                  }
                                   }
                                   className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}>
+                                      {clicked && (
+     
+        <Loading spinner classes="size-4 text-white"/>
+        
+      )}
                                   {transalateText(
                                     siteTransalations?.generalTranslations
                                       ?.shop_now,
@@ -618,25 +629,38 @@ export default function Home({ featuredProducts, pageData, homeSections, tags })
                                   </p>
                                 </div>
                                 <div>
-                                  <Link
-                                    aria-label={
-                                      item?.acf?.main_cat[0]?.post_title
-                                    }
-                                    title={item?.acf?.main_cat[0]?.post_title}
-                                    href={catUrl(
-                                      item?.acf?.cateogary,
-                                      language
-                                    )}
-                                    onClick={(e) =>
-                                      setThemeLayout(item?.acf?.cateogary)
-                                    }
-                                    className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}>
-                                    {transalateText(
+
+                                <Link
+                                  aria-label={
+                                    item?.acf?.main_cat[0]?.post_title
+                                  }
+                                  title={item?.acf?.main_cat[0]?.post_title}
+                                  href={catUrl(
+                                    item?.acf?.cateogary,
+                                    language
+                                  )}
+                                  onClick={(e) =>
+                                  {
+                                    setThemeLayout(item?.acf?.cateogary),
+                                    setClicked(!clicked)
+
+                                  }
+                                  }
+                                  className={`btn btn-${item?.acf?.cateogary} btn-lg px-[40px]  border border-solid text-white rounded-full`}>
+                                      {clicked && (
+     
+        <Loading spinner classes="size-4 text-white"/>
+        
+      )}
+                                 {transalateText(
                                       siteTransalations?.generalTranslations
                                         ?.shop_now,
                                       language
                                     )}
-                                  </Link>
+                                </Link>
+
+
+                                 
                                 </div>
                               </div>
                             </div>
